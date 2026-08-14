@@ -19,7 +19,7 @@ export const translations = {
     journal: { label:"共同档案", title:"我们如何走到这里", place:"上海 · 2026", entries:["桌上的二十七张纸","第一次公开试玩","雨天收集到的声音","第 64 位参与者"] },
     groups: { label:"仅成员可见", title:"声音小组", people:"8 人", member:"参与者 #027", you:"你 · #042", messageA:"我把昨晚车站的环境声放进群文件了。", messageB:"听到了，最后十秒特别像潮水。", placeholder:"写给小组……", send:"发送", lock:"群组、消息与文件仅对成员可见。只有项目 Owner 可以建立群组。" },
     upload: { add:"拖放或选择文件", detail:"照片、音频、视频、文档 · 最大 50 MB" },
-    dashboard: { label:"创作者面板 / 仅限 OWNER", title:"活跃度与贡献记录", lockedTitle:"创作者空间", locked:"活跃记录与贡献分只对 Owner 开放。", signIn:"以 Owner 身份登录", recorded:"已记录参与者", events:"活跃事件", total:"贡献总分", daily:"24h 活跃", manual:"手动贡献分", manualTitle:"由 Owner 记录贡献分", points:"贡献分", reason:"记录贡献原因", record:"记录分数", success:"贡献分已记录", failure:"记录失败，请确认你已以 Owner 身份登录", person:"匿名参与者", score:"贡献分", activity:"活跃次数", recent:"最近活跃", never:"尚无", group:"＋ 建立私密小组（仅 Owner）" },
+    dashboard: { label:"创作者面板 / 仅限 OWNER", title:"活跃度与贡献记录", lockedTitle:"创作者空间", locked:"活跃记录与贡献分只对 Owner 开放。", signIn:"以 Owner 身份登录", recorded:"已记录参与者", events:"活跃事件", total:"贡献总分", daily:"24h 活跃", manual:"手动贡献分", manualTitle:"由 Owner 记录贡献分", points:"贡献分", reason:"记录贡献原因", record:"记录分数", success:"贡献分已记录", failure:"记录失败，请确认你已以 Owner 身份登录", person:"匿名参与者", score:"贡献分", activity:"活跃次数", recent:"最近活跃", never:"尚无", group:"＋ 建立私密小组（仅 Owner）", editor:"实时内容编辑", editorIntro:"正在编辑当前语言的公开内容。保存后约 15 秒同步给所有访问者。", eyebrow:"页首小标题", headlineA:"主标题第一行", headlineB:"主标题第二行", subtitle:"首页简介", conceptA:"理念第一行", conceptB:"理念第二行", conceptC:"理念第三行", creatorNote:"创作者留言", copyrightLabel:"版权文字", saveContent:"保存并立即更新", saving:"正在保存…", contentSaved:"已保存，公开页面正在同步", contentFailed:"保存失败，请确认你已以 Owner 身份登录" },
     copyright:"© 2026 Huie Chen. 保留所有权利。",
   },
   en: {
@@ -34,7 +34,7 @@ export const translations = {
     journal:{label:"SHARED ARCHIVE",title:"How we arrived here",place:"Shanghai · 2026",entries:["Twenty-seven papers on a table","The first public playtest","Sounds gathered on a rainy day","Participant number 64"]},
     groups:{label:"MEMBERS ONLY",title:"Sound group",people:"8 people",member:"Participant #027",you:"You · #042",messageA:"I added last night’s station ambience to the group files.",messageB:"I heard it—the last ten seconds feel like a tide.",placeholder:"Write to the group…",send:"Send",lock:"Groups, messages and files are visible only to members. Only the project Owner can create groups."},
     upload:{add:"Drop or choose files",detail:"Photos, audio, video and documents · Up to 50 MB"},
-    dashboard:{label:"CREATOR DASHBOARD / OWNER ONLY",title:"Activity & contribution records",lockedTitle:"Creator space",locked:"Activity records and contribution scores are available only to the Owner.",signIn:"Sign in as Owner",recorded:"Participants recorded",events:"Activity events",total:"Contribution total",daily:"Active in 24h",manual:"MANUAL CONTRIBUTION SCORE",manualTitle:"Recorded by the Owner",points:"Points",reason:"Reason for this contribution",record:"Record score",success:"Contribution score recorded",failure:"Could not record. Confirm that you are signed in as Owner.",person:"Anonymous participant",score:"Score",activity:"Activity",recent:"Last active",never:"No activity yet",group:"＋ Create private group (Owner only)"},
+    dashboard:{label:"CREATOR DASHBOARD / OWNER ONLY",title:"Activity & contribution records",lockedTitle:"Creator space",locked:"Activity records and contribution scores are available only to the Owner.",signIn:"Sign in as Owner",recorded:"Participants recorded",events:"Activity events",total:"Contribution total",daily:"Active in 24h",manual:"MANUAL CONTRIBUTION SCORE",manualTitle:"Recorded by the Owner",points:"Points",reason:"Reason for this contribution",record:"Record score",success:"Contribution score recorded",failure:"Could not record. Confirm that you are signed in as Owner.",person:"Anonymous participant",score:"Score",activity:"Activity",recent:"Last active",never:"No activity yet",group:"＋ Create private group (Owner only)",editor:"Live content editor",editorIntro:"You are editing public content in the current language. Changes sync to every visitor in about 15 seconds.",eyebrow:"Header eyebrow",headlineA:"Headline, line one",headlineB:"Headline, line two",subtitle:"Homepage introduction",conceptA:"Concept, line one",conceptB:"Concept, line two",conceptC:"Concept, line three",creatorNote:"Creator note",copyrightLabel:"Copyright text",saveContent:"Save and update now",saving:"Saving…",contentSaved:"Saved. The public page is syncing now.",contentFailed:"Could not save. Confirm that you are signed in as Owner."},
     copyright:"© 2026 Huie Chen. All rights reserved.",
   },
   ja: {
@@ -49,9 +49,22 @@ export const translations = {
     journal:{label:"共同アーカイブ",title:"ここまでの道のり",place:"上海 · 2026",entries:["机の上の27枚の紙","初めての公開プレイテスト","雨の日に集めた音","64番目の参加者"]},
     groups:{label:"メンバー限定",title:"サウンドグループ",people:"8人",member:"参加者 #027",you:"あなた · #042",messageA:"昨夜の駅の環境音をグループファイルに追加しました。",messageB:"聴きました。最後の10秒が潮のようです。",placeholder:"グループに書く…",send:"送信",lock:"グループ、メッセージ、ファイルはメンバーだけが閲覧できます。グループを作成できるのは Owner のみです。"},
     upload:{add:"ファイルをドロップまたは選択",detail:"写真、音声、動画、文書 · 最大50 MB"},
-    dashboard:{label:"クリエイター画面 / OWNER限定",title:"アクティビティと貢献記録",lockedTitle:"クリエイター空間",locked:"アクティビティ記録と貢献点は Owner のみ閲覧できます。",signIn:"Ownerとしてログイン",recorded:"記録された参加者",events:"アクティビティ",total:"貢献点の合計",daily:"24時間以内に活動",manual:"手動の貢献点",manualTitle:"Ownerが貢献点を記録",points:"点数",reason:"貢献の理由",record:"点数を記録",success:"貢献点を記録しました",failure:"記録できません。Ownerでログインしているか確認してください。",person:"匿名の参加者",score:"貢献点",activity:"活動回数",recent:"最終活動",never:"まだ活動なし",group:"＋ 非公開グループを作成（Ownerのみ）"},
+    dashboard:{label:"クリエイター画面 / OWNER限定",title:"アクティビティと貢献記録",lockedTitle:"クリエイター空間",locked:"アクティビティ記録と貢献点は Owner のみ閲覧できます。",signIn:"Ownerとしてログイン",recorded:"記録された参加者",events:"アクティビティ",total:"貢献点の合計",daily:"24時間以内に活動",manual:"手動の貢献点",manualTitle:"Ownerが貢献点を記録",points:"点数",reason:"貢献の理由",record:"点数を記録",success:"貢献点を記録しました",failure:"記録できません。Ownerでログインしているか確認してください。",person:"匿名の参加者",score:"貢献点",activity:"活動回数",recent:"最終活動",never:"まだ活動なし",group:"＋ 非公開グループを作成（Ownerのみ）",editor:"リアルタイム内容編集",editorIntro:"現在の言語の公開内容を編集中です。保存後、約15秒で全訪問者に反映されます。",eyebrow:"ページ上部の小見出し",headlineA:"メイン見出し 1行目",headlineB:"メイン見出し 2行目",subtitle:"ホーム紹介文",conceptA:"コンセプト 1行目",conceptB:"コンセプト 2行目",conceptC:"コンセプト 3行目",creatorNote:"クリエイターノート",copyrightLabel:"著作権表示",saveContent:"保存して今すぐ更新",saving:"保存中…",contentSaved:"保存しました。公開ページに同期しています。",contentFailed:"保存できません。Ownerでログインしているか確認してください。"},
     copyright:"© 2026 Huie Chen. All rights reserved.",
   },
 } as const;
 
 export type Translation = (typeof translations)[Language];
+
+export function applyTranslationOverrides(base: Translation, values: Record<string, string>): Translation {
+  const copy = JSON.parse(JSON.stringify(base)) as Record<string, unknown>;
+  const landing = copy.landing as Record<string, unknown>;
+  const overview = copy.overview as Record<string, unknown>;
+  for (const [path, value] of Object.entries(values)) {
+    const [section, key] = path.split(".");
+    if (section === "landing" && key && key in landing) landing[key] = value;
+    if (section === "overview" && key === "note") overview.note = value;
+    if (path === "copyright") copy.copyright = value;
+  }
+  return copy as unknown as Translation;
+}
