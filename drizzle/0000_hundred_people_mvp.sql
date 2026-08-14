@@ -1,0 +1,17 @@
+CREATE TABLE `users` (`id` text PRIMARY KEY NOT NULL, `email` text NOT NULL, `name` text, `role` text NOT NULL, `created_at` integer NOT NULL);
+CREATE TABLE `participants` (`id` text PRIMARY KEY NOT NULL, `display_code` text NOT NULL, `locale` text DEFAULT 'zh' NOT NULL, `created_at` integer NOT NULL);
+CREATE TABLE `invitations` (`id` text PRIMARY KEY NOT NULL, `token_hash` text NOT NULL, `participant_id` text NOT NULL, `expires_at` integer, `revoked_at` integer);
+CREATE UNIQUE INDEX `idx_invitation_token` ON `invitations` (`token_hash`);
+CREATE TABLE `tasks` (`id` text PRIMARY KEY NOT NULL, `title_zh` text NOT NULL, `title_en` text NOT NULL, `status` text NOT NULL, `sort_order` integer NOT NULL);
+CREATE TABLE `submissions` (`id` text PRIMARY KEY NOT NULL, `participant_id` text NOT NULL, `task_id` text NOT NULL, `kind` text NOT NULL, `body` text, `file_key` text, `status` text NOT NULL, `updated_at` integer NOT NULL);
+CREATE INDEX `idx_submissions_participant_task` ON `submissions` (`participant_id`,`task_id`);
+CREATE TABLE `survey_responses` (`id` text PRIMARY KEY NOT NULL, `participant_id` text NOT NULL, `survey_id` text NOT NULL, `payload` text NOT NULL, `updated_at` integer NOT NULL);
+CREATE INDEX `idx_survey_participant` ON `survey_responses` (`participant_id`,`survey_id`);
+CREATE TABLE `game_links` (`id` text PRIMARY KEY NOT NULL, `version` text NOT NULL, `url` text NOT NULL, `notes_zh` text, `notes_en` text, `published_at` integer NOT NULL);
+CREATE TABLE `journal_entries` (`id` text PRIMARY KEY NOT NULL, `title_zh` text NOT NULL, `title_en` text NOT NULL, `file_key` text NOT NULL, `occurred_at` integer NOT NULL);
+CREATE TABLE `groups` (`id` text PRIMARY KEY NOT NULL, `name` text NOT NULL, `created_by` text NOT NULL, `created_at` integer NOT NULL);
+CREATE TABLE `group_members` (`group_id` text NOT NULL, `participant_id` text NOT NULL, `joined_at` integer NOT NULL);
+CREATE UNIQUE INDEX `idx_group_member` ON `group_members` (`group_id`,`participant_id`);
+CREATE TABLE `messages` (`id` text PRIMARY KEY NOT NULL, `group_id` text NOT NULL, `participant_id` text NOT NULL, `body` text NOT NULL, `file_key` text, `created_at` integer NOT NULL);
+CREATE INDEX `idx_messages_group_created` ON `messages` (`group_id`,`created_at`);
+PRAGMA optimize;
