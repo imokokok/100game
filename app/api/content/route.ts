@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { d1, isOwner } from "../_shared";
 
-const locales = new Set(["zh", "en", "ja"]);
+const localeList = ["zh", "en", "ja", "es", "fr", "ar", "hi", "bn", "sw", "ha", "id", "pt"];
+const locales = new Set(localeList);
 const editableKeys = new Set([
   "landing.eyebrow",
   "landing.titleA",
@@ -20,7 +21,7 @@ export async function GET() {
   const result = await d1()
     .prepare("SELECT locale, content_key, value, updated_at FROM content_overrides ORDER BY locale, content_key")
     .all<ContentRow>();
-  const content: Record<string, Record<string, string>> = { zh: {}, en: {}, ja: {} };
+  const content: Record<string, Record<string, string>> = Object.fromEntries(localeList.map(locale => [locale, {}]));
   let updatedAt = 0;
   for (const row of result.results ?? []) {
     if (locales.has(row.locale) && editableKeys.has(row.content_key)) {
