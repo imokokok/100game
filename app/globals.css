@@ -338,3 +338,151 @@ html{background:#fff}
   .peoplePage .creditsHead{padding-left:18px}
   .peoplePage .creditsHead::before{bottom:30px;width:4px}
 }
+
+/* Solid red fields and responsive entry/public layouts. */
+.publicAccessCheck{min-height:100vh;background:#fff}
+.entryGate{
+  min-height:100svh;
+  background:#fff;
+  color:#111;
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",Arial,sans-serif;
+}
+.entryGate .entryTop{min-height:88px;border-color:#d8d8d3;color:#111}
+.entryGate .entryTop>button{color:#111}
+.entryGate>section{width:min(1180px,100%);padding:clamp(56px,8vw,112px) clamp(22px,7vw,82px)}
+.entryGate h1{
+  max-width:760px;
+  margin:22px 0 48px;
+  color:#111;
+  font-size:clamp(40px,6vw,78px);
+  font-weight:600;
+  line-height:1.08;
+  letter-spacing:-.045em;
+}
+.entryGate .kicker{color:#666;font-family:inherit}
+.entryChoices{gap:14px}
+.entryChoices button{
+  min-height:190px;
+  border:0;
+  border-radius:0;
+  background:var(--red);
+  color:#fff;
+  padding:30px;
+}
+.entryChoices button:nth-child(2){background:#c84435}
+.entryChoices button:hover{background:#a93629}
+.entryChoices b{font-family:inherit;font-size:clamp(25px,3vw,36px);font-weight:700}
+.entryChoices span{color:#fff;opacity:.9;font-size:14px;line-height:1.65}
+.entryGate .creatorEntry{color:#555}
+.entryGate>.copyright{color:#666;border-color:#d8d8d3;background:#fff}
+.inviteGate section>p{color:#555}
+.gateInvite input{background:#fff;color:#111;border-color:#999}
+.gateInvite .primary{background:var(--red)}
+
+.conceptStandalone>h1{padding-left:0;border-bottom:0}
+.conceptStandalone>h1::before,
+.conceptStandalone .conceptEssay::before{display:none}
+.conceptHeadlineLine{display:block;width:fit-content}
+.conceptHeadlineLine.accent{
+  margin-top:14px;
+  padding:16px 24px 20px;
+  background:var(--public-red);
+  color:#fff;
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
+}
+.conceptLabelBlock{
+  display:inline-block;
+  padding:9px 13px;
+  background:var(--public-red);
+  color:#fff!important;
+}
+.conceptStandalone .conceptEssay{margin-top:64px}
+.conceptStandalone .peopleCta{
+  border-bottom:0;
+  padding:13px 17px;
+  background:var(--public-red);
+  color:#fff;
+}
+.conceptStandalone .peopleCta:hover{background:#bd3f31;color:#fff}
+
+.peoplePage .creditsHead{padding-left:0}
+.peoplePage .creditsHead::before{display:none}
+.peoplePage .creditsHead .kicker{
+  display:inline-block;
+  width:fit-content;
+  padding:9px 13px;
+  background:var(--public-red);
+  color:#fff;
+}
+.peoplePage .disciplineTabs{
+  display:grid;
+  gap:10px;
+  border:0;
+  background:transparent;
+}
+.peoplePage .disciplineTabs button,
+.peoplePage .disciplineTabs button:last-child{
+  min-height:94px;
+  border:0;
+  background:var(--public-red);
+  color:#fff;
+}
+.peoplePage .disciplineTabs button:hover{background:#c74435;color:#fff}
+.peoplePage .disciplineTabs button.active{background:#a93629;color:#fff;box-shadow:inset 0 -6px 0 #111}
+.peoplePage .featuredProfileCard{
+  padding:0;
+  gap:0;
+  border:1px solid #d8d8d3;
+  overflow:visible;
+}
+.peoplePage .featuredProfileCard::before,
+.peoplePage .featuredProfileCard::after{display:none}
+.peoplePage .profileIdentity{
+  min-width:0;
+  padding:34px;
+  background:var(--public-red);
+  color:#fff;
+}
+.peoplePage .profileMonogram{border-color:#fff;color:#fff}
+.peoplePage .profileDetails{margin:34px 0;padding-right:34px}
+.peoplePage .featuredProfileCard>strong{padding:34px 28px 34px 20px}
+.peoplePage .divisionTags span{border:0;background:var(--public-red);color:#fff}
+.peoplePage .miniMonogram{background:var(--public-red);border:0;color:#fff}
+.publicPage>.copyright::before{height:8px;background:var(--public-red)}
+
+@media(max-width:900px){
+  .peoplePage .featuredProfileCard{grid-template-columns:1fr}
+  .peoplePage .profileDetails{margin:0;padding:28px}
+  .peoplePage .featuredProfileCard>strong{right:28px;top:28px;padding:0;color:#fff}
+}
+@media(max-width:800px){
+  .entryGate .entryTop{align-items:center;padding:12px 20px}
+  .entryGate>section{padding:52px 20px 72px}
+  .entryGate h1{margin-bottom:34px;font-size:clamp(38px,11vw,58px)}
+  .entryChoices{grid-template-columns:1fr}
+  .entryChoices button{min-height:150px;padding:24px}
+  .conceptStandalone>h1{padding-left:0}
+  .conceptHeadlineLine.accent{margin-top:10px;padding:12px 16px 15px}
+  .conceptStandalone .conceptEssay{margin-top:46px}
+  .peoplePage .creditsHead{padding-left:0}
+  .peoplePage .disciplineTabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .peoplePage .disciplineTabs button,
+  .peoplePage .disciplineTabs button:last-child{min-height:68px;padding:12px 8px;border:0}
+  .peoplePage .disciplineTabs button.active{box-shadow:inset 0 -4px 0 #111}
+  .peoplePage .profileIdentity{padding:26px 22px}
+  .peoplePage .profileDetails{padding:24px 22px}
+}
+@media(max-width:520px){
+  .publicPage .top{padding:12px 16px}
+  .publicPage .mark{max-width:155px;font-size:10px}
+  .publicPage .languagePicker>span{font-size:0}
+  .publicPage .languagePicker>span b{font-size:13px}
+  .publicPage .languagePicker select{min-width:100px;max-width:112px}
+  .conceptStandalone,.peoplePage .publicCredits{padding-left:16px;padding-right:16px}
+  .conceptStandalone>h1{font-size:clamp(36px,11.5vw,52px)}
+  .conceptStandalone .conceptEssay p{font-size:15.5px;line-height:1.85}
+  .peoplePage .creditsHead h2{font-size:38px}
+  .peoplePage .disciplineTabs button span{font-size:14px}
+  .peoplePage .featuredProfileCard>strong{right:20px;top:24px}
+}
