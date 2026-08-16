@@ -7,6 +7,7 @@
     { "idx": 2, "version": "6", "when": 1786685400000, "tag": "0002_live_content_editor", "breakpoints": true },
     { "idx": 3, "version": "6", "when": 1786838400000, "tag": "0003_real_participation_flows", "breakpoints": true },
     { "idx": 4, "version": "6", "when": 1786924800000, "tag": "0004_remove_examples_and_add_live_content", "breakpoints": true },
-    { "idx": 5, "version": "6", "when": 1787011200000, "tag": "0005_shared_invitation_911", "breakpoints": true }
+    { "idx": 5, "version": "6", "when": 1787011200000, "tag": "0005_shared_invitation_911", "breakpoints": true },
+    { "idx": 6, "version": "6", "when": 1787097600000, "tag": "0006_discord_style_groups", "breakpoints": true }
   ]
 }
