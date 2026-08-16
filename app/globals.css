@@ -622,3 +622,16 @@ html{background:#fff}
   .peoplePage .profileMonogram{width:60px;height:60px}
   .peoplePage .profileIdentity h3{font-size:30px}
 }
+
+.conceptSubtitle{
+  max-width:760px;
+  margin:22px 0 0;
+  color:#595959;
+  font-size:clamp(15px,1.5vw,18px);
+  font-weight:650;
+  letter-spacing:.08em;
+}
+html[lang="zh"] .conceptHeadlineLine{white-space:nowrap}
+@media(max-width:520px){
+  .conceptSubtitle{margin-top:16px;font-size:15px}
+}
