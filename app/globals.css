@@ -38,3 +38,233 @@ html[dir="rtl"] .app{direction:ltr}html[dir="rtl"] .workspace,html[dir="rtl"] .l
 @media(max-width:800px){.conceptPage .top,.peoplePage .top{grid-template-columns:1fr auto;gap:8px}.conceptPage .top nav,.peoplePage .top nav{grid-column:1/-1;grid-row:2;justify-content:flex-start;border-top:1px solid #4b4943;padding-top:7px;width:100%}.peoplePage .top nav{border-color:var(--line)}.conceptPage .languagePicker,.peoplePage>.top .languagePicker{grid-column:2;grid-row:1}.conceptStandalone{padding:60px 20px 80px}.conceptStandalone>h1{padding-bottom:38px}.disciplineTabs{grid-template-columns:1fr}.disciplineTabs button{border-right:0;border-bottom:1px solid var(--ink);min-height:72px}.disciplineTabs button:last-child{border-bottom:0}}
 html{background:#20201d}.peoplePage,.peoplePage .publicCredits{background:#20201d;color:#f3f0e9}.peoplePage .top{border-color:#4b4943}.peoplePage .mark{color:inherit}.peoplePage .creditsHead{border-color:#56534d}.peoplePage .creditsHead p,.peoplePage .filterNote,.peoplePage .profileMiniCard p,.peoplePage .designerGrid small,.peoplePage .emptyDiscipline p{color:#aaa}.peoplePage .disciplineTabs{border-color:#77736b}.peoplePage .disciplineTabs button{border-color:#77736b}.peoplePage .disciplineTabs button:hover,.peoplePage .disciplineTabs button.active{background:#f3f0e9;color:#20201d}.peoplePage .designerGrid{border-color:#56534d}.peoplePage .designerGrid article,.peoplePage .profileMiniCard .miniBio{border-color:#56534d}.peoplePage .miniMonogram{background:#44433e;color:#f3f0e9}.peoplePage .emptyDiscipline{border-color:#56534d}.peoplePage>.copyright{border-color:#4b4943}.peoplePage .kicker{color:#aaa}
 @media(max-width:800px){.peoplePage .top nav{border-color:#4b4943}.peoplePage .disciplineTabs button{border-color:#77736b}}
+
+/* Public concept and contributor pages: calm, consistent editorial system. */
+html{background:#fff}
+.publicPage,
+.publicPage .publicCredits,
+.publicPage>.copyright{background:#fff;color:#111}
+.publicPage,
+.publicPage button,
+.publicPage input,
+.publicPage select,
+.publicPage textarea,
+.publicPage h1,
+.publicPage h2,
+.publicPage h3,
+.publicPage p,
+.publicPage span,
+.publicPage small,
+.publicPage strong,
+.publicPage b,
+.publicPage a,
+.publicPage .kicker{
+  font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",Arial,sans-serif;
+}
+.publicPage .top{
+  min-height:88px;
+  height:auto;
+  padding:18px clamp(22px,5vw,76px);
+  border-color:#d8d8d3;
+  grid-template-columns:minmax(250px,1fr) auto minmax(250px,1fr);
+  gap:28px;
+}
+.publicPage .mark{
+  color:#111;
+  font-size:13px;
+  font-weight:750;
+  line-height:1.35;
+  letter-spacing:.055em;
+}
+.publicPage .top nav{gap:4px}
+.publicPage .top nav a{
+  color:#111;
+  padding:10px 14px;
+  border-bottom:1px solid transparent;
+  font-size:12px;
+  font-weight:650;
+  line-height:1.2;
+  letter-spacing:.04em;
+}
+.publicPage .top nav a.active{border-color:#111}
+.publicPage .languagePicker{
+  color:#111!important;
+  background:#fff;
+  border:1px solid #111;
+  border-radius:0;
+  padding:4px 6px;
+}
+.publicPage .languagePicker>span{
+  color:#111;
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.06em;
+}
+.publicPage .languagePicker select{
+  color:#111!important;
+  background:#fff;
+  border-left-color:#bbb;
+  font-size:11px;
+  font-weight:650;
+}
+.publicPage .kicker{
+  color:#666;
+  font-size:11px;
+  font-weight:700;
+  line-height:1.4;
+  letter-spacing:.12em;
+}
+.conceptStandalone{
+  width:min(1380px,100%);
+  margin:0 auto;
+  padding:clamp(68px,8vw,118px) clamp(22px,7vw,96px) 118px;
+}
+.conceptStandalone>h1{
+  max-width:1050px;
+  margin:26px 0 0;
+  padding-bottom:48px;
+  border-color:#111;
+  color:#111;
+  font-size:clamp(42px,6.4vw,88px);
+  font-weight:560;
+  line-height:1.12;
+  letter-spacing:-.045em;
+}
+.conceptStandalone .conceptEssay{
+  columns:1;
+  max-width:790px;
+  margin:58px 0 68px clamp(0px,17vw,230px);
+}
+.conceptStandalone .conceptEssay p{
+  color:#292929;
+  margin:0 0 1.65em;
+  font-size:17px;
+  font-weight:400;
+  line-height:1.95;
+  letter-spacing:.015em;
+}
+.conceptStandalone .peopleCta{
+  margin-left:clamp(0px,17vw,230px);
+  border-color:#111;
+  color:#111;
+  font-size:14px;
+  font-weight:700;
+}
+.publicPage>.copyright{
+  padding:28px clamp(22px,7vw,96px);
+  border-color:#d8d8d3;
+  color:#666;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.08em;
+}
+.peoplePage .publicCredits{
+  width:min(1380px,100%);
+  margin:0 auto;
+  padding:clamp(68px,8vw,108px) clamp(22px,7vw,96px) 118px;
+}
+.peoplePage .creditsHead{
+  grid-template-columns:minmax(170px,.48fr) minmax(0,1fr);
+  gap:42px;
+  padding-bottom:38px;
+  border-color:#111;
+}
+.peoplePage .creditsHead h2{
+  color:#111;
+  font-size:clamp(40px,5.2vw,72px);
+  font-weight:560;
+  line-height:1.08;
+  letter-spacing:-.04em;
+}
+.peoplePage .creditsHead p{
+  align-self:end;
+  max-width:700px;
+  margin:0;
+  color:#444;
+  font-size:16px;
+  line-height:1.8;
+}
+.peoplePage .disciplineTabs{margin-top:32px;border-color:#111}
+.peoplePage .disciplineTabs button{
+  min-height:80px;
+  border-color:#111;
+  color:#111;
+  padding:18px 22px;
+}
+.peoplePage .disciplineTabs button span{
+  font-size:clamp(18px,2vw,27px);
+  font-weight:600;
+  letter-spacing:-.02em;
+}
+.peoplePage .disciplineTabs button b{font-size:11px}
+.peoplePage .disciplineTabs button:hover,
+.peoplePage .disciplineTabs button.active{background:#111;color:#fff}
+.peoplePage .filterNote{margin:16px 0 28px;color:#666;font-size:12px;line-height:1.6}
+.peoplePage .featuredProfileCard{
+  margin:0 0 28px;
+  padding:36px;
+  gap:38px;
+  border:1px solid #111;
+  background:#fff;
+  color:#111;
+}
+.peoplePage .profileIdentity .profileNumber,
+.peoplePage .profileIdentity small{font-size:10px;letter-spacing:.09em}
+.peoplePage .profileMonogram{border-color:#111;font-size:23px;font-weight:600}
+.peoplePage .profileIdentity h3{
+  margin:8px 0;
+  font-size:clamp(30px,3.5vw,48px);
+  font-weight:600;
+  line-height:1.05;
+  letter-spacing:-.04em;
+}
+.peoplePage .profileDetails{border-color:#bbb}
+.peoplePage .profileDetails .kicker{color:#666;opacity:1}
+.peoplePage .divisionTags span{border-color:#111;font-size:11px}
+.peoplePage .profileDetails p{max-width:650px;color:#333;font-size:15px;line-height:1.8}
+.peoplePage .profileDetails a{color:#111;font-size:13px;font-weight:650}
+.peoplePage .featuredProfileCard>strong{font-size:34px;font-weight:600}
+.peoplePage .featuredProfileCard>strong small{font-size:9px}
+.peoplePage .designerGrid{border-color:#d8d8d3}
+.peoplePage .designerGrid article{
+  min-height:132px;
+  padding:20px 16px;
+  border-color:#d8d8d3;
+  background:#fff;
+}
+.peoplePage .designerGrid article:nth-child(odd){border-color:#d8d8d3}
+.peoplePage .miniMonogram{background:#fff;border:1px solid #999;color:#111;font-size:10px;font-weight:650}
+.peoplePage .designerGrid h3{font-size:18px;font-weight:650;line-height:1.25}
+.peoplePage .designerGrid small{color:#666;font-size:10px;line-height:1.5}
+.peoplePage .profileMiniCard p{color:#555;font-size:11px;line-height:1.55}
+.peoplePage .profileMiniCard .miniBio{border-color:#d8d8d3}
+.peoplePage .designerGrid article>b{font-size:25px;font-weight:560}
+.peoplePage .emptyDiscipline{border-color:#d8d8d3;color:#111}
+.peoplePage .emptyDiscipline b{font-size:30px;font-weight:600}
+.peoplePage .emptyDiscipline p{color:#666}
+
+@media(max-width:800px){
+  .publicPage .top{grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:14px 20px}
+  .publicPage .mark{max-width:210px;font-size:11px}
+  .publicPage .top nav{grid-column:1/-1;grid-row:2;justify-content:flex-start;width:100%;padding-top:8px;border-top:1px solid #d8d8d3}
+  .publicPage .top nav a{padding:9px 12px 8px;font-size:11px}
+  .publicPage .languagePicker{grid-column:2;grid-row:1}
+  .conceptStandalone,.peoplePage .publicCredits{padding:58px 20px 78px}
+  .conceptStandalone>h1{padding-bottom:34px;font-size:clamp(38px,12vw,60px);line-height:1.1}
+  .conceptStandalone .conceptEssay{margin:38px 0 50px}
+  .conceptStandalone .conceptEssay p{font-size:16px;line-height:1.9}
+  .conceptStandalone .peopleCta{margin-left:0}
+  .peoplePage .creditsHead{grid-template-columns:1fr;gap:20px;padding-bottom:30px}
+  .peoplePage .creditsHead p{grid-column:1}
+  .peoplePage .disciplineTabs{grid-template-columns:repeat(3,1fr)}
+  .peoplePage .disciplineTabs button{min-height:64px;padding:12px 10px;border-right:1px solid #111;border-bottom:0}
+  .peoplePage .disciplineTabs button:last-child{border-right:0}
+  .peoplePage .disciplineTabs button span{font-size:15px}
+  .peoplePage .disciplineTabs button b{width:22px;height:22px;font-size:9px}
+  .peoplePage .featuredProfileCard{padding:24px;gap:24px}
+  .peoplePage .profileDetails{border-color:#bbb}
+}
+@media(max-width:480px){
+  .peoplePage .disciplineTabs button{justify-content:center}
+  .peoplePage .disciplineTabs button b{display:none}
+}
