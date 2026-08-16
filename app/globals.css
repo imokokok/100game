@@ -268,3 +268,73 @@ html{background:#fff}
   .peoplePage .disciplineTabs button{justify-content:center}
   .peoplePage .disciplineTabs button b{display:none}
 }
+
+/* Restrained project-red details keep the public pages expressive. */
+.publicPage{--public-red:#e25742}
+.publicPage .top nav a.active{border-color:var(--public-red);color:var(--public-red)}
+.conceptStandalone>h1{position:relative;padding-left:30px}
+.conceptStandalone>h1::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.09em;
+  bottom:calc(48px + .08em);
+  width:6px;
+  background:var(--public-red);
+}
+.conceptStandalone .conceptEssay{position:relative}
+.conceptStandalone .conceptEssay::before{
+  content:"";
+  display:block;
+  width:72px;
+  height:5px;
+  margin-bottom:34px;
+  background:var(--public-red);
+}
+.conceptStandalone .peopleCta{border-color:var(--public-red);color:#111}
+.conceptStandalone .peopleCta:hover{color:var(--public-red)}
+.peoplePage .creditsHead{position:relative;padding-left:24px}
+.peoplePage .creditsHead::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:38px;
+  width:5px;
+  background:var(--public-red);
+}
+.peoplePage .disciplineTabs{border:2px solid var(--public-red)}
+.peoplePage .disciplineTabs button:hover,
+.peoplePage .disciplineTabs button.active{background:var(--public-red);color:#fff}
+.peoplePage .featuredProfileCard{position:relative;border:2px solid var(--public-red)}
+.peoplePage .featuredProfileCard::before,
+.peoplePage .featuredProfileCard::after{
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  pointer-events:none;
+}
+.peoplePage .featuredProfileCard::before{left:-7px;top:-7px;border-left:5px solid var(--public-red);border-top:5px solid var(--public-red)}
+.peoplePage .featuredProfileCard::after{right:-7px;bottom:-7px;border-right:5px solid var(--public-red);border-bottom:5px solid var(--public-red)}
+.peoplePage .profileMonogram,
+.peoplePage .miniMonogram{border-color:var(--public-red);color:var(--public-red)}
+.peoplePage .divisionTags span{border-color:var(--public-red)}
+.peoplePage .profileDetails a{color:var(--public-red)}
+.peoplePage .designerGrid article{transition:border-color .18s,box-shadow .18s}
+.peoplePage .designerGrid article:hover{box-shadow:inset 4px 0 0 var(--public-red)}
+.publicPage>.copyright::before{
+  content:"";
+  display:inline-block;
+  width:32px;
+  height:3px;
+  margin-right:12px;
+  vertical-align:middle;
+  background:var(--public-red);
+}
+@media(max-width:800px){
+  .conceptStandalone>h1{padding-left:20px}
+  .conceptStandalone>h1::before{bottom:calc(34px + .08em);width:4px}
+  .peoplePage .creditsHead{padding-left:18px}
+  .peoplePage .creditsHead::before{bottom:30px;width:4px}
+}
