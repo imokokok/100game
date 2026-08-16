@@ -1,0 +1,6 @@
+"use client";
+import {useEffect,useState} from "react";
+import Link from "next/link";
+import {languageOptions,translations,type Language} from "../i18n";
+import {PublicDesignerRanking} from "../live-flows";
+export function PeoplePage(){const [lang,setLang]=useState<Language>("zh");useEffect(()=>{queueMicrotask(()=>{const saved=localStorage.getItem("hundred-language") as Language|null;if(saved&&translations[saved])setLang(saved)})},[]);useEffect(()=>{localStorage.setItem("hundred-language",lang);document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr"},[lang]);return <main className="peoplePage"><header className="top"><Link className="mark" href="/?public=1#concept">WHAT 100 PEOPLE DO TO A GAME</Link><div><Link className="ghost peopleLink" href="/?public=1#concept">← {lang==="zh"?"返回 Concept":"Back to Concept"}</Link><label className="languagePicker"><span><b aria-hidden="true">🌐</b>{lang==="zh"?"语言":"LANGUAGE"}</span><select value={lang} onChange={e=>setLang(e.target.value as Language)}>{languageOptions.map(x=><option key={x.value} value={x.value}>{x.label}</option>)}</select></label></div></header><PublicDesignerRanking lang={lang}/><footer className="copyright">© Huie Chen. All rights reserved.</footer></main>}
