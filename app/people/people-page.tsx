@@ -1,6 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-html-link-for-pages */
-import {useEffect,useState} from "react";
-import {languageOptions,translations,type Language} from "../i18n";
-import {PublicDesignerRanking} from "../live-flows";
-export function PeoplePage(){const [lang,setLang]=useState<Language>("zh");useEffect(()=>{queueMicrotask(()=>{const saved=localStorage.getItem("hundred-language") as Language|null;if(saved&&translations[saved])setLang(saved)});const prefetch=document.createElement("link");prefetch.rel="prefetch";prefetch.href="/concept";prefetch.as="document";document.head.append(prefetch);return()=>prefetch.remove()},[]);useEffect(()=>{localStorage.setItem("hundred-language",lang);document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr"},[lang]);return <main className="peoplePage"><header className="top"><a className="mark" href="/">WHAT 100 PEOPLE DO TO A GAME</a><nav aria-label={lang==="zh"?"公开页面":"Public pages"}><a href="/concept">Concept</a><a className="active" href="/people">{lang==="zh"?"共同创作者":"People"}</a></nav><label className="languagePicker"><span><b aria-hidden="true">🌐</b>{lang==="zh"?"语言":"LANGUAGE"}</span><select value={lang} onChange={e=>setLang(e.target.value as Language)}>{languageOptions.map(x=><option key={x.value} value={x.value}>{x.label}</option>)}</select></label></header><PublicDesignerRanking lang={lang}/><footer className="copyright">© Huie Chen. All rights reserved.</footer></main>}
+import {PublicPages} from "../concept/concept-page";
+
+export function PeoplePage(){return <PublicPages initialView="people"/>}
