@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const participant = participantId(req);
+  const participant = await participantId(req);
   if (!participant && !isOwner(req)) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
   const ownerView = isOwner(req);
   const query = ownerView

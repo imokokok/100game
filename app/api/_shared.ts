@@ -19,13 +19,21 @@ export function isOwner(req: NextRequest) {
   return Boolean(ownerId && userId && ownerId === userId);
 }
 
-export function participantId(req: NextRequest) {
-  return req.cookies.get("participant")?.value ?? null;
+export async function sha256(value:string){
+  const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));
+  return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+
+export async function participantId(req: NextRequest) {
+  const token=req.cookies.get("participant_session")?.value;
+  if(!token)return null;
+  const row=await d1().prepare("SELECT participant_id FROM participant_sessions WHERE token_hash = ? AND expires_at > ?").bind(await sha256(token),Date.now()).first<{participant_id:string}>();
+  return row?.participant_id??null;
 }
 
 export async function canAccessGroup(req: NextRequest, groupId: string) {
   if (isOwner(req)) return true;
-  const participant = participantId(req);
+  const participant = await participantId(req);
   if (!participant) return false;
   const member = await d1().prepare("SELECT 1 FROM group_members WHERE group_id = ? AND participant_id = ?").bind(groupId, participant).first();
   return Boolean(member);

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { d1, isOwner, participantId } from "../_shared";
 
 export async function GET(req: NextRequest) {
-  const participant = participantId(req);
+  const participant = await participantId(req);
   if (!participant && !isOwner(req)) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
   if (isOwner(req) && !participant) {
     const rows = await d1().prepare("SELECT id, title_zh, title_en, status, sort_order FROM tasks ORDER BY sort_order").all();
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const participant = participantId(req);
+  const participant = await participantId(req);
   if (!participant) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
   const body = await req.json().catch(() => ({}));
   const taskId = String(body.taskId ?? "");
@@ -34,4 +34,26 @@ export async function POST(req: NextRequest) {
     ON CONFLICT(participant_id, task_id) DO UPDATE SET body = excluded.body, status = excluded.status, updated_at = excluded.updated_at
   `).bind(crypto.randomUUID(), participant, taskId, text, status, now).run();
   return NextResponse.json({ ok: true, status, updatedAt: now });
+}
+
+export async function PUT(req: NextRequest) {
+  if (!isOwner(req)) return NextResponse.json({ error: "Only the Owner can create tasks" }, { status: 403 });
+  const body = await req.json().catch(() => ({}));
+  const titleZh = String(body.titleZh ?? "").trim().slice(0, 160);
+  const titleEn = String(body.titleEn ?? titleZh).trim().slice(0, 160);
+  if (!titleZh) return NextResponse.json({ error: "Task title required" }, { status: 400 });
+  const id = crypto.randomUUID();
+  const order = Number((await d1().prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_order FROM tasks").first<{next_order:number}>())?.next_order ?? 1);
+  await d1().prepare("INSERT INTO tasks (id, title_zh, title_en, status, sort_order) VALUES (?, ?, ?, 'active', ?)").bind(id, titleZh, titleEn, order).run();
+  return NextResponse.json({ task: { id, title_zh: titleZh, title_en: titleEn, status: "active", sort_order: order } }, { status: 201 });
+}
+
+export async function PATCH(req: NextRequest) {
+  if (!isOwner(req)) return NextResponse.json({ error: "Only the Owner can update tasks" }, { status: 403 });
+  const body = await req.json().catch(() => ({}));
+  const id = String(body.id ?? "");
+  const status = body.status === "archived" ? "archived" : "active";
+  if (!id) return NextResponse.json({ error: "Task required" }, { status: 400 });
+  await d1().prepare("UPDATE tasks SET status = ? WHERE id = ?").bind(status, id).run();
+  return NextResponse.json({ ok: true });
 }

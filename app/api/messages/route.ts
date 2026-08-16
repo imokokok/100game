@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const message = String(body.body ?? "").trim().slice(0, 4000);
   if (!groupId || !message || !(await canAccessGroup(req, groupId))) return NextResponse.json({ error: "Invalid group message" }, { status: 403 });
   const ownerView = isOwner(req);
-  const author = ownerView ? "owner" : (participantId(req) ?? "");
+  const author = ownerView ? "owner" : ((await participantId(req)) ?? "");
   if (!author) return NextResponse.json({ error: "Sign-in required" }, { status: 401 });
   const id = crypto.randomUUID();
   const now = Date.now();
