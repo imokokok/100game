@@ -11,10 +11,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const { token } = await req.json().catch(() => ({}));
   if (!token) return NextResponse.json({ error: "Missing invitation" }, { status: 400 });
-  const row = await d1().prepare("SELECT i.participant_id AS id, p.display_code, p.locale FROM invitations i JOIN participants p ON p.id = i.participant_id WHERE i.token_hash = ? AND i.revoked_at IS NULL AND (i.expires_at IS NULL OR i.expires_at > ?)").bind(await sha256(String(token).trim()), Date.now()).first();
+  const row = await d1().prepare("SELECT i.id AS invitation_id, i.participant_id AS id, i.reusable, p.display_code, p.locale FROM invitations i LEFT JOIN participants p ON p.id = i.participant_id WHERE i.token_hash = ? AND i.revoked_at IS NULL AND (i.expires_at IS NULL OR i.expires_at > ?)").bind(await sha256(String(token).trim()), Date.now()).first<{invitation_id:string;id:string;reusable:number;display_code:string|null;locale:string|null}>();
   if (!row) return NextResponse.json({ error: "Invalid or expired invitation" }, { status: 403 });
-  const session=crypto.randomUUID()+crypto.randomUUID();const now=Date.now();const expires=now+60*60*24*30*1000;await d1().prepare("INSERT INTO participant_sessions (token_hash, participant_id, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(await sha256(session),String(row.id),now,expires).run();
-  const res = NextResponse.json({ participant: row });
+  const now=Date.now();let participant={id:String(row.id),display_code:String(row.display_code),locale:row.locale||"zh"};
+  if(row.reusable){const id=crypto.randomUUID();const count=Number((await d1().prepare("SELECT COUNT(*) AS n FROM participants").first<{n:number}>())?.n??0)+1;participant={id,display_code:`P-${String(count).padStart(3,"0")}`,locale:"zh"};await d1().prepare("INSERT INTO participants (id, display_code, locale, created_at, last_active_at, activity_count) VALUES (?, ?, 'zh', ?, NULL, 0)").bind(id,participant.display_code,now).run()}
+  if(!participant.id||!row.reusable&&!row.display_code)return NextResponse.json({error:"Invitation participant unavailable"},{status:403});
+  const session=crypto.randomUUID()+crypto.randomUUID();const expires=now+60*60*24*30*1000;await d1().prepare("INSERT INTO participant_sessions (token_hash, participant_id, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(await sha256(session),participant.id,now,expires).run();
+  const res = NextResponse.json({ participant });
   res.cookies.set("participant_session", session, { httpOnly: true, sameSite: "strict", secure: true, maxAge: 60 * 60 * 24 * 30 });
   return res;
 }

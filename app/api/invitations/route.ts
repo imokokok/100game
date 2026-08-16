@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
   if (!isOwner(req)) return NextResponse.json({ error: "Owner sign-in required" }, { status: 401 });
   const rows = await d1().prepare(`
     SELECT i.id, i.label, i.token_hint, i.created_at, i.expires_at, i.revoked_at,
-      p.id AS participant_id, p.display_code, p.last_active_at, p.activity_count
-    FROM invitations i JOIN participants p ON p.id = i.participant_id
+      p.id AS participant_id, COALESCE(p.display_code, 'SHARED') AS display_code, p.last_active_at, p.activity_count
+    FROM invitations i LEFT JOIN participants p ON p.id = i.participant_id
     ORDER BY i.created_at DESC LIMIT 200
   `).all();
   return NextResponse.json({ invitations: rows.results });
