@@ -690,8 +690,10 @@ html[lang="zh"] .conceptHeadlineLine{white-space:nowrap}
 .entryGate .ownerEntry:hover span,
 .entryGate .ownerEntry:focus-visible span{color:#ddd}
 .ownerGroupSignin{display:inline-block;text-decoration:none}
+.worktopLead{display:flex;align-items:center;gap:12px}.worktopLead>a{color:var(--ink);text-decoration:none;border:1px solid var(--line);padding:8px 10px;font:700 12px/1 Arial,sans-serif;letter-spacing:0}.worktopLead>a:hover,.worktopLead>a:focus-visible{background:var(--red);border-color:var(--red);color:#fff}.publicBack{border:1px solid var(--line)!important;padding:9px 12px!important;color:var(--ink)!important}.publicBack:hover,.publicBack:focus-visible{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}.groupCreateNote{margin:0;padding:4px 26px 8px;color:#666;line-height:1.6}
 @media(max-width:800px){
   .entryChoices .entryChoice{min-height:150px;padding:24px}
+  .worktop{justify-content:space-between}.worktopLead>span{display:none}.worktopLead>a{padding:8px}.publicPage .top{flex-wrap:wrap}.publicPage .top nav{order:3;width:100%;display:flex;overflow-x:auto}.publicBack{margin-right:auto}
 }
 
 /* Shared wordmark: only 100, PEOPLE, and GAME are bold. */

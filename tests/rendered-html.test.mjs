@@ -21,9 +21,27 @@ test("server-renders the real access page and resilient links", async () => {
   assert.match(html, /<title>WHAT 100 PEOPLE DO TO A GAME<\/title>/i);
   assert.match(html, /href="\/concept\?public=1"/);
   assert.match(html, /href="\/\?access=invite"/);
-  assert.match(html, /Owner 管理入口/);
+  assert.doesNotMatch(html, /Owner 管理入口/);
+  assert.match(html, /进入任务、问卷、文件与聊天/);
   assert.match(html, /© 2026 Huie Chen/);
   assert.doesNotMatch(html, /HuieChen/);
+});
+
+test("invited participants can create and immediately join chat groups", async () => {
+  const [groupsApi, flows, studio, concept] = await Promise.all([
+    readFile(new URL("../app/api/groups/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(groupsApi, /if \(!participant && !ownerView\)/);
+  assert.match(groupsApi, /\[participant, \.\.\.requestedMembers\]/);
+  assert.match(groupsApi, /canCreate: true/);
+  assert.match(flows, /创建你的第一个聊天组/);
+  assert.match(flows, /canCreate&&<button className="addServer"/);
+  assert.doesNotMatch(flows, /Owner 登录并创建小组/);
+  assert.match(studio, /worktopLead/);
+  assert.match(concept, /className="publicBack" href="\/"/);
 });
 
 test("keeps the wordmark weights and public name consistent", async () => {
