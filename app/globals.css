@@ -486,3 +486,26 @@ html{background:#fff}
   .peoplePage .disciplineTabs button span{font-size:14px}
   .peoplePage .featuredProfileCard>strong{right:20px;top:24px}
 }
+
+/* Correction: red fields are for short labels, never for the Concept headline. */
+.conceptStandalone>h1{
+  max-width:760px;
+  margin-top:34px;
+  padding-bottom:0;
+  font-size:clamp(44px,5.3vw,72px);
+  font-weight:600;
+  line-height:1.12;
+  letter-spacing:-.04em;
+}
+.conceptHeadlineLine.accent{
+  margin-top:2px;
+  padding:0;
+  background:transparent;
+  color:#111;
+}
+@media(max-width:800px){
+  .conceptStandalone>h1{max-width:560px;margin-top:28px;font-size:clamp(38px,10vw,54px)}
+}
+@media(max-width:520px){
+  .conceptStandalone>h1{font-size:clamp(36px,10vw,46px);line-height:1.15}
+}
