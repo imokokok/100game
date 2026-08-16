@@ -635,3 +635,43 @@ html[lang="zh"] .conceptHeadlineLine{white-space:nowrap}
 @media(max-width:520px){
   .conceptSubtitle{margin-top:16px;font-size:15px}
 }
+
+/* Entry choices use native links so navigation still works before hydration. */
+.entryChoices .entryChoice{
+  position:relative;
+  display:grid;
+  align-content:start;
+  gap:14px;
+  min-height:190px;
+  padding:30px;
+  border:0;
+  background:var(--red);
+  color:#fff;
+  text-align:left;
+  text-decoration:none;
+}
+.entryChoices .entryChoice:hover,
+.entryChoices .entryChoice:focus-visible{background:#a93629}
+.entryChoices .entryChoice b{
+  font-family:inherit;
+  font-size:clamp(25px,3vw,36px);
+  font-weight:700;
+}
+.entryChoices .entryChoice span{
+  max-width:320px;
+  color:#fff;
+  font-size:14px;
+  line-height:1.65;
+  opacity:.9;
+}
+.entryChoices .entryChoice i{
+  position:absolute;
+  right:25px;
+  bottom:20px;
+  font-size:27px;
+}
+.entryGate .entryTop>a{color:#111;text-decoration:none}
+.entryGate .creatorEntry{display:inline-block}
+@media(max-width:800px){
+  .entryChoices .entryChoice{min-height:150px;padding:24px}
+}
