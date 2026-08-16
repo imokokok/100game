@@ -509,3 +509,116 @@ html{background:#fff}
 @media(max-width:520px){
   .conceptStandalone>h1{font-size:clamp(36px,10vw,46px);line-height:1.15}
 }
+
+/* Public layout correction: one red, one grid, no horizontal clipping. */
+.publicPage{--public-red:#e95743;overflow-x:clip}
+.entryChoices button,
+.entryChoices button:nth-child(2),
+.entryChoices button:hover,
+.gateInvite .primary,
+.conceptLabelBlock,
+.conceptStandalone .peopleCta,
+.peoplePage .creditsHead .kicker,
+.peoplePage .disciplineTabs button,
+.peoplePage .disciplineTabs button:hover,
+.peoplePage .disciplineTabs button.active,
+.peoplePage .profileIdentity,
+.peoplePage .divisionTags span,
+.peoplePage .miniMonogram{background:var(--public-red)}
+.peoplePage .disciplineTabs button.active{box-shadow:inset 0 -6px 0 #111}
+.conceptStandalone{
+  width:min(1120px,100%);
+  padding-left:clamp(24px,5vw,64px);
+  padding-right:clamp(24px,5vw,64px);
+}
+.conceptStandalone .conceptEssay{
+  max-width:760px;
+  margin:58px auto 68px;
+}
+.conceptStandalone .peopleCta{
+  margin-left:max(0px,calc((100% - 760px)/2));
+}
+.peoplePage .publicCredits{
+  width:min(1120px,100%);
+  padding-left:clamp(24px,5vw,64px);
+  padding-right:clamp(24px,5vw,64px);
+}
+.peoplePage .creditsHead{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:22px;
+  padding-bottom:34px;
+}
+.peoplePage .creditsHead h2{
+  margin:0;
+  max-width:760px;
+  font-size:clamp(42px,5vw,64px);
+}
+.peoplePage .creditsHead p{
+  grid-column:1;
+  max-width:720px;
+  margin:0;
+  align-self:auto;
+}
+.peoplePage .disciplineTabs{width:100%}
+.peoplePage .featuredProfileCard{
+  display:grid;
+  grid-template-columns:minmax(260px,300px) minmax(0,1fr);
+  min-width:0;
+}
+.peoplePage .profileIdentity{
+  grid-template-columns:72px minmax(0,1fr);
+  gap:16px;
+  min-width:0;
+}
+.peoplePage .profileMonogram{width:72px;height:72px}
+.peoplePage .profileIdentity>div:last-child{min-width:0}
+.peoplePage .profileIdentity h3{
+  max-width:100%;
+  margin:7px 0 0;
+  font-size:clamp(29px,3.2vw,38px);
+  line-height:1.05;
+  overflow-wrap:normal;
+  word-break:keep-all;
+  white-space:nowrap;
+}
+.peoplePage .profileDetails{
+  min-width:0;
+  margin:0;
+  padding:32px 96px 32px 34px;
+  overflow:hidden;
+}
+.peoplePage .profileDetails p{overflow-wrap:anywhere}
+.peoplePage .featuredProfileCard>strong{
+  position:absolute;
+  right:26px;
+  bottom:28px;
+  padding:0;
+  color:#111;
+}
+.peoplePage .divisionTags{max-width:100%}
+.peoplePage .divisionTags span{white-space:nowrap}
+.peoplePage .designerGrid,
+.peoplePage .profileMiniCard{min-width:0}
+@media(max-width:900px){
+  .peoplePage .featuredProfileCard{grid-template-columns:1fr}
+  .peoplePage .profileDetails{padding:26px 22px}
+  .peoplePage .featuredProfileCard>strong{right:22px;top:26px;bottom:auto;color:#fff}
+}
+@media(max-width:800px){
+  .conceptStandalone .conceptEssay{margin:44px 0 52px}
+  .conceptStandalone .peopleCta{margin-left:0}
+  .peoplePage .publicCredits{padding-left:20px;padding-right:20px}
+  .peoplePage .creditsHead{gap:16px;padding-bottom:28px}
+  .peoplePage .creditsHead h2{font-size:clamp(38px,10vw,48px)}
+  .peoplePage .disciplineTabs button.active{box-shadow:inset 0 -4px 0 #111}
+  .peoplePage .profileIdentity h3{font-size:34px}
+}
+@media(max-width:520px){
+  .conceptStandalone,.peoplePage .publicCredits{padding-left:16px;padding-right:16px}
+  .peoplePage .disciplineTabs{gap:5px}
+  .peoplePage .disciplineTabs button{min-width:0}
+  .peoplePage .profileIdentity{grid-template-columns:60px minmax(0,1fr);padding:22px 18px}
+  .peoplePage .profileMonogram{width:60px;height:60px}
+  .peoplePage .profileIdentity h3{font-size:30px}
+}
