@@ -672,6 +672,24 @@ html[lang="zh"] .conceptHeadlineLine{white-space:nowrap}
 }
 .entryGate .entryTop>a{color:#111;text-decoration:none}
 .entryGate .creatorEntry{display:inline-block}
+.entryGate .ownerEntry{
+  position:relative;
+  display:grid;
+  gap:5px;
+  width:min(520px,100%);
+  margin-top:20px;
+  padding:17px 48px 17px 18px;
+  border:1px solid #111;
+  color:#111;
+  text-decoration:none;
+}
+.entryGate .ownerEntry span{color:#555;font-size:12px;line-height:1.5}
+.entryGate .ownerEntry i{position:absolute;right:18px;top:50%;translate:0 -50%;font-size:20px}
+.entryGate .ownerEntry:hover,
+.entryGate .ownerEntry:focus-visible{background:#111;color:#fff}
+.entryGate .ownerEntry:hover span,
+.entryGate .ownerEntry:focus-visible span{color:#ddd}
+.ownerGroupSignin{display:inline-block;text-decoration:none}
 @media(max-width:800px){
   .entryChoices .entryChoice{min-height:150px;padding:24px}
 }
