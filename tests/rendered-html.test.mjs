@@ -41,6 +41,9 @@ test("invited participants can create and immediately join chat groups", async (
   assert.match(groupsApi, /defaultChannel:/);
   assert.match(flows, /创建你的第一个聊天组/);
   assert.match(flows, /正在连接聊天/);
+  assert.match(flows, /function GroupFileGallery/);
+  assert.match(flows, /className="imageLightbox"/);
+  assert.doesNotMatch(flows, /target="_blank" rel="noreferrer"><b>{file\.name}/);
   assert.match(flows, /canCreate&&<button className="addServer"/);
   assert.doesNotMatch(flows, /Owner 登录并创建小组/);
   assert.match(studio, /worktopLead/);
