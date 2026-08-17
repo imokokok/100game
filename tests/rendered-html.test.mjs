@@ -97,3 +97,20 @@ test("keeps background tabs quiet and uses the shared workspace theme", async ()
   assert.match(styles, /html\{scroll-behavior:auto\}/);
   assert.match(styles, /\.communityPage,\.discordEmpty\{background:var\(--paper\)/);
 });
+
+test("chat uses original project reaction marks with a working toggle request", async () => {
+  const [api, flows, styles] = await Promise.all([
+    readFile(new URL("../app/api/reactions/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  for (const reaction of ["r-spark","r-pulse","r-orbit","r-bloom","r-echo"]) {
+    assert.match(api, new RegExp(reaction));
+    assert.match(flows, new RegExp(reaction));
+  }
+  assert.doesNotMatch(`${api}\n${flows}`, /👍|❤️|✨|🎮|👀/u);
+  assert.match(flows, /response\?\.ok/);
+  assert.match(flows, /aria-pressed=\{active\}/);
+  assert.match(styles, /Original project reaction marks/);
+  assert.match(styles, /touch-action:manipulation/);
+});

@@ -761,6 +761,30 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .conversation{background:#faf8f3;color:var(--ink)}.conversation>header{border-color:var(--line);background:#fff}.conversation>header small,.conversation>header>span{color:#716c64}
 .discordMessages article:hover{background:#f0ece4}.messageAvatar,.memberAvatar{border-radius:0;background:var(--red)}.messageBody time{color:#777169}
 .messageActions button,.reactionRow button,.editComposer button{border-color:#cfc8bc;background:#fff;color:var(--ink);border-radius:0}
+
+/* Original project reaction marks — drawn entirely with CSS, without platform emoji artwork. */
+.reactionRow .projectReaction{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:40px;height:36px;padding:5px 9px;border:1px solid #cfc8bc;background:#fff;color:var(--ink);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.reactionRow .projectReaction:hover,.reactionRow .projectReaction:focus-visible{border-color:var(--red);background:#fff4f1;outline:none}
+.reactionRow .projectReaction.active{border-color:var(--red);background:var(--red);color:#fff}
+.reactionRow .projectReaction:disabled{opacity:.55;cursor:wait}
+.reactionRow .projectReaction>span:last-child:not(.reactionGlyph){font:700 12px/1 var(--mono)}
+.reactionGlyph{position:relative;display:inline-block;width:20px;height:20px;flex:0 0 20px;color:currentColor}
+.reactionGlyph i{position:absolute;display:block;background:currentColor}
+.reactionGlyph.r-spark i:nth-child(1){width:6px;height:20px;left:7px;top:0;clip-path:polygon(50% 0,70% 38%,100% 50%,70% 62%,50% 100%,30% 62%,0 50%,30% 38%)}
+.reactionGlyph.r-spark i:nth-child(2){width:20px;height:6px;left:0;top:7px;clip-path:polygon(0 50%,38% 30%,50% 0,62% 30%,100% 50%,62% 70%,50% 100%,38% 70%)}
+.reactionGlyph.r-spark i:nth-child(3){width:4px;height:4px;border-radius:50%;right:0;top:0}
+.reactionGlyph.r-pulse i:nth-child(1){width:16px;height:16px;border:2px solid currentColor;background:transparent;border-radius:50%;left:2px;top:2px}
+.reactionGlyph.r-pulse i:nth-child(2){width:8px;height:8px;border-radius:50%;left:6px;top:6px}
+.reactionGlyph.r-pulse i:nth-child(3){width:3px;height:3px;border-radius:50%;right:0;top:1px}
+.reactionGlyph.r-orbit i:nth-child(1){width:18px;height:10px;border:2px solid currentColor;background:transparent;border-radius:50%;left:1px;top:5px;transform:rotate(-28deg)}
+.reactionGlyph.r-orbit i:nth-child(2){width:6px;height:6px;border-radius:50%;left:7px;top:7px}
+.reactionGlyph.r-orbit i:nth-child(3){width:4px;height:4px;border-radius:50%;right:1px;top:2px}
+.reactionGlyph.r-bloom i:nth-child(1),.reactionGlyph.r-bloom i:nth-child(2){width:8px;height:14px;border-radius:8px 8px 2px 8px;left:6px;top:0;transform-origin:50% 100%}
+.reactionGlyph.r-bloom i:nth-child(2){transform:rotate(120deg)}
+.reactionGlyph.r-bloom i:nth-child(3){width:8px;height:14px;border-radius:8px 8px 2px 8px;left:6px;top:0;transform-origin:50% 100%;transform:rotate(240deg)}
+.reactionGlyph.r-echo i:nth-child(1){width:3px;height:8px;left:2px;top:6px}
+.reactionGlyph.r-echo i:nth-child(2){width:3px;height:14px;left:8px;top:3px}
+.reactionGlyph.r-echo i:nth-child(3){width:3px;height:20px;left:14px;top:0}
 .editComposer input{background:#fff;color:var(--ink);border-color:#aaa}
 .emptyChannel{color:#777169}.emptyChannel b{color:var(--ink)}
 .discordComposer{background:#fff;border:1px solid #cfc8bc;border-radius:0}.discordComposer textarea{color:var(--ink)}.discordComposer button{color:var(--ink)}.discordComposer button:last-child{border-radius:0;background:var(--red)}
