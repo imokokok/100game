@@ -37,7 +37,10 @@ test("invited participants can create and immediately join chat groups", async (
   assert.match(groupsApi, /if \(!participant && !ownerView\)/);
   assert.match(groupsApi, /\[participant, \.\.\.requestedMembers\]/);
   assert.match(groupsApi, /canCreate: true/);
+  assert.match(groupsApi, /default_channel_id/);
+  assert.match(groupsApi, /defaultChannel:/);
   assert.match(flows, /创建你的第一个聊天组/);
+  assert.match(flows, /正在连接聊天/);
   assert.match(flows, /canCreate&&<button className="addServer"/);
   assert.doesNotMatch(flows, /Owner 登录并创建小组/);
   assert.match(studio, /worktopLead/);

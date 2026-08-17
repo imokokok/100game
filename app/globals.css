@@ -691,6 +691,7 @@ html[lang="zh"] .conceptHeadlineLine{white-space:nowrap}
 .entryGate .ownerEntry:focus-visible span{color:#ddd}
 .ownerGroupSignin{display:inline-block;text-decoration:none}
 .worktopLead{display:flex;align-items:center;gap:12px}.worktopLead>a{color:var(--ink);text-decoration:none;border:1px solid var(--line);padding:8px 10px;font:700 12px/1 Arial,sans-serif;letter-spacing:0}.worktopLead>a:hover,.worktopLead>a:focus-visible{background:var(--red);border-color:var(--red);color:#fff}.publicBack{border:1px solid var(--line)!important;padding:9px 12px!important;color:var(--ink)!important}.publicBack:hover,.publicBack:focus-visible{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}.groupCreateNote{margin:0;padding:4px 26px 8px;color:#666;line-height:1.6}
+.chatLoading{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#f0b232;color:#20201d;font-size:13px}.chatLoading button{border:1px solid #20201d;background:transparent;padding:5px 10px;font-weight:700}
 @media(max-width:800px){
   .entryChoices .entryChoice{min-height:150px;padding:24px}
   .worktop{justify-content:space-between}.worktopLead>span{display:none}.worktopLead>a{padding:8px}.publicPage .top{flex-wrap:wrap}.publicPage .top nav{order:3;width:100%;display:flex;overflow-x:auto}.publicBack{margin-right:auto}

@@ -11,13 +11,14 @@ export async function POST(req: NextRequest) {
   const members = [...new Set(participant ? [participant, ...requestedMembers] : requestedMembers)].slice(0, 100);
   if (!name) return NextResponse.json({ error: "Group name required" }, { status: 400 });
   const id = crypto.randomUUID();
+  const channelId = crypto.randomUUID();
   const now = Date.now();
   const creator = ownerView ? req.headers.get("oai-authenticated-user-id") ?? "owner" : participant!;
   const statements = [d1().prepare("INSERT INTO groups (id, name, created_by, created_at) VALUES (?, ?, ?, ?)").bind(id, name, creator, now)];
-  statements.push(d1().prepare("INSERT INTO group_channels (id, group_id, name, kind, position, created_at) VALUES (?, ?, 'general', 'text', 0, ?)").bind(crypto.randomUUID(), id, now));
+  statements.push(d1().prepare("INSERT INTO group_channels (id, group_id, name, kind, position, created_at) VALUES (?, ?, 'general', 'text', 0, ?)").bind(channelId, id, now));
   for (const participant of members) statements.push(d1().prepare("INSERT OR IGNORE INTO group_members (group_id, participant_id, joined_at) SELECT ?, id, ? FROM participants WHERE id = ?").bind(id, now, participant));
   await d1().batch(statements);
-  return NextResponse.json({ group: { id, name, memberCount: members.length } }, { status: 201 });
+  return NextResponse.json({ group: { id, name, memberCount: members.length, defaultChannel: { id: channelId, group_id: id, name: "general", kind: "text", position: 0 } } }, { status: 201 });
 }
 
 export async function GET(req: NextRequest) {
@@ -25,8 +26,14 @@ export async function GET(req: NextRequest) {
   if (!participant && !isOwner(req)) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
   const ownerView = isOwner(req);
   const query = ownerView
-    ? `SELECT g.id, g.name, g.created_at, COUNT(gm.participant_id) AS member_count FROM groups g LEFT JOIN group_members gm ON gm.group_id = g.id GROUP BY g.id ORDER BY g.created_at DESC`
-    : `SELECT g.id, g.name, g.created_at, COUNT(all_members.participant_id) AS member_count FROM groups g JOIN group_members mine ON mine.group_id = g.id AND mine.participant_id = ? LEFT JOIN group_members all_members ON all_members.group_id = g.id GROUP BY g.id ORDER BY g.created_at DESC`;
+    ? `SELECT g.id, g.name, g.created_at, COUNT(gm.participant_id) AS member_count,
+        (SELECT id FROM group_channels WHERE group_id = g.id ORDER BY position, created_at LIMIT 1) AS default_channel_id,
+        (SELECT name FROM group_channels WHERE group_id = g.id ORDER BY position, created_at LIMIT 1) AS default_channel_name
+      FROM groups g LEFT JOIN group_members gm ON gm.group_id = g.id GROUP BY g.id ORDER BY g.created_at DESC`
+    : `SELECT g.id, g.name, g.created_at, COUNT(all_members.participant_id) AS member_count,
+        (SELECT id FROM group_channels WHERE group_id = g.id ORDER BY position, created_at LIMIT 1) AS default_channel_id,
+        (SELECT name FROM group_channels WHERE group_id = g.id ORDER BY position, created_at LIMIT 1) AS default_channel_name
+      FROM groups g JOIN group_members mine ON mine.group_id = g.id AND mine.participant_id = ? LEFT JOIN group_members all_members ON all_members.group_id = g.id GROUP BY g.id ORDER BY g.created_at DESC`;
   const rows = ownerView ? await d1().prepare(query).all() : await d1().prepare(query).bind(participant).all();
   return NextResponse.json({ groups: rows.results.map(row=>({...row,can_manage:ownerView})), canManage: ownerView, canCreate: true });
 }
