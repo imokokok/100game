@@ -12,8 +12,7 @@ export async function GET(req: NextRequest) {
     FROM messages m LEFT JOIN participants p ON p.id = m.participant_id
     WHERE m.group_id = ? AND m.channel_id = ? ORDER BY m.created_at ASC LIMIT 200
   `).bind(groupId,channelId).all();
-  const reactions=await d1().prepare("SELECT message_id, emoji, COUNT(*) AS count FROM message_reactions WHERE message_id IN (SELECT id FROM messages WHERE group_id = ? AND channel_id = ?) GROUP BY message_id, emoji").bind(groupId,channelId).all();
-  return NextResponse.json({ messages: rows.results, reactions: reactions.results });
+  return NextResponse.json({ messages: rows.results });
 }
 
 export async function POST(req: NextRequest) {
