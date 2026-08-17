@@ -39,8 +39,8 @@ test("invited participants can create and immediately join chat groups", async (
   assert.match(groupsApi, /canCreate: true/);
   assert.match(groupsApi, /default_channel_id/);
   assert.match(groupsApi, /defaultChannel:/);
-  assert.match(flows, /创建你的第一个聊天组/);
-  assert.match(flows, /正在连接聊天/);
+  assert.match(flows, /u\.createChat/);
+  assert.match(flows, /u\.loading/);
   assert.match(flows, /function GroupFileGallery/);
   assert.match(flows, /className="imageLightbox"/);
   assert.doesNotMatch(flows, /target="_blank" rel="noreferrer"><b>{file\.name}/);
@@ -48,6 +48,25 @@ test("invited participants can create and immediately join chat groups", async (
   assert.doesNotMatch(flows, /Owner 登录并创建小组/);
   assert.match(studio, /worktopLead/);
   assert.match(concept, /className="publicBack" href="\/"/);
+});
+
+test("language switching uses complete local copy without an online translator", async () => {
+  const [locale, ui, studio, concept, flows] = await Promise.all([
+    readFile(new URL("../app/locale-copy.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/ui-copy.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+  ]);
+  for (const language of ["zh","en","ja","es","fr","ar","hi","bn","sw","ha","id","pt"]) {
+    assert.match(locale, new RegExp(`(?:^|\\s)${language}:\\{`, "m"));
+    assert.match(ui, new RegExp(`(?:^|\\s)${language}:\\{`, "m"));
+  }
+  assert.match(concept, /c\.essay\.map/);
+  assert.match(concept, /c\.headline\[0\]/);
+  assert.match(flows, /const u=uiCopy\[lang\]/);
+  assert.doesNotMatch(studio, /\/ LANGUAGE/);
+  assert.doesNotMatch(`${locale}\n${ui}\n${studio}\n${concept}\n${flows}`, /translate\.google|deepl|libretranslate|microsofttranslator/i);
 });
 
 test("keeps the wordmark weights and public name consistent", async () => {
