@@ -738,3 +738,34 @@ html[lang="zh"] .conceptHeadlineLine{white-space:nowrap}
 .brand .wordmarkPhrase>span,
 .brand .wordmarkPhrase>strong{display:inline;font:inherit}
 .brand .wordmarkPhrase>strong{font-weight:800}
+
+/* Unified participant workspace: one visual language, lighter rendering. */
+html{scroll-behavior:auto}
+body,button,input,textarea,select{font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Arial,sans-serif}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.app .intro h1,.app .page>h1,.app .sectionTitle,.app .task h3,.discordEmpty h1,.groupModal header h2{font-family:inherit}
+.task,.serverRail button{transition:none}.task:hover{transform:none}
+.communityPage,.discordEmpty{background:var(--paper);color:var(--ink)}
+.discordEmpty{border-top:1px solid var(--line)}
+.discordEmpty p{color:#68645d}.emptyServerIcon{border-radius:0;background:var(--red);color:#fff}
+.communityShell{border-top:1px solid var(--line)}
+.serverRail{background:#e6e1d7!important;border-right:1px solid var(--line)}
+.serverRail button{border-radius:0;background:#f7f4ed;color:var(--ink);border:1px solid #c9c2b6}
+.serverRail button:hover,.serverRail button.active{border-radius:0;background:var(--red);border-color:var(--red);color:#fff}
+.serverRail .addServer{background:#f7f4ed;color:var(--red)}
+.serverRail .addServer:hover{background:var(--red);color:#fff}
+.channelRail{background:#ece7dd!important;color:var(--ink)!important;border-right:1px solid var(--line)}
+.channelRail>header{border-color:var(--line)}.channelRail>header small,.channelTitle{color:#777169}
+.channelRail>button{color:#68645d;border-radius:0}.channelRail>button:hover,.channelRail>button.active{background:#fff;color:var(--ink);box-shadow:inset 4px 0 0 var(--red)}
+.channelRail>footer{background:#e0dbd1;color:var(--ink)}.channelRail>footer small{color:#716c64}
+.conversation{background:#faf8f3;color:var(--ink)}.conversation>header{border-color:var(--line);background:#fff}.conversation>header small,.conversation>header>span{color:#716c64}
+.discordMessages article:hover{background:#f0ece4}.messageAvatar,.memberAvatar{border-radius:0;background:var(--red)}.messageBody time{color:#777169}
+.messageActions button,.reactionRow button,.editComposer button{border-color:#cfc8bc;background:#fff;color:var(--ink);border-radius:0}
+.editComposer input{background:#fff;color:var(--ink);border-color:#aaa}
+.emptyChannel{color:#777169}.emptyChannel b{color:var(--ink)}
+.discordComposer{background:#fff;border:1px solid #cfc8bc;border-radius:0}.discordComposer textarea{color:var(--ink)}.discordComposer button{color:var(--ink)}.discordComposer button:last-child{border-radius:0;background:var(--red)}
+.memberRail{background:#eee9df!important;color:var(--ink)!important;border-left:1px solid var(--line)}.memberRail h3{color:#777169}.memberRail>div{color:var(--ink)}
+.fileWorkspace .upload{background:#fff;border-color:#aaa;color:var(--ink)}.fileWorkspace .groupFiles{background:#fff;border-color:var(--line)}.fileWorkspace .groupFiles a{border-color:var(--line)}.fileWorkspace .groupFiles small{color:#777169}
+.fileGallery .imageFileCard{border-radius:0;border-color:var(--line);background:#fff;color:var(--ink)}
+.chatLoading{background:#f6d5cf;border-bottom:1px solid #e4aaa0}
+@media(max-width:800px){.communityPage{height:calc(100svh - 126px)}.channelRail{border-right:0;border-bottom:1px solid var(--line)}.memberRail{display:none!important}.fileGallery{grid-template-columns:1fr 1fr}}

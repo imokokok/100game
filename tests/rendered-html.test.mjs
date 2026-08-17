@@ -65,3 +65,16 @@ test("keeps the wordmark weights and public name consistent", async () => {
   assert.match(migration, /SET `name` = 'Huie Chen'/);
   assert.doesNotMatch(migration, /SET `name` = 'HuieChen'/);
 });
+
+test("keeps background tabs quiet and uses the shared workspace theme", async () => {
+  const [studio, flows, styles] = await Promise.all([
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(studio, /document\.visibilityState!=="visible"/);
+  assert.match(flows, /document\.visibilityState==="visible"/);
+  assert.match(styles, /Unified participant workspace/);
+  assert.match(styles, /html\{scroll-behavior:auto\}/);
+  assert.match(styles, /\.communityPage,\.discordEmpty\{background:var\(--paper\)/);
+});
