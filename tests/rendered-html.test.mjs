@@ -18,7 +18,7 @@ test("server-renders the real access page and resilient links", async () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
-  assert.match(html, /<title>WHAT 100 PEOPLE DO TO A GAME<\/title>/i);
+  assert.match(html, /<title>HOW 100 PEOPLE CALL A GAME<\/title>/i);
   assert.match(html, /href="\/concept\?public=1"/);
   assert.match(html, /href="\/\?access=invite"/);
   assert.doesNotMatch(html, /Owner 管理入口/);
@@ -76,9 +76,9 @@ test("keeps the wordmark weights and public name consistent", async () => {
     readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../drizzle/0010_fix_huie_chen_name.sql", import.meta.url), "utf8"),
   ]);
-  assert.match(wordmark, /<span>WHAT<\/span><strong>100<\/strong>/);
-  assert.match(wordmark, /<strong>PEOPLE<\/strong><span> DO TO A <\/span><strong>GAME<\/strong>/);
-  assert.match(wordmark, /<span>WHAT <\/span><strong>100 PEOPLE<\/strong><span> DO TO A <\/span><strong>GAME<\/strong>/);
+  assert.match(wordmark, /<span>HOW<\/span><strong>100<\/strong>/);
+  assert.match(wordmark, /<strong>PEOPLE<\/strong><span> CALL A <\/span><strong>GAME<\/strong>/);
+  assert.match(wordmark, /<span>HOW <\/span><strong>100 PEOPLE<\/strong><span> CALL A <\/span><strong>GAME<\/strong>/);
   assert.match(studio, /<Wordmark stacked\/>/);
   assert.match(concept, /<Wordmark\/>/);
   assert.match(migration, /SET `name` = 'Huie Chen'/);
