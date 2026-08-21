@@ -15,7 +15,7 @@ const groups=[
  ["gameDefinition","likedGenres","recommendations","wantGenres","avoidGenres","likedConcepts","dislikedConcepts","viewpoint","redLines"],
  ["mediaPreferences","mediaOther","mediaToGame","references"],
  ["gameIdea","favoritePoint","concerns","wantToDo","wantToGain"],
- ["planningLevel","planningDetail","creativeRoles","technicalRoles","participation"],
+ ["planningLevel","planningDetail","creativeRoles","technicalRoles","participation","additionalThoughts"],
 ];
 const sectionStarts=["wechatName","gameDefinition","mediaPreferences","gameIdea","planningLevel"];
 function filled(v:unknown){return Array.isArray(v)?v.length>0:typeof v==="string"&&v.trim().length>0}
