@@ -143,6 +143,10 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/lead":"\/workspace"\)/);
   assert.match(workspace, /<Studio\s*\/>/);
   assert.match(studio, /location\.pathname!=="\/workspace"/);
+  assert.match(studio, /import \{WorkspaceFiles\} from "\.\/workspace-files"/);
+  assert.doesNotMatch(studio, /lazy\(\(\)=>import\("\.\/workspace-files"\)/);
+  assert.match(studio, /workspaceHomeButton/);
+  assert.match(studio, /x\.value==="zh"\|\|x\.value==="en"/);
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(css, /selectionPop/);
   assert.match(css, /Motion communicates state and direction/);
@@ -154,4 +158,9 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.match(css, /Mobile keeps the desktop information hierarchy/);
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.publicPage \.top>\.mark\{display:block!important/);
+});
+
+test("keeps public pages bilingual", async () => {
+  const concept = await readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8");
+  assert.match(concept, /x\.value==="zh"\|\|x\.value==="en"/);
 });
