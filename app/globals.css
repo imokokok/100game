@@ -1029,6 +1029,22 @@ html,body{max-width:100%;overflow-x:clip}img,video,canvas{max-width:100%;height:
 @keyframes toastConfirm{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.interactionLayer i{border-width:4px;background:rgba(199,45,36,.16)}}
 
+/* Editorial portfolio motion system */
+.portfolioProgress{position:fixed;left:0;right:0;top:0;height:3px;z-index:10000;pointer-events:none;transform-origin:left}.portfolioProgress i{display:block;width:100%;height:100%;background:#c72d24;transform:scaleX(var(--portfolio-progress,0));transform-origin:left;will-change:transform}.portfolioPointer{position:fixed;left:var(--pointer-x,-100px);top:var(--pointer-y,-100px);width:240px;height:240px;border-radius:50%;pointer-events:none;z-index:0;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(199,45,36,.055),transparent 68%);opacity:0;transition:opacity .25s}.entryGate,.publicPage{isolation:isolate}.entryGate:hover~.portfolioPointer,.publicPage:hover~.portfolioPointer{opacity:1}
+@media(prefers-reduced-motion:no-preference){
+ .motion-ready .portfolioReveal{opacity:0;transform:translateY(26px);clip-path:inset(0 0 22% 0);transition:opacity .72s cubic-bezier(.2,.75,.2,1),transform .72s cubic-bezier(.2,.75,.2,1),clip-path .8s cubic-bezier(.2,.75,.2,1);transition-delay:calc(var(--reveal-order,0)*45ms)}
+ .motion-ready .portfolioReveal.isVisible{opacity:1;transform:none;clip-path:inset(0)}
+ .entryGate .entryChoice{overflow:hidden;position:relative;transition:transform .38s cubic-bezier(.2,.8,.2,1),background-color .2s,color .2s!important}
+ .entryGate .entryChoice:before{content:"";position:absolute;inset:0;background:#c72d24;transform:scaleX(0);transform-origin:right;transition:transform .45s cubic-bezier(.2,.8,.2,1);z-index:-1}
+ .entryGate .entryChoice:hover{transform:translateY(-6px)}.entryGate .entryChoice:hover:before{transform:scaleX(1);transform-origin:left}.entryGate .entryChoice i{transition:transform .38s cubic-bezier(.2,.8,.2,1)}.entryGate .entryChoice:hover i{transform:translateX(10px)}
+ .conceptStandalone h1 .conceptHeadlineLine{display:block;transform-origin:left;animation:portfolioTitleIn .9s cubic-bezier(.2,.75,.2,1) both}.conceptStandalone h1 .conceptHeadlineLine:nth-child(2){animation-delay:.1s}
+ .peopleCta{position:relative;overflow:hidden}.peopleCta:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .4s ease}.peopleCta:hover:after{transform:scaleX(1);transform-origin:left}
+ .peoplePage .designerGrid>article,.peoplePage .leadCredit{transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease}.peoplePage .designerGrid>article:hover,.peoplePage .leadCredit:hover{transform:translateY(-7px);box-shadow:0 22px 60px rgba(20,20,18,.1)}
+}
+@keyframes portfolioTitleIn{from{opacity:0;transform:translateY(70%) skewY(3deg)}to{opacity:1;transform:none}}
+@media(max-width:700px){.portfolioPointer{display:none}.portfolioProgress{height:2px}.entryGate .entryChoice:hover,.peoplePage .designerGrid>article:hover,.peoplePage .leadCredit:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.portfolioProgress{display:none}.portfolioPointer{display:none}.portfolioReveal{opacity:1!important;transform:none!important;clip-path:none!important}}
+
 /* Modern workspace UI: depth and whitespace replace structural linework. */
 :root{--surface:#fff;--surface-soft:#f2f1ed;--shadow-sm:0 1px 2px rgba(17,17,15,.05),0 8px 24px rgba(17,17,15,.045);--shadow-md:0 2px 4px rgba(17,17,15,.06),0 18px 46px rgba(17,17,15,.07)}
 body,.workspace,.surveyHub,.survey-shell{background:#f5f4f0}
