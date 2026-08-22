@@ -1017,6 +1017,18 @@ html,body{max-width:100%;overflow-x:clip}img,video,canvas{max-width:100%;height:
 .workspaceLoading{min-height:55vh;background:linear-gradient(90deg,#f8f7f3 0,#fff 50%,#f8f7f3 100%);background-size:200% 100%}
 @media(prefers-reduced-motion:no-preference){.workspaceLoading{animation:workspaceLoad .7s ease-out 1}}@keyframes workspaceLoad{from{opacity:.45;background-position:100% 0}to{opacity:1;background-position:0 0}}
 
+/* Quiet, non-verbal interaction feedback */
+.interactionLayer i{border-color:#c72d24;background:rgba(199,45,36,.12)}
+@media(prefers-reduced-motion:no-preference){
+ button:not(:disabled),a[href],summary,.option,.driveFolder,.workspaceCategory,.surveyCatalogue>a{transition:transform .14s ease,box-shadow .18s ease,background-color .16s ease,color .16s ease,border-color .16s ease}
+ button:not(:disabled):active,a[href]:active,summary:active,.option:active,.driveFolder:active,.workspaceCategory:active,.surveyCatalogue>a:active{transform:scale(.975)}
+ .survey-shell .option.selected>span{animation:selectionPop .2s cubic-bezier(.2,.8,.2,1)}
+ .toast{animation:toastConfirm .28s cubic-bezier(.2,.8,.2,1)}
+}
+@keyframes selectionPop{0%{transform:scale(.55);opacity:.25}70%{transform:scale(1.18)}100%{transform:scale(1);opacity:1}}
+@keyframes toastConfirm{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.interactionLayer i{border-width:4px;background:rgba(199,45,36,.16)}}
+
 /* Modern workspace UI: depth and whitespace replace structural linework. */
 :root{--surface:#fff;--surface-soft:#f2f1ed;--shadow-sm:0 1px 2px rgba(17,17,15,.05),0 8px 24px rgba(17,17,15,.045);--shadow-md:0 2px 4px rgba(17,17,15,.06),0 18px 46px rgba(17,17,15,.07)}
 body,.workspace,.surveyHub,.survey-shell{background:#f5f4f0}

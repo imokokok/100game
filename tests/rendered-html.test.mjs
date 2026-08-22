@@ -126,3 +126,16 @@ test("keeps management and participant records behind server authorization", asy
   assert.match(proxy, /X-Frame-Options/);
   assert.match(proxy, /Permissions-Policy/);
 });
+
+test("mounts quiet visual feedback and respects reduced motion", async () => {
+  const [layout, feedback, css] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/click-feedback.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(layout, /<ClickFeedback\s*\/>/);
+  assert.match(feedback, /pointerdown/);
+  assert.match(feedback, /keydown/);
+  assert.match(css, /prefers-reduced-motion:reduce/);
+  assert.match(css, /selectionPop/);
+});
