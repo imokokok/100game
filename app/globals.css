@@ -916,6 +916,18 @@ input:hover,textarea:hover,select:hover{border-color:#77746d}
 .survey-shell .review-item p{white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:700px){.entryGate>section{padding-inline:20px}.entryGate h1{font-size:clamp(40px,12vw,58px);margin-bottom:30px}.creatorWelcome{margin-top:18px}.gateInvite{margin-top:26px}.survey-shell .survey-progress{min-width:70px}.survey-shell .option{padding:14px 13px}.workspaceCategoryGrid{gap:14px}}
 
+/* Questionnaire alignment: one edge system at every viewport. */
+.survey-shell{width:100%;overflow-x:clip}
+.survey-shell .survey-head,.survey-shell .survey-intro,.survey-shell .survey-step-head,.survey-shell .question-list,.survey-shell .review-panel,.survey-shell .survey-footer{border-left:0!important;border-right:0!important}
+.survey-shell .survey-head:before,.survey-shell .survey-head:after,.survey-shell .survey-title:before,.survey-shell .survey-title:after,.survey-shell .question-list:before,.survey-shell .question-list:after{content:none!important;display:none!important}
+@media(max-width:700px){
+ .survey-shell .section-progress{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;overflow:hidden!important;gap:0!important}
+ .survey-shell .section-progress button{width:100%;min-width:0!important;padding-inline:2px!important;grid-template-columns:1fr!important;justify-items:center;border-left:0!important;border-right:0!important}
+ .survey-shell .section-progress button+button{border-left:1px solid var(--survey-line)!important}
+ .survey-shell .section-progress button b{display:none!important}
+ .survey-shell .question-list,.survey-shell .review-panel{width:100%;padding-inline:18px}
+}
+
 /* Concept statement: editorial reading rhythm, with recruitment kept secondary. */
 .conceptStandalone{padding-bottom:clamp(72px,10vw,140px)}
 .conceptStandalone .conceptSubtitle{max-width:760px;line-height:1.75}
