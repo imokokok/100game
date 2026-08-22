@@ -1,4 +1,4 @@
 import type { Metadata } from "next";
-import { SurveyApp } from "./survey-app";
-export const metadata: Metadata={title:"参与者创作画像 / Participant Creative Portrait",description:"WHAT 100 PEOPLE DO TO A GAME 项目参与者创作画像问卷"};
-export default function SurveyPage(){return <SurveyApp/>}
+import { SurveyHub } from "./survey-hub";
+export const metadata: Metadata={title:"项目问卷 / Project Surveys",description:"WHAT 100 PEOPLE DO TO A GAME 项目问卷中心"};
+export default function SurveyPage(){return <SurveyHub/>}
