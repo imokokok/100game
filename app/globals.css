@@ -892,6 +892,10 @@ html{scroll-padding-top:86px;scrollbar-gutter:stable}body{overscroll-behavior-y:
 .survey-shell .draft-status{font-size:11px;color:#5d6d58;white-space:nowrap}
 .survey-shell .focus-note{display:flex;justify-content:space-between;gap:18px;margin:20px 0 4px;padding:14px 16px;border-left:4px solid var(--survey-blue);background:#eef2f4;color:#252622}
 .survey-shell .focus-note strong{font-size:14px}.survey-shell .focus-note span{color:#66645e;font-size:12px;text-align:right}
+.survey-shell .focus-note.complete{border-left-color:#557550;background:#edf3ea}.survey-shell .focus-note.complete strong{color:#365532}
+.survey-shell .question.answered{border-left:3px solid #78916f;padding-left:16px}.survey-shell .answer-confirmation{margin:10px 0 0;color:#456342;font-size:13px;font-weight:750;max-width:none}
+.survey-shell .option.selected span{font-weight:900}.survey-shell .option[aria-pressed="true"]{box-shadow:inset 0 0 0 2px rgba(255,255,255,.3)}
+.creatorWelcome{position:static;width:auto;height:auto;margin:24px 0 0;padding:16px 18px;border-left:4px solid #315f83;background:#eef2f4;color:#191a18;display:grid;gap:6px}.creatorWelcome strong{font-size:15px}.creatorWelcome span{font-size:13px;line-height:1.6;color:#555750}.creatorTaskNote{margin:8px 0 28px;padding:14px 16px;border-left:4px solid #657862;background:#edf2ea;color:#4f534c;font-size:14px;line-height:1.65}.workspaceEmpty{line-height:1.6}
 .survey-shell .step-actions{position:sticky;bottom:0;z-index:4;margin-top:34px;padding:14px 0;background:linear-gradient(to bottom,rgba(247,245,238,0),#f7f5ee 20%)}
 .survey-shell .q-label{line-height:1.45}.survey-shell .option{line-height:1.45;text-align:left}
 @media(max-width:700px){.survey-shell .draft-status{position:fixed;right:14px;bottom:70px;z-index:5;padding:6px 9px;border:1px solid var(--survey-line);border-radius:16px;background:#fff}.survey-shell .focus-note{display:grid;gap:5px}.survey-shell .focus-note span{text-align:left}.survey-shell .step-actions{padding-bottom:max(14px,env(safe-area-inset-bottom))}}
