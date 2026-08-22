@@ -5,14 +5,14 @@ export async function GET(req: NextRequest) {
   const participant = await participantId(req);
   if (!participant && !isOwner(req)) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
   if (isOwner(req) && !participant) {
-    const rows = await d1().prepare("SELECT id, title_zh, title_en, status, sort_order FROM tasks ORDER BY sort_order").all();
+    const rows = await d1().prepare("SELECT id, title_zh, title_en, status, sort_order, week FROM tasks ORDER BY week, sort_order").all();
     return NextResponse.json({ tasks: rows.results });
   }
   const rows = await d1().prepare(`
-    SELECT t.id, t.title_zh, t.title_en, t.status, t.sort_order,
+    SELECT t.id, t.title_zh, t.title_en, t.status, t.sort_order, t.week,
       s.body, s.status AS submission_status, s.updated_at
     FROM tasks t LEFT JOIN submissions s ON s.task_id = t.id AND s.participant_id = ?
-    WHERE t.status != 'archived' ORDER BY t.sort_order
+    WHERE t.status != 'archived' ORDER BY t.week, t.sort_order
   `).bind(participant).all();
   return NextResponse.json({ tasks: rows.results });
 }
@@ -41,11 +41,12 @@ export async function PUT(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
   const titleZh = String(body.titleZh ?? "").trim().slice(0, 160);
   const titleEn = String(body.titleEn ?? titleZh).trim().slice(0, 160);
+  const week = Math.max(0, Math.min(4, Number(body.week) || 0));
   if (!titleZh) return NextResponse.json({ error: "Task title required" }, { status: 400 });
   const id = crypto.randomUUID();
   const order = Number((await d1().prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_order FROM tasks").first<{next_order:number}>())?.next_order ?? 1);
-  await d1().prepare("INSERT INTO tasks (id, title_zh, title_en, status, sort_order) VALUES (?, ?, ?, 'active', ?)").bind(id, titleZh, titleEn, order).run();
-  return NextResponse.json({ task: { id, title_zh: titleZh, title_en: titleEn, status: "active", sort_order: order } }, { status: 201 });
+  await d1().prepare("INSERT INTO tasks (id, title_zh, title_en, status, sort_order, week) VALUES (?, ?, ?, 'active', ?, ?)").bind(id, titleZh, titleEn, order, week).run();
+  return NextResponse.json({ task: { id, title_zh: titleZh, title_en: titleEn, status: "active", sort_order: order, week } }, { status: 201 });
 }
 
 export async function PATCH(req: NextRequest) {
