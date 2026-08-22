@@ -33,6 +33,11 @@ export async function GET(req: NextRequest) {
   const category = req.nextUrl.searchParams.get("category") ?? "";
   const requestedWeek = Number(req.nextUrl.searchParams.get("week") ?? 0);
   const week = Number.isInteger(requestedWeek) && requestedWeek >= 0 && requestedWeek <= 4 ? requestedWeek : 0;
+  if (!id && !groupId && !category && req.nextUrl.searchParams.has("week")) {
+    if (!(await participantId(req)) && !isOwner(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const rows = await d1().prepare("SELECT id, name, content_type, size, created_at, participant_id, category, week FROM uploaded_files WHERE week = ? AND group_id IS NULL AND category IN ('draft', 'process', 'final') ORDER BY created_at DESC LIMIT 300").bind(week).all();
+    return NextResponse.json({ files: rows.results });
+  }
   if (!id && workspaceCategories.has(category)) {
     if (!(await participantId(req)) && !isOwner(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     const rows = await d1().prepare("SELECT id, name, content_type, size, created_at, participant_id, category, week FROM uploaded_files WHERE category = ? AND week = ? AND group_id IS NULL ORDER BY created_at DESC LIMIT 100").bind(category, week).all();

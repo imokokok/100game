@@ -26,7 +26,7 @@ export function WorkspaceFiles({t,lang,onJournal}:{t:Translation;lang:Language;o
   {id:"process" as const,title:zh?"过程文件":"Work in progress",note:zh?"测试、迭代、中间版本及制作材料":"Tests, iterations, intermediate versions, and production material"},
   {id:"final" as const,title:zh?"成品文件":"Final works",note:zh?"确认完成、可供展示或交付的版本":"Approved files ready for presentation or delivery"}
  ];
- const load=(selectedWeek:number)=>{setLoaded(false);return Promise.all(categories.map(c=>fetch(`/api/uploads?category=${c.id}&week=${selectedWeek}`,{cache:"no-store"}).then(r=>r.ok?r.json():{files:[]}))).then(rows=>{setFiles({draft:rows[0].files||[],process:rows[1].files||[],final:rows[2].files||[]});setLoaded(true)}).catch(()=>setLoaded(true))};
+ const load=(selectedWeek:number)=>{setLoaded(false);return fetch(`/api/uploads?week=${selectedWeek}`,{cache:"no-store"}).then(r=>r.ok?r.json():{files:[]}).then(data=>{const rows=(data.files||[]) as Array<FileRow&{category:CategoryId}>;setFiles({draft:rows.filter(file=>file.category==="draft"),process:rows.filter(file=>file.category==="process"),final:rows.filter(file=>file.category==="final")});setLoaded(true)}).catch(()=>setLoaded(true))};
  useEffect(()=>{if(week!==null)load(week)},[week]);
  const enterWeek=(value:number)=>{setWeek(value);setOpenCategory(null);setOpenNotice(false)};
  const back=()=>{if(openCategory)setOpenCategory(null);else if(openNotice)setOpenNotice(false);else setWeek(null)};
