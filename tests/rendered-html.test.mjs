@@ -19,7 +19,7 @@ test("server-renders the real access page and resilient links", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>WHAT 100 PEOPLE DO TO A GAME \/ 一百个人怎么做游戏<\/title>/i);
-  assert.match(html, /href="\/concept\?public=1"/);
+  assert.match(html, /href="\/concept"/);
   assert.match(html, /href="\/\?access=invite"/);
   assert.doesNotMatch(html, /Owner 管理入口/);
   assert.match(html, /创作者协作区/);
@@ -127,17 +127,22 @@ test("keeps management and participant records behind server authorization", asy
   assert.match(proxy, /Permissions-Policy/);
 });
 
-test("uses motion only for navigation and state, with reduced-motion support", async () => {
-  const [layout, motion, css] = await Promise.all([
+test("keeps the public entry lightweight and defers the workspace", async () => {
+  const [layout, page, entry, workspace, studio, css] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/portfolio-motion.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/workspace/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  assert.match(layout, /<PortfolioMotion\s*\/>/);
+  assert.doesNotMatch(layout, /PortfolioMotion/);
   assert.doesNotMatch(layout, /ClickFeedback/);
-  assert.doesNotMatch(motion, /pointermove/);
-  assert.match(motion, /IntersectionObserver/);
-  assert.match(motion, /requestAnimationFrame/);
+  assert.match(page, /<EntryStudio\s*\/>/);
+  assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
+  assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/lead":"\/workspace"\)/);
+  assert.match(workspace, /<Studio\s*\/>/);
+  assert.match(studio, /location\.pathname!=="\/workspace"/);
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(css, /selectionPop/);
   assert.match(css, /Motion communicates state and direction/);

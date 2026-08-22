@@ -1,5 +1,5 @@
-import { Studio } from "./studio";
+import { EntryStudio } from "./entry-studio";
 
 export default function Home() {
-  return <Studio />;
+  return <EntryStudio />;
 }

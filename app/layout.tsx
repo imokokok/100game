@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { PortfolioMotion } from "./portfolio-motion";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hundred-people-game.jzwjf5xs57.chatgpt.site"),
@@ -12,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="zh-CN"><body>{children}<PortfolioMotion/></body></html>;
+  return <html lang="zh-CN"><body>{children}</body></html>;
 }
