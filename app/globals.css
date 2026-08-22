@@ -913,6 +913,9 @@ input:hover,textarea:hover,select:hover{border-color:#77746d}
 .workspaceCategory header p,.driveFolder small,.photoJournalLink span{color:#65635d;line-height:1.5}
 .saveStatus,.answer-confirmation,.draft-status{letter-spacing:0}
 .surveyCatalogue>a:hover{padding-left:4px;padding-right:4px}
+.surveyCatalogue strong{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:14px 20px;background:#315f83;color:#fff;border:1px solid #315f83;border-radius:3px;font-size:13px;letter-spacing:.015em;transition:background-color .16s ease,border-color .16s ease}
+.surveyCatalogue>a:hover strong,.surveyCatalogue>a:focus-visible strong{background:#244963;border-color:#244963}
+@media(max-width:650px){.surveyCatalogue strong{width:max-content;max-width:100%;margin-top:16px}}
 .survey-shell .review-item p{white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:700px){.entryGate>section{padding-inline:20px}.entryGate h1{font-size:clamp(40px,12vw,58px);margin-bottom:30px}.creatorWelcome{margin-top:18px}.gateInvite{margin-top:26px}.survey-shell .survey-progress{min-width:70px}.survey-shell .option{padding:14px 13px}.workspaceCategoryGrid{gap:14px}}
 
