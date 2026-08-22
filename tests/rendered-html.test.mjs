@@ -141,6 +141,9 @@ test("uses motion only for navigation and state, with reduced-motion support", a
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(css, /selectionPop/);
   assert.match(css, /Motion communicates state and direction/);
+  assert.match(css, /Editorial contrast: richer without decorative motion/);
+  assert.match(css, /entryGate:not\(\.inviteGate\):before/);
+  assert.match(css, /\.conceptQuestions\{max-width:none/);
   assert.match(css, /Mobile keeps the desktop information hierarchy/);
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.publicPage \.top>\.mark\{display:block!important/);
