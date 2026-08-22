@@ -164,3 +164,12 @@ test("keeps public pages bilingual", async () => {
   const concept = await readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8");
   assert.match(concept, /x\.value==="zh"\|\|x\.value==="en"/);
 });
+
+test("keeps supporting interface text legible", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Readability pass/);
+  assert.match(css, /\.gateInvite label>span\{font-size:13px/);
+  assert.match(css, /\.copyright,\.entryGate>\.copyright,\.publicPage>\.copyright\{[^}]*font-size:12px/);
+  assert.match(css, /\.weekFolder small,\.categoryFolder small\{[^}]*font-size:14px/);
+  assert.match(css, /input::placeholder,textarea::placeholder\{color:#6b6963;opacity:1\}/);
+});
