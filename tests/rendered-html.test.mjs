@@ -110,18 +110,19 @@ test("chat has no reactions and waits for live data before choosing a screen", a
 });
 
 test("keeps management and participant records behind server authorization", async () => {
-  const [studio, questionnaire, leadResponses, leadLogin, config] = await Promise.all([
+  const [studio, questionnaire, leadResponses, leadLogin, proxy] = await Promise.all([
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/questionnaire/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/lead/responses/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/lead/login/route.ts", import.meta.url), "utf8"),
-    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../proxy.ts", import.meta.url), "utf8"),
   ]);
   assert.doesNotMatch(studio, /params\.get\("creator"\)/);
   assert.match(questionnaire, /participantId\(req\)/);
   assert.match(questionnaire, /Invitation required/);
   assert.match(leadResponses, /private, no-store/);
   assert.match(leadLogin, /safeEq/);
-  assert.match(config, /X-Frame-Options/);
-  assert.match(config, /Permissions-Policy/);
+  assert.match(proxy, /X-Content-Type-Options/);
+  assert.match(proxy, /X-Frame-Options/);
+  assert.match(proxy, /Permissions-Policy/);
 });
