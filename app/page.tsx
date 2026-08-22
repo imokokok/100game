@@ -1,5 +1,5 @@
-import { Studio } from "./studio";
+import { SurveyApp } from "./survey/survey-app";
 
 export default function Home() {
-  return <Studio />;
+  return <SurveyApp />;
 }
