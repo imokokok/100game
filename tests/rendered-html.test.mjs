@@ -22,7 +22,7 @@ test("server-renders the real access page and resilient links", async () => {
   assert.match(html, /href="\/concept\?public=1"/);
   assert.match(html, /href="\/\?access=invite"/);
   assert.doesNotMatch(html, /Owner 管理入口/);
-  assert.match(html, /进入任务、问卷、文件与项目记录/);
+  assert.match(html, /创作者协作区/);
   assert.match(html, /© 2026 HuieChen/);
 });
 
