@@ -7,7 +7,7 @@ function safeEq(a:string,b:string){if(a.length!==b.length)return false;let value
 async function sign(value:string){const key=await crypto.subtle.importKey("raw",enc.encode(env.LEAD_SESSION_SECRET),{name:"HMAC",hash:"SHA-256"},false,["sign"]);const bytes=new Uint8Array(await crypto.subtle.sign("HMAC",key,enc.encode(value)));return btoa(String.fromCharCode(...bytes)).replace(/=+$/g,"")}
 
 export async function POST(req:NextRequest){
- const {code}=await req.json().catch(()=>({code:""})) as {code?:string};
+ const {code,name}=await req.json().catch(()=>({code:"",name:""})) as {code?:string;name?:string};
  const value=String(code??"").trim();
  if(!value)return NextResponse.json({error:"Missing access code"},{status:400});
  if(env.LEAD_ACCESS_CODE&&safeEq(value,env.LEAD_ACCESS_CODE)){
@@ -16,7 +16,7 @@ export async function POST(req:NextRequest){
   res.cookies.set("lead_session",token,{httpOnly:true,secure:true,sameSite:"strict",path:"/",maxAge:60*60*8});
   return res;
  }
- const participantReq=new NextRequest(new URL("/api/participant",req.url),{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:value})});
+ const participantReq=new NextRequest(new URL("/api/participant",req.url),{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:value,name})});
  const res=await participantLogin(participantReq);
  if(!res.ok)return res;
  const data=await res.clone().json() as {participant:unknown};

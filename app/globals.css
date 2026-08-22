@@ -378,6 +378,12 @@ html{background:#fff}
 .inviteGate section>p{color:#555}
 .gateInvite input{background:#fff;color:#111;border-color:#999}
 .gateInvite .primary{background:var(--red)}
+.gateInvite{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:12px}
+.gateInvite label{display:grid;gap:8px}
+.gateInvite label>span{font-size:12px;font-weight:750;letter-spacing:.05em}
+.gateInvite label input{width:100%;font-size:18px}
+.gateInvite .primary{min-height:60px}
+@media(max-width:800px){.gateInvite{grid-template-columns:1fr}}
 
 .conceptStandalone>h1{padding-left:0;border-bottom:0}
 .conceptStandalone>h1::before,
