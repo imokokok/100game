@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ClickFeedback } from "./click-feedback";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://hundred-people-game.jzwjf5xs57.chatgpt.site"),
@@ -12,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="zh-CN"><head><link rel="prefetch" href="/concept?public=1"/><link rel="prefetch" href="/survey"/><link rel="prefetch" href="/survey/participant-portrait"/></head><body>{children}<ClickFeedback/></body></html>;
+  return <html lang="zh-CN"><body>{children}</body></html>;
 }
