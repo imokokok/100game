@@ -208,7 +208,7 @@ export function applyTranslationOverrides(base: Translation, values: Record<stri
     const [section, key] = path.split(".");
     if (section === "landing" && key && key in landing) landing[key] = value;
     if (section === "overview" && key === "note") overview.note = value;
-    if (path === "copyright") copy.copyright = value;
+    if (path === "copyright") copy.copyright = value.replaceAll("Huie Chen", "HuieChen");
   }
   return copy as unknown as Translation;
 }
