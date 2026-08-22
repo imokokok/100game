@@ -1053,6 +1053,16 @@ html,body{max-width:100%;overflow-x:clip}img,video,canvas{max-width:100%;height:
 }
 @media(max-width:350px){.entryChoices{grid-template-columns:1fr}.entryChoices .entryChoice{min-height:145px!important}.entryGate h1{max-width:10ch}.publicPage .top>nav{justify-content:flex-start;overflow-x:auto}}
 
+/* Motion communicates state and direction; it is never a generic click effect. */
+.interactionLayer,.portfolioPointer{display:none!important}.portfolioProgress{display:none}.publicPage~.portfolioProgress{display:block}
+button:not(:disabled):active,a[href]:active,summary:active,label:has(input):active,[role=button]:active{transform:none;filter:none}
+@media(prefers-reduced-motion:no-preference){
+ .motion-ready .portfolioReveal{transform:translateY(12px);clip-path:none;transition-duration:.48s,.48s,0s;transition-delay:calc(var(--reveal-order,0)*30ms)}
+ .entryGate .entryChoice:before{display:none}.entryGate .entryChoice:hover{transform:none}.entryGate .entryChoice:hover i{transform:translateX(4px)}
+ .conceptStandalone h1 .conceptHeadlineLine,.conceptStandalone h1 .conceptHeadlineLine:nth-child(2){animation:none}
+ .peoplePage .designerGrid>article:hover,.peoplePage .leadCredit:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(20,20,18,.07)}
+}
+
 /* Modern workspace UI: depth and whitespace replace structural linework. */
 :root{--surface:#fff;--surface-soft:#f2f1ed;--shadow-sm:0 1px 2px rgba(17,17,15,.05),0 8px 24px rgba(17,17,15,.045);--shadow-md:0 2px 4px rgba(17,17,15,.06),0 18px 46px rgba(17,17,15,.07)}
 body,.workspace,.surveyHub,.survey-shell{background:#f5f4f0}

@@ -8,7 +8,6 @@ export function PortfolioMotion(){
   const root=document.documentElement;
   root.classList.add("motion-ready");
   const selector=[
-   ".entryGate section>*",
    ".conceptStandalone>.kicker",
    ".conceptStandalone>h1",
    ".conceptStandalone>.conceptSubtitle",
@@ -27,9 +26,8 @@ export function PortfolioMotion(){
   let frame=0;
   const update=()=>{frame=0;const max=document.documentElement.scrollHeight-innerHeight;const value=max>0?scrollY/max:0;progress.current?.style.setProperty("--portfolio-progress",String(Math.max(0,Math.min(1,value))))};
   const scroll=()=>{if(!frame)frame=requestAnimationFrame(update)};
-  const pointer=(event:PointerEvent)=>{root.style.setProperty("--pointer-x",`${event.clientX}px`);root.style.setProperty("--pointer-y",`${event.clientY}px`)};
-  update();addEventListener("scroll",scroll,{passive:true});addEventListener("resize",scroll,{passive:true});addEventListener("pointermove",pointer,{passive:true});
-  return()=>{observer.disconnect();if(frame)cancelAnimationFrame(frame);removeEventListener("scroll",scroll);removeEventListener("resize",scroll);removeEventListener("pointermove",pointer);root.classList.remove("motion-ready")};
+  update();addEventListener("scroll",scroll,{passive:true});addEventListener("resize",scroll,{passive:true});
+  return()=>{observer.disconnect();if(frame)cancelAnimationFrame(frame);removeEventListener("scroll",scroll);removeEventListener("resize",scroll);root.classList.remove("motion-ready")};
  },[]);
- return <><div ref={progress} className="portfolioProgress" aria-hidden="true"><i/></div><div className="portfolioPointer" aria-hidden="true"/></>;
+ return <div ref={progress} className="portfolioProgress" aria-hidden="true"><i/></div>;
 }

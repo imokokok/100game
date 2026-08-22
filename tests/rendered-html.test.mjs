@@ -127,22 +127,20 @@ test("keeps management and participant records behind server authorization", asy
   assert.match(proxy, /Permissions-Policy/);
 });
 
-test("mounts quiet visual feedback and respects reduced motion", async () => {
-  const [layout, feedback, motion, css] = await Promise.all([
+test("uses motion only for navigation and state, with reduced-motion support", async () => {
+  const [layout, motion, css] = await Promise.all([
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/click-feedback.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/portfolio-motion.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  assert.match(layout, /<ClickFeedback\s*\/>/);
   assert.match(layout, /<PortfolioMotion\s*\/>/);
-  assert.match(feedback, /pointerdown/);
-  assert.match(feedback, /keydown/);
+  assert.doesNotMatch(layout, /ClickFeedback/);
+  assert.doesNotMatch(motion, /pointermove/);
   assert.match(motion, /IntersectionObserver/);
   assert.match(motion, /requestAnimationFrame/);
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(css, /selectionPop/);
-  assert.match(css, /portfolioTitleIn/);
+  assert.match(css, /Motion communicates state and direction/);
   assert.match(css, /Mobile keeps the desktop information hierarchy/);
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.publicPage \.top>\.mark\{display:block!important/);
