@@ -143,4 +143,7 @@ test("mounts quiet visual feedback and respects reduced motion", async () => {
   assert.match(css, /prefers-reduced-motion:reduce/);
   assert.match(css, /selectionPop/);
   assert.match(css, /portfolioTitleIn/);
+  assert.match(css, /Mobile keeps the desktop information hierarchy/);
+  assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.publicPage \.top>\.mark\{display:block!important/);
 });
