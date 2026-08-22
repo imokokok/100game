@@ -824,3 +824,5 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .survey-title{background:none}
 .survey-intro:before,.survey-intro:after,.survey-step-head:after,.profile-sheet:before{content:none;display:none}
 .section-progress button.done:nth-child(1),.section-progress button.done:nth-child(2),.section-progress button.done:nth-child(3){box-shadow:none}
+.section-progress{gap:0!important;overflow:hidden}
+.section-progress button,.section-progress button.active,.section-progress button.done{margin:0!important;border-radius:0!important;box-shadow:none!important;background-clip:border-box}
