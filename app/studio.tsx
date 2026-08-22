@@ -4,7 +4,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { applyTranslationOverrides, languageOptions, translations, type Language, type Translation } from "./i18n";
 import { localeCopy } from "./locale-copy";
-import { DesignerRosterManager, LiveJournal, LiveLinks, LiveTasks, OwnerContentManager, OwnerOperations, WorkspaceFiles } from "./live-flows";
+import { DesignerRosterManager, LiveJournal, LiveLinks, LiveTasks, OwnerContentManager, OwnerOperations } from "./live-flows";
+import { WorkspaceFiles } from "./workspace-files";
 import { Wordmark } from "./wordmark";
 
 type View="home"|"tasks"|"survey"|"links"|"journal"|"dashboard";
