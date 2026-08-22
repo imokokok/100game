@@ -819,3 +819,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 
 .section-progress button b{white-space:nowrap}
 @media(max-width:700px){.section-progress{overflow:hidden}.section-progress button{min-width:0;flex:1;grid-template-columns:1fr;place-items:center;border-right:1px solid var(--survey-ink)}.section-progress button b{display:none}}
+
+/* Keep colour inside functional controls; no shapes attached to borders. */
+.survey-title{background:none}
+.survey-intro:before,.survey-intro:after,.survey-step-head:after,.profile-sheet:before{content:none;display:none}
+.section-progress button.done:nth-child(1),.section-progress button.done:nth-child(2),.section-progress button.done:nth-child(3){box-shadow:none}
