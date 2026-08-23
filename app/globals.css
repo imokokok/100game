@@ -2001,3 +2001,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 
 /* Public navigation labels remain readable as single units on narrow screens. */
 .publicPage .top>nav a{white-space:nowrap}
+
+/* Lead response drawer uses a crisp boundary without glow or fuzzy shadow. */
+.profile-sheet{
+ border:0!important;
+ border-left:1px solid #9f988e!important;
+ border-radius:0!important;
+ box-shadow:none!important;
+ filter:none!important;
+ -webkit-backdrop-filter:none!important;
+ backdrop-filter:none!important;
+}
+.profile-backdrop{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}

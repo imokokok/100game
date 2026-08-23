@@ -521,3 +521,10 @@ test("shows the original recruitment poster inside public access", async () => {
   assert.match(css, /The public concept page presents the original project poster as a primary artefact/);
   assert.match(css, /\.projectPoster\{width:min\(100%,760px\)/);
 });
+
+test("keeps the lead response drawer edge crisp and free of glow", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Lead response drawer uses a crisp boundary without glow or fuzzy shadow/);
+  assert.match(css, /\.profile-sheet\{[\s\S]*border-left:1px solid #9f988e!important;[\s\S]*border-radius:0!important;[\s\S]*box-shadow:none!important;[\s\S]*filter:none!important/);
+  assert.match(css, /\.profile-backdrop\{-webkit-backdrop-filter:none!important;backdrop-filter:none!important\}/);
+});
