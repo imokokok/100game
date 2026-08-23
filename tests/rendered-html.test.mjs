@@ -478,3 +478,14 @@ test("keeps the embedded survey title anchored above the scrolling questions", a
   assert.match(css, /\.workspace \.embeddedSurvey \.survey-head\{[\s\S]*position:sticky!important;[\s\S]*top:64px!important;[\s\S]*z-index:29!important/);
   assert.match(css, /@media\(max-width:600px\)\{[\s\S]*\.workspace \.embeddedSurvey \.survey-head\{position:sticky!important;top:54px!important/);
 });
+
+test("allows only the lead to delete explicitly identified questionnaire responses", async () => {
+  const route = await readFile(new URL("../app/api/lead/responses/route.ts", import.meta.url), "utf8");
+  assert.match(route, /export async function DELETE/);
+  assert.match(route, /!isOwner\(req\)&&!await isLead\(req\)/);
+  assert.match(route, /slice\(0,20\)/);
+  assert.match(route, /SELECT id FROM questionnaire_responses WHERE id = \?/);
+  assert.match(route, /DELETE FROM questionnaire_responses WHERE id = \?/);
+  assert.match(route, /found\.length!==ids\.length/);
+  assert.doesNotMatch(route, /DELETE FROM questionnaire_responses WHERE wechat_name/);
+});
