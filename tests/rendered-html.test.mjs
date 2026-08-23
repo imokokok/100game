@@ -310,6 +310,8 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(hub, /surveyHubStatement/);
   assert.match(hub, /surveyIndex/);
   assert.match(hub, /surveyStatus/);
+  assert.match(hub, /surveyCta/);
+  assert.doesNotMatch(hub, /<strong>\{zh\?"进入问卷"/);
   assert.match(hub, /© 2026 HuieChen/);
   assert.match(css, /Survey register: one coherent red, white and black editorial system/);
   assert.match(css, /Glass survey direction: depth replaces grids, dividers and stacked cards/);
@@ -317,4 +319,5 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(css, /Neumorphic survey system: fixed top-left light, soft clay surfaces/);
   assert.match(css, /--neu-raised:8px 8px 16px #b8bcc2,-8px -8px 16px #ffffff/);
   assert.match(css, /--neu-inset-focus:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff/);
+  assert.match(css, /No red in the survey surface: purple is the only interaction accent/);
 });

@@ -1601,3 +1601,28 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .survey-shell .option-grid{gap:12px}.survey-shell .option{box-shadow:4px 4px 8px #b8bcc2,-4px -4px 8px #ffffff!important}.survey-shell .option:hover{box-shadow:2px 2px 4px #b8bcc2,-2px -2px 4px #ffffff!important}
 }
 @media(prefers-reduced-motion:reduce){.surveyHub>header>button,.survey-shell .lang-switch,.surveyStatus>strong,.survey-shell .button,.surveyCatalogue>a,.survey-shell .section-progress button,.survey-shell .q-body input,.survey-shell .q-body textarea,.survey-shell .option{transition:none!important}}
+
+/* No red in the survey surface: purple is the only interaction accent. */
+.surveyHub,.survey-shell{--red:#6d5dfc!important;--survey-red:#6d5dfc!important;--survey-blue:#6d5dfc!important;accent-color:#6d5dfc}
+.surveyHub .surveyCta{
+ display:grid;
+ place-items:center;
+ min-width:146px;
+ min-height:50px;
+ padding:12px 16px;
+ border:0!important;
+ border-radius:14px!important;
+ background:#e0e5ec!important;
+ color:#4f46d8!important;
+ box-shadow:6px 6px 12px #b8bcc2,-6px -6px 12px #ffffff!important;
+ font-size:13px;
+ font-weight:750;
+ transform:none!important;
+ transition:box-shadow .3s ease-in-out,color .3s ease-in-out!important;
+}
+.surveyHub .surveyCta:hover{background:#e0e5ec!important;color:#4f46d8!important;box-shadow:4px 4px 8px #b8bcc2,-4px -4px 8px #ffffff!important;transform:none!important}
+.surveyHub .surveyCatalogue>a:active .surveyCta{box-shadow:inset 4px 4px 8px #b8bcc2,inset -4px -4px 8px #ffffff!important;transform:none!important}
+.surveyHub .surveyStatus>span,.surveyHub .surveyIndex,.surveyHub .surveyHubIntro>div>p,.survey-shell .eyebrow{color:#5d50df!important}
+.surveyHub .surveyCatalogue strong{background:#e0e5ec!important;color:#4f46d8!important}
+@media(max-width:700px){.surveyHub .surveyCta{min-width:128px;min-height:46px;box-shadow:4px 4px 8px #b8bcc2,-4px -4px 8px #ffffff!important}}
+@media(prefers-reduced-motion:reduce){.surveyHub .surveyCta{transition:none!important}}
