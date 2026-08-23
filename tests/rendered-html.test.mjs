@@ -357,4 +357,5 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /\.entryChoices \.entryChoice:nth-child\(2\):hover b,[\s\S]*color:#ffffff!important/);
   assert.match(css, /Publication-style copyright line/);
   assert.match(css, /letter-spacing:\.02em/);
+  assert.match(css, /\.libraryWeeks \.weekFolder\{padding-inline:clamp\(20px,3vw,32px\)!important\}/);
 });
