@@ -2039,3 +2039,27 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  .profile-backdrop,.profile-sheet{animation:none!important}
  .profile-close{transition:none!important;transform:none!important}
 }
+
+/* Survey chapter rail: only the current chapter is recessed; every other chapter stays flat. */
+.survey-shell .section-progress{
+ box-shadow:none!important;
+ overflow:hidden!important;
+}
+.survey-shell .section-progress button,
+.survey-shell .section-progress button+button,
+.survey-shell .section-progress button.done,
+.survey-shell .section-progress button:disabled{
+ min-width:0!important;
+ opacity:1!important;
+ cursor:default;
+ box-shadow:none!important;
+}
+.survey-shell .section-progress button.done{cursor:pointer}
+.survey-shell .section-progress button.active,
+.survey-shell .section-progress button.active:disabled{
+ color:#9f211a!important;
+ box-shadow:inset 5px 5px 10px #c4bdb3,inset -5px -5px 10px #ffffff!important;
+}
+.survey-shell .section-progress button.done:active{
+ box-shadow:inset 4px 4px 8px #c4bdb3,inset -4px -4px 8px #ffffff!important;
+}

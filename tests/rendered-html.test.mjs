@@ -534,3 +534,28 @@ test("keeps the lead response drawer edge crisp and free of glow", async () => {
   assert.match(css, /\.profile-close:active\{background:#c72d24!important;color:#fff!important;transform:scale\(\.92\)!important\}/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{[\s\S]*\.profile-backdrop,\.profile-sheet\{animation:none!important\}/);
 });
+
+test("shows only the selected survey chapter as recessed and removes dead clicks", async () => {
+  const [survey, css] = await Promise.all([
+    readFile(new URL("../app/survey/survey-app.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(survey, /const available=i<currentSection/);
+  assert.match(survey, /disabled=\{!available\}/);
+  assert.match(survey, /onClick=\{\(\)=>move\(i\)\}/);
+  assert.doesNotMatch(survey, /onClick=\{\(\)=>i<currentSection&&move\(i\)\}/);
+  assert.match(css, /Survey chapter rail: only the current chapter is recessed; every other chapter stays flat/);
+  assert.match(css, /\.survey-shell \.section-progress\{[\s\S]*box-shadow:none!important;[\s\S]*overflow:hidden!important/);
+  assert.match(css, /\.survey-shell \.section-progress button\.active:disabled\{[\s\S]*box-shadow:inset 5px 5px 10px/);
+  assert.match(css, /\.survey-shell \.section-progress button:disabled\{[\s\S]*box-shadow:none!important/);
+});
+
+test("keeps same-route invitation navigation synchronized with browser history", async () => {
+  const entry = await readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8");
+  assert.match(entry, /window\.addEventListener\("popstate",sync\)/);
+  assert.match(entry, /window\.removeEventListener\("popstate",sync\)/);
+  assert.match(entry, /function openInvite\(event:MouseEvent<HTMLAnchorElement>\)/);
+  assert.match(entry, /history\.pushState\(\{\},"","\/\?access=invite"\)/);
+  assert.match(entry, /href="\/\?access=invite" onClick=\{openInvite\}/);
+  assert.match(entry, /href="\/" onClick=\{closeInvite\}/);
+});
