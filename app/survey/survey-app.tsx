@@ -12,16 +12,30 @@ const sections:Record<string,{n:string;zh:string;en:string;noteZh:string;noteEn:
 };
 const groups=[
  ["wechatName"],
- ["gameDefinition","likedGenres","recommendations","wantGenres","avoidGenres","likedConcepts","dislikedConcepts","viewpoint","redLines"],
- ["mediaPreferences","mediaOther","mediaToGame","references"],
- ["gameIdea","favoritePoint","concerns","wantToDo","wantToGain"],
+ ["gameDefinition","likedGenres","wantGenres","likedConcepts","avoidGenres"],
+ ["mediaPreferences","mediaOther","references"],
+ ["gameIdea","favoritePoint","concerns","wantToDo"],
  ["planningLevel","planningDetail","creativeRoles","technicalRoles","participation","additionalThoughts"],
 ];
 const sectionStarts=["wechatName","gameDefinition","mediaPreferences","gameIdea","planningLevel"];
 function filled(v:unknown){return Array.isArray(v)?v.length>0:typeof v==="string"&&v.trim().length>0}
+function migrateDraftAnswers(source:Answers){
+ const next={...source};
+ const mergeText=(target:string,sources:string[])=>{
+  const values=[next[target],...sources.map(id=>next[id])].filter(v=>typeof v==="string"&&v.trim().length>0) as string[];
+  if(values.length)next[target]=[...new Set(values.map(v=>v.trim()))].join("\n\n");
+  for(const id of sources)delete next[id];
+ };
+ mergeText("likedConcepts",["viewpoint"]);
+ mergeText("avoidGenres",["dislikedConcepts","redLines"]);
+ mergeText("references",["recommendations"]);
+ mergeText("wantToDo",["wantToGain"]);
+ mergeText("additionalThoughts",["mediaToGame"]);
+ return next;
+}
 export function SurveyApp({embedded=false}:{embedded?:boolean}){
  const [lang,setLang]=useState<Lang>("zh"),[answers,setAnswers]=useState<Answers>({}),[stage,setStage]=useState<"form"|"review"|"done">("form"),[currentSection,setCurrentSection]=useState(0),[busy,setBusy]=useState(false),[error,setError]=useState(""),[hydrated,setHydrated]=useState(false),[saved,setSaved]=useState(true);
- useEffect(()=>{try{const raw=localStorage.getItem(KEY);if(raw){const draft=JSON.parse(raw) as Answers|{answers?:Answers;currentSection?:number};if("answers" in draft){setAnswers(draft.answers||{});setCurrentSection(Math.min(Math.max(Number(draft.currentSection)||0,0),groups.length-1))}else setAnswers(draft)}}catch{}finally{setHydrated(true)}},[]);
+ useEffect(()=>{try{const raw=localStorage.getItem(KEY);if(raw){const draft=JSON.parse(raw) as Answers|{answers?:Answers;currentSection?:number};if("answers" in draft){setAnswers(migrateDraftAnswers(draft.answers||{}));setCurrentSection(Math.min(Math.max(Number(draft.currentSection)||0,0),groups.length-1))}else setAnswers(migrateDraftAnswers(draft))}}catch{}finally{setHydrated(true)}},[]);
  useEffect(()=>{if(!hydrated||stage==="done")return;setSaved(false);let idle=0;const timer=setTimeout(()=>{const save=()=>{localStorage.setItem(KEY,JSON.stringify({answers,currentSection}));setSaved(true)};if("requestIdleCallback" in window)idle=window.requestIdleCallback(save,{timeout:800});else save()},650);return()=>{clearTimeout(timer);if(idle&&"cancelIdleCallback" in window)window.cancelIdleCallback(idle)}},[answers,currentSection,hydrated,stage]);
  const visible=useMemo(()=>questions.filter(q=>!q.showWhen||(Array.isArray(answers[q.showWhen.id])?(answers[q.showWhen.id] as string[]).includes(q.showWhen.includes):answers[q.showWhen.id]===q.showWhen.includes)),[answers]);
  const completed=visible.filter(q=>filled(answers[q.id])).length;

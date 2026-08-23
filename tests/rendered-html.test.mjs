@@ -453,3 +453,28 @@ test("uses purposeful motion with tactile feedback and a reduced-motion fallback
   assert.match(css, /transform:translateY\(1px\) scale\(\.99\)!important/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{[\s\S]*animation:none!important[\s\S]*transition:none!important;transform:none!important/);
 });
+
+test("consolidates overlapping survey prompts without losing earlier responses", async () => {
+  const [questionSource, survey, lead] = await Promise.all([
+    readFile(new URL("../app/survey/questions.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/survey/survey-app.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/lead/lead-dashboard.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(questionSource, /retiredQuestionIds=new Set\(\["recommendations","dislikedConcepts","viewpoint","mediaToGame","redLines","wantToGain"\]\)/);
+  assert.match(questionSource, /你希望项目围绕怎样的 concept、主题或体验？又希望作品表达、追问或倡导什么？/);
+  assert.match(questionSource, /哪些游戏类型、concept 或内容是你不想做、也不希望在作品中看到的？为什么？/);
+  assert.match(questionSource, /你最想在项目里做什么，又希望从中获得什么？/);
+  assert.match(survey, /function migrateDraftAnswers/);
+  assert.match(survey, /mergeText\("avoidGenres",\["dislikedConcepts","redLines"\]\)/);
+  assert.doesNotMatch(survey, /\["gameDefinition","likedGenres","recommendations"/);
+  assert.match(lead, /import \{allQuestions\} from "\.\.\/survey\/questions"/);
+  assert.match(lead, /allQuestions\.map/);
+});
+
+test("keeps the embedded survey title anchored above the scrolling questions", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Embedded survey navigation stays anchored while only the questionnaire moves/);
+  assert.match(css, /\.worktop\{position:sticky!important;top:0;z-index:30\}/);
+  assert.match(css, /\.workspace \.embeddedSurvey \.survey-head\{[\s\S]*position:sticky!important;[\s\S]*top:64px!important;[\s\S]*z-index:29!important/);
+  assert.match(css, /@media\(max-width:600px\)\{[\s\S]*\.workspace \.embeddedSurvey \.survey-head\{position:sticky!important;top:54px!important/);
+});

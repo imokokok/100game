@@ -1855,6 +1855,24 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 /* The participant badge is identity information, not an inert control. */
 .worktop .avatar{display:inline-grid;place-items:center;cursor:default}
 
+/* Embedded survey navigation stays anchored while only the questionnaire moves. */
+.worktop{position:sticky!important;top:0;z-index:30}
+.workspace .embeddedSurvey .survey-head{
+ position:sticky!important;
+ top:64px!important;
+ z-index:29!important;
+}
+.workspace .embeddedSurvey .question,
+.workspace .embeddedSurvey .form-section{scroll-margin-top:144px}
+@media(max-width:800px){
+ .workspace .embeddedSurvey .survey-head{top:58px!important}
+ .workspace .embeddedSurvey .question,.workspace .embeddedSurvey .form-section{scroll-margin-top:132px}
+}
+@media(max-width:600px){
+ .workspace .embeddedSurvey .survey-head{position:sticky!important;top:54px!important;height:48px;padding-inline:16px}
+ .workspace .embeddedSurvey .question,.workspace .embeddedSurvey .form-section{scroll-margin-top:116px}
+}
+
 /* Purposeful motion: movement confirms navigation, selection and completed actions. */
 @keyframes surfaceEnter{
  from{opacity:0;transform:translateY(10px)}
