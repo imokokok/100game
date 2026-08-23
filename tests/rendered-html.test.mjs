@@ -24,6 +24,7 @@ test("server-renders the real access page and resilient links", async () => {
   assert.doesNotMatch(html, /Owner 管理入口/);
   assert.match(html, /创作者协作区/);
   assert.match(html, /© 2026 HuieChen/);
+  assert.match(html, /© 2026 HuieChen\. 版权所有。/);
 });
 
 test("invited participants can create and immediately join chat groups", async () => {
@@ -354,4 +355,6 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /\.lead-login form,\.lead-shell \.filters,\.lead-shell \.response-card,\.profile-sheet/);
   assert.match(css, /Keep the red invitation interaction state readable/);
   assert.match(css, /\.entryChoices \.entryChoice:nth-child\(2\):hover b,[\s\S]*color:#ffffff!important/);
+  assert.match(css, /Publication-style copyright line/);
+  assert.match(css, /letter-spacing:\.02em/);
 });

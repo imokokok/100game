@@ -29,7 +29,7 @@ export const translations = {
     groups: { label:"仅成员可见", title:"声音聊天", people:"8 人", member:"参与者 #027", you:"你 · #042", messageA:"我把昨晚车站的环境声放进群文件了。", messageB:"听到了，最后十秒特别像潮水。", placeholder:"写到聊天……", send:"发送", lock:"聊天组、消息与文件仅对组内成员可见。" },
     upload: { add:"拖放或选择文件", detail:"照片、音频、视频、文档 · 最大 50 MB" },
     dashboard: { label:"创作者面板 / 仅限 OWNER", title:"活跃度与贡献记录", lockedTitle:"创作者空间", locked:"活跃记录与贡献分只对 Owner 开放。", signIn:"以 Owner 身份登录", recorded:"已记录参与者", events:"活跃事件", total:"贡献总分", daily:"24h 活跃", manual:"手动贡献分", manualTitle:"由 Owner 记录贡献分", points:"贡献分", reason:"记录贡献原因", record:"记录分数", success:"贡献分已记录", failure:"记录失败，请确认你已以 Owner 身份登录", person:"匿名参与者", score:"贡献分", activity:"活跃次数", recent:"最近活跃", never:"尚无", group:"＋ 建立私密小组（仅 Owner）", editor:"实时内容编辑", editorIntro:"正在编辑当前语言的公开内容。保存后约 15 秒同步给所有访问者。", eyebrow:"页首小标题", headlineA:"主标题第一行", headlineB:"主标题第二行", subtitle:"首页简介", conceptA:"理念第一行", conceptB:"理念第二行", conceptC:"理念第三行", creatorNote:"创作者留言", copyrightLabel:"版权文字", saveContent:"保存并立即更新", saving:"正在保存…", contentSaved:"已保存，公开页面正在同步", contentFailed:"保存失败，请确认你已以 Owner 身份登录" },
-    copyright:"© 2026 HuieChen. 保留所有权利。",
+    copyright:"© 2026 HuieChen. 版权所有。",
   },
   en: {
     language:"Language", creatorSignIn:"Creator sign in", privacy:"Private space", participant:"Participant #042",

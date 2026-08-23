@@ -1811,3 +1811,6 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .entryChoices .entryChoice:nth-child(2):hover span,
 .entryChoices .entryChoice:nth-child(2):focus-visible span,
 .entryChoices .entryChoice:nth-child(2):active span{color:#ffffff!important}
+
+/* Publication-style copyright line. */
+.copyright,.entryGate>.copyright,.publicPage>.copyright{font-family:"Avenir Next","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif!important;font-size:12px;line-height:1.5;font-weight:500;letter-spacing:.02em}
