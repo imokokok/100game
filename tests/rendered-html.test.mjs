@@ -329,3 +329,12 @@ test("uses the same neumorphic system for the public and invitation entry", asyn
   assert.match(css, /\.entryChoices \.entryChoice:active\{box-shadow:inset 4px 4px 8px #b8bcc2,inset -4px -4px 8px #ffffff!important/);
   assert.match(css, /\.gateInvite input:focus\{box-shadow:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff!important/);
 });
+
+test("shares the neumorphic system across public pages, workspace and lead tools", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Site-wide neumorphic unification: one surface, one light source, one accent/);
+  assert.match(css, /\.app>aside\{background:#e0e5ec!important/);
+  assert.match(css, /\.publicPage \.top\{[\s\S]*background:#e0e5ec!important/);
+  assert.match(css, /\.workspace input:not\(\[type="file"\]\)[\s\S]*box-shadow:var\(--neu-inset\)!important/);
+  assert.match(css, /\.lead-login form,\.lead-shell \.filters,\.lead-shell \.response-card,\.profile-sheet/);
+});
