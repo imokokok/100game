@@ -173,3 +173,16 @@ test("keeps supporting interface text legible", async () => {
   assert.match(css, /\.weekFolder small,\.categoryFolder small\{[^}]*font-size:14px/);
   assert.match(css, /input::placeholder,textarea::placeholder\{color:#6b6963;opacity:1\}/);
 });
+
+test("keeps invitation placeholders visible on narrow screens", async () => {
+  const [entry, studio, css] = await Promise.all([
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(entry, /namePlaceholder:"填写微信群聊名"/);
+  assert.doesNotMatch(`${entry}\n${studio}`, /填写你在群里使用的名字|Name used in the group/);
+  assert.match(css, /-webkit-text-size-adjust:100%/);
+  assert.match(css, /\.gateInvite label\{min-width:0\}/);
+  assert.match(css, /\.gateInvite input\{font-size:15px!important;padding-inline:14px\}/);
+});

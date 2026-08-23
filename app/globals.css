@@ -1100,7 +1100,7 @@ body,.workspace,.surveyHub,.survey-shell{background:#f5f4f0}
 .workspaceHomeButton{border:0;background:none;color:#575852;padding:8px 0;font-size:11px;letter-spacing:.04em}.workspaceHomeButton:hover{color:#171715}
 
 /* Readability pass: retain the compact editorial hierarchy without faint microcopy. */
-html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{line-height:1.55}
 .eyebrow,.kicker{font-size:12px;line-height:1.45;letter-spacing:.13em;color:#595851}
 .languagePicker>span,.entryGate .entryTop .languagePicker>span,.publicPage .top .languagePicker>span,.worktop .languagePicker>span{font-size:11px!important;color:#55544f}
@@ -1110,7 +1110,7 @@ body{line-height:1.55}
 .creatorWelcome strong{font-size:16px;line-height:1.45}
 .creatorWelcome span{color:#44453f;font-size:14px;line-height:1.65}
 .gateInvite label>span{font-size:13px;line-height:1.45}
-.gateInvite input{font-size:16px;line-height:1.45}
+.gateInvite label{min-width:0}.gateInvite input{min-width:0;max-width:100%;font-size:16px!important;line-height:1.45}
 input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
 .copyright,.entryGate>.copyright,.publicPage>.copyright{color:#5c5a54;font-size:12px;line-height:1.55;font-weight:500}
 .publicPage .top nav a{font-size:13px}
@@ -1134,4 +1134,5 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .app>aside nav button b{font-size:10px}
  .publicPage .top nav a{font-size:12px}
  .entryChoices .entryChoice span{font-size:14px;line-height:1.6}
+ .gateInvite input{font-size:15px!important;padding-inline:14px}
 }
