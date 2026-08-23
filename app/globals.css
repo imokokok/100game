@@ -1272,3 +1272,39 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .weekFolder small,.driveFolder small,.categoryFolder small{font-size:12px}
  .lead-shell .filters{border-radius:0}.journalEmpty{padding:40px 4px}
 }
+
+/* Mobile comfort pass: reflow controls instead of squeezing the desktop interface. */
+.survey-shell .step-actions{position:static}
+@media(max-width:600px){
+ body{overflow-x:hidden}
+ .app{padding-bottom:118px}
+ .app>aside{height:118px;padding:6px 8px max(6px,env(safe-area-inset-bottom))}
+ .app>aside nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(46px,1fr));gap:4px;height:100%;overflow:visible}
+ .app>aside nav button{min-width:0;min-height:46px;padding:5px 3px;font-size:11px;line-height:1.15}
+ .app>aside nav button b{font-size:9px}
+ .worktop{height:54px;padding-inline:14px;gap:8px}
+ .worktop>div:last-child{gap:7px}.worktop .privacy{display:none}.worktop .avatar{width:34px;height:34px;margin-left:0}
+ .worktop .languagePicker select{min-width:82px!important;max-width:92px}
+ .workspaceHomeButton{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .workspace .embeddedSurvey .survey-head{position:relative;top:0!important;height:48px;padding-inline:16px}
+ .workspace .embeddedSurvey .survey-title{font-size:12px}.workspace .embeddedSurvey .survey-title span,.workspace .embeddedSurvey .lang-switch{display:none}
+ .workspace .embeddedSurvey .survey-progress{min-width:82px}
+ .survey-shell .survey-step-head{padding:38px 18px 20px}
+ .survey-shell .survey-step-head h1{font-size:34px}
+ .survey-shell .question-list{padding-inline:17px;padding-bottom:48px}
+ .survey-shell .question,.survey-shell .question.answered{grid-template-columns:1fr!important;gap:11px;padding:34px 0!important}
+ .survey-shell .q-number{padding:0;font-size:13px}.survey-shell .q-label{margin-bottom:18px;font-size:22px;line-height:1.35}
+ .survey-shell .q-body textarea{min-height:138px}.survey-shell .option{min-height:54px;padding:14px}
+ .survey-shell .step-actions{position:static!important;margin-top:0;padding:28px 0 0!important;border-top:0;background:transparent!important}
+ .survey-shell .step-actions .button{min-width:0;min-height:52px}
+ .journalFilters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:20px 0 28px;padding:0;overflow:visible}
+ .journalFilters button{justify-content:space-between;min-width:0;padding:10px 11px}
+ .inviteGate>section{width:100%;margin:0 auto;padding:40px 20px 54px;border:0;border-radius:0;background:transparent;box-shadow:none}
+ .inviteGate .creatorWelcome{padding:17px 0;border-top:1px solid #c9c6be;border-bottom:1px solid #c9c6be;border-radius:0;background:transparent}
+ .libraryBreadcrumb>button:only-child{display:none}.libraryBreadcrumb:has(>button:only-child){min-height:0;margin:0;padding:0;border:0}
+}
+@media(max-width:360px){
+ .app>aside nav button{font-size:10px}.app>aside nav button b{font-size:8px}
+ .survey-shell .q-label{font-size:20px}
+ .journalFilters button{padding-inline:8px;font-size:11px}
+}

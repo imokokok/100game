@@ -291,3 +291,13 @@ test("uses one editorial system instead of assembling the interface from rounded
   assert.match(css, /\.lead-shell \.response-card\{[^}]*border-radius:0;[^}]*background:transparent;[^}]*box-shadow:none!important/);
   assert.match(css, /\.entryChoices \.entryChoice,\.entryChoices \.entryChoice:first-child,\.entryChoices \.entryChoice:nth-child\(2\)\{[^}]*grid-template-columns:minmax\(180px,.55fr\)/);
 });
+
+test("reflows the mobile workspace without tiny navigation or controls covering questions", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Mobile comfort pass: reflow controls instead of squeezing the desktop interface/);
+  assert.match(css, /\.app>aside nav\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\);grid-template-rows:repeat\(2,minmax\(46px,1fr\)\)/);
+  assert.match(css, /\.survey-shell \.step-actions\{position:static\}/);
+  assert.match(css, /\.survey-shell \.question,\.survey-shell \.question\.answered\{grid-template-columns:1fr!important/);
+  assert.match(css, /\.journalFilters\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css, /\.worktop \.privacy\{display:none\}/);
+});
