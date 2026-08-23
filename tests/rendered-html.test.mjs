@@ -349,6 +349,7 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /\.publicPage \.top\{[\s\S]*background:#e0e5ec!important/);
   assert.match(css, /\.conceptStandalone>\.conceptLabelBlock\{[\s\S]*background:#e0e5ec!important;[\s\S]*color:#4f46d8!important;[\s\S]*box-shadow:inset 3px 3px 6px/);
   assert.match(css, /\.conceptStandalone \.conceptHeadlineLine\.accent\{color:#c72d24!important\}/);
+  assert.match(css, /\.conceptQuestions\{[^}]*padding:clamp\(36px,5vw,64px\)/);
   assert.match(css, /\.workspace input:not\(\[type="file"\]\)[\s\S]*box-shadow:var\(--neu-inset\)!important/);
   assert.match(css, /\.lead-login form,\.lead-shell \.filters,\.lead-shell \.response-card,\.profile-sheet/);
   assert.match(css, /Keep the red invitation interaction state readable/);

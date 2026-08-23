@@ -1757,7 +1757,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .publicPage .languagePicker{border:0!important;border-radius:14px!important;background:#e0e5ec!important;box-shadow:4px 4px 8px #b8bcc2,-4px -4px 8px #ffffff!important}.publicPage .languagePicker select{border:0!important;background:#e0e5ec!important;color:#454b55!important}
 .conceptStandalone .conceptHeadlineLine.accent{color:#c72d24!important}.conceptStandalone .conceptSubtitle,.conceptStandalone .conceptEssay p{color:#4f5660}
 .conceptStandalone .conceptEssay p,.conceptStandalone .conceptEssay p:nth-child(3n){padding-top:0;border:0;box-shadow:none;background:transparent}
-.conceptQuestions{border:0!important;border-radius:20px;background:#e0e5ec!important;color:#3c4149!important;box-shadow:var(--neu-inset-soft)!important}.conceptQuestions p{color:#3c4149!important}
+.conceptQuestions{border:0!important;border-radius:20px;padding:clamp(36px,5vw,64px);background:#e0e5ec!important;color:#3c4149!important;box-shadow:var(--neu-inset-soft)!important}.conceptQuestions p{color:#3c4149!important}
 .conceptRecruitment{border:0!important;border-radius:22px!important;background:#e0e5ec!important;color:#333333!important;box-shadow:var(--neu-raised)!important}.conceptRecruitment .kicker,.conceptRecruitment p,.conceptRecruitment strong,.conceptRecruitment b{color:#4f5660!important}.conceptRecruitment strong,.conceptRecruitment b{color:#5d50df!important}
 .conceptStandalone .peopleCta{
  border:0!important;border-radius:14px!important;background:#e0e5ec!important;color:#4f46d8!important;box-shadow:6px 6px 12px #b8bcc2,-6px -6px 12px #ffffff!important;transform:none!important;transition:box-shadow .3s ease-in-out!important
