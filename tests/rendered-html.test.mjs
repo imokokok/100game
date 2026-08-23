@@ -63,6 +63,24 @@ test("uses 911 for the shared participant invitation and preserves returning ses
   assert.match(accessRoute, /participantHeaders\.set\("cookie",participantCookie\)/);
 });
 
+test("requires Hera and the lead code together while isolating participant sessions", async () => {
+  const [shared, accessRoute, leadLogin, dashboard] = await Promise.all([
+    readFile(new URL("../app/api/_shared.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/access/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/lead/login/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/lead/lead-dashboard.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(shared, /export const LEAD_NAME = "Hera"/);
+  assert.match(shared, /safeEq\(submittedName,LEAD_NAME\)&&safeEq\(submittedCode,expectedCode\)/);
+  assert.match(shared, /const payload=`\$\{LEAD_NAME\}\.\$\{expiry\}`/);
+  assert.match(shared, /if\(parts\.length!==3\)return false/);
+  assert.match(accessRoute, /validLeadCredentials\(name,value\)/);
+  assert.match(accessRoute, /clearLeadSession\(res\)/);
+  assert.match(leadLogin, /validLeadCredentials\(name,code\)/);
+  assert.match(dashboard, /JSON\.stringify\(\{name,code\}\)/);
+  assert.match(dashboard, /姓名 \/ Name/);
+});
+
 test("language switching uses complete local copy without an online translator", async () => {
   const [locale, ui, studio, concept, flows] = await Promise.all([
     readFile(new URL("../app/locale-copy.ts", import.meta.url), "utf8"),
@@ -135,7 +153,7 @@ test("keeps management and participant records behind server authorization", asy
   assert.match(questionnaire, /participantId\(req\)/);
   assert.match(questionnaire, /Invitation required/);
   assert.match(leadResponses, /private, no-store/);
-  assert.match(leadLogin, /safeEq/);
+  assert.match(leadLogin, /validLeadCredentials/);
   assert.match(proxy, /X-Content-Type-Options/);
   assert.match(proxy, /X-Frame-Options/);
   assert.match(proxy, /Permissions-Policy/);

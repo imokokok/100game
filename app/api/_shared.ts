@@ -1,5 +1,8 @@
 import { env } from "cloudflare:workers";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+export const LEAD_NAME = "Hera";
+const LEAD_SESSION_MAX_AGE = 60 * 60 * 8;
 
 export function d1() {
   const db = (env as unknown as { DB?: D1Database }).DB;
@@ -26,14 +29,41 @@ function safeEq(a:string,b:string){
   return value===0;
 }
 
+async function signLeadPayload(payload:string){
+  const secret=(env as unknown as {LEAD_SESSION_SECRET?:string}).LEAD_SESSION_SECRET;
+  if(!secret)throw new Error("Lead session secret is unavailable");
+  const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  const bytes=new Uint8Array(await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(payload)));
+  return btoa(String.fromCharCode(...bytes)).replace(/=+$/g,"");
+}
+
+export function validLeadCredentials(name:unknown,code:unknown){
+  const expectedCode=(env as unknown as {LEAD_ACCESS_CODE?:string}).LEAD_ACCESS_CODE;
+  const submittedName=String(name??"").trim();
+  const submittedCode=String(code??"").trim();
+  return Boolean(expectedCode&&safeEq(submittedName,LEAD_NAME)&&safeEq(submittedCode,expectedCode));
+}
+
+export async function setLeadSession(res:NextResponse){
+  const expiry=Date.now()+LEAD_SESSION_MAX_AGE*1000;
+  const payload=`${LEAD_NAME}.${expiry}`;
+  const token=`${payload}.${await signLeadPayload(payload)}`;
+  res.cookies.set("lead_session",token,{httpOnly:true,secure:true,sameSite:"strict",path:"/",maxAge:LEAD_SESSION_MAX_AGE});
+}
+
+export function clearLeadSession(res:NextResponse){
+  res.cookies.set("lead_session","",{httpOnly:true,secure:true,sameSite:"strict",path:"/",maxAge:0});
+}
+
 export async function isLead(req:Request){
   const raw=req.headers.get("cookie")?.match(/(?:^|; )lead_session=([^;]+)/)?.[1];
   if(!raw)return false;
-  const [expiry,sig]=decodeURIComponent(raw).split(".");
-  if(!expiry||!sig||Date.now()>Number(expiry)||!env.LEAD_SESSION_SECRET)return false;
-  const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(env.LEAD_SESSION_SECRET),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
-  const bytes=new Uint8Array(await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(expiry)));
-  const expected=btoa(String.fromCharCode(...bytes)).replace(/=+$/g,"");
+  const parts=decodeURIComponent(raw).split(".");
+  if(parts.length!==3)return false;
+  const [name,expiry,sig]=parts;
+  const expiresAt=Number(expiry);
+  if(!safeEq(name,LEAD_NAME)||!Number.isFinite(expiresAt)||Date.now()>expiresAt)return false;
+  const expected=await signLeadPayload(`${name}.${expiry}`);
   return safeEq(sig,expected);
 }
 
