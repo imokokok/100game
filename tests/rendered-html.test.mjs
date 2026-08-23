@@ -193,3 +193,16 @@ test("keeps public back navigation visually lightweight", async () => {
   assert.match(css, /\.publicPage \.top>\.publicBack\{[^}]*border:0!important;[^}]*background:transparent!important/);
   assert.match(css, /\.publicPage \.top>\.publicBack:focus-visible\{[^}]*outline:2px solid #c72d24/);
 });
+
+test("keeps entry cards free of redundant arrows", async () => {
+  const [entry, studio] = await Promise.all([
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+  ]);
+  const entryChoices = entry.match(/className="entryChoices">([\s\S]*?)<\/div><\/section>/)?.[1] ?? "";
+  const studioChoices = studio.match(/className="entryChoices">([\s\S]*?)<\/div><\/section>/)?.[1] ?? "";
+  assert.ok(entryChoices);
+  assert.ok(studioChoices);
+  assert.doesNotMatch(entryChoices, /<i>→<\/i>/);
+  assert.doesNotMatch(studioChoices, /<i>→<\/i>/);
+});
