@@ -282,3 +282,12 @@ test("keeps workspace navigation refresh-safe and gives the lead the correct ext
   assert.match(css, /Mobile navigation and filter rails remain complete without browser scrollbars/);
   assert.match(entry, /busy\?c\.entering:c\.verify/);
 });
+
+test("uses one editorial system instead of assembling the interface from rounded cards", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Editorial direction: hierarchy comes from typography, rhythm and contrast/);
+  assert.match(css, /\.survey-shell \.question,\.survey-shell \.question\.answered\{[^}]*border-radius:0!important;[^}]*background:transparent!important;[^}]*box-shadow:none!important/);
+  assert.match(css, /\.weekFolder,\.driveFolder,\.categoryFolder,\.categoryFolder:nth-child\(2n\)\{[^}]*border-radius:0!important;[^}]*background:transparent!important;[^}]*box-shadow:none!important/);
+  assert.match(css, /\.lead-shell \.response-card\{[^}]*border-radius:0;[^}]*background:transparent;[^}]*box-shadow:none!important/);
+  assert.match(css, /\.entryChoices \.entryChoice,\.entryChoices \.entryChoice:first-child,\.entryChoices \.entryChoice:nth-child\(2\)\{[^}]*grid-template-columns:minmax\(180px,.55fr\)/);
+});
