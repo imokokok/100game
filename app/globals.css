@@ -1817,3 +1817,8 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 
 /* Week indices keep a comfortable distance from the folder edge. */
 .libraryWeeks .weekFolder{padding-inline:clamp(20px,3vw,32px)!important}
+
+/* Survey structure stays flat: no decorative halo around the reading surface. */
+.survey-shell .survey-intro,
+.survey-shell .question-list,
+.survey-shell .review-panel{box-shadow:none!important}

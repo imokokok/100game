@@ -369,3 +369,9 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /letter-spacing:\.02em/);
   assert.match(css, /\.libraryWeeks \.weekFolder\{padding-inline:clamp\(20px,3vw,32px\)!important\}/);
 });
+
+test("keeps the survey reading surface free of a decorative halo", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Survey structure stays flat: no decorative halo around the reading surface/);
+  assert.match(css, /\.survey-shell \.survey-intro,\s*\.survey-shell \.question-list,\s*\.survey-shell \.review-panel\{box-shadow:none!important\}/);
+});
