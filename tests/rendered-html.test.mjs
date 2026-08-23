@@ -154,7 +154,7 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.match(css, /Mature studio system: hierarchy first, decoration removed/);
   assert.match(css, /entryGate:not\(\.inviteGate\):before/);
   assert.match(css, /\.conceptQuestions\{max-width:none/);
-  assert.match(css, /\.conceptStandalone \.conceptEssay\{display:grid;grid-template-columns:repeat\(2/);
+  assert.match(css, /\.conceptStandalone \.conceptEssay\{display:grid;grid-template-columns:minmax\(0,820px\);gap:30px\}/);
   assert.match(css, /Mobile keeps the desktop information hierarchy/);
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css, /\.publicPage \.top>\.mark\{display:block!important/);
