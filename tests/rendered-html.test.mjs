@@ -306,6 +306,8 @@ test("gives the Week 0 proposal and participant survey their real task flows", a
   assert.match(flows, /Digital Proposal \/ 电子提案（可选）/);
   assert.match(flows, /可参考群公告整理提案/);
   assert.match(flows, /const participantSurvey=task\?\.id==="week0-participant-survey"/);
+  assert.match(flows, /title_zh\.includes\("参与者信息问卷"\)/);
+  assert.match(flows, /title_en\.toLowerCase\(\)\.includes\("participant survey"\)/);
   assert.match(flows, /href="\/workspace\?view=survey"/);
   assert.match(flows, /event\.preventDefault\(\);onOpenSurvey\(\)/);
   assert.match(flows, /fetch\("\/api\/tasks",\{cache:"no-store"\}\)[\s\S]*\.finally\(\(\)=>setLoaded\(true\)\)\},\[\]\)/);

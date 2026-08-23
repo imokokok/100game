@@ -50,7 +50,9 @@ export function LiveTasks({t,lang,onOpenSurvey}:{t:Translation;lang:Language;onO
   :lang==="zh"?x.title_zh:lang==="en"?x.title_en:t.tasks.title;
  const weekTasks=tasks.filter(x=>x.week===week);
  const ownerPending=task?.id==="week0-top-five-games";
- const participantSurvey=task?.id==="week0-participant-survey";
+ const participantSurvey=task?.id==="week0-participant-survey"
+  ||Boolean(task?.title_zh.includes("参与者信息问卷"))
+  ||Boolean(task?.title_en.toLowerCase().includes("participant survey"));
  const digitalProposal=task?.id==="week0-digital-proposal";
  const promptLabel=digitalProposal?(lang==="zh"?"提案说明（可选）":"Proposal note (optional)"):t.tasks.prompt;
  const promptPlaceholder=digitalProposal?(lang==="zh"?"可简要写下核心概念、游戏机制、叙事、视觉方向或希望讨论的问题；也可以直接上传提案文件。":"Briefly note the concept, mechanics, narrative, visual direction, or questions for discussion. You can also upload the proposal file directly."):t.tasks.placeholder;
