@@ -312,4 +312,6 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(hub, /surveyStatus/);
   assert.match(hub, /© 2026 HuieChen/);
   assert.match(css, /Survey register: one coherent red, white and black editorial system/);
+  assert.match(css, /Glass survey direction: depth replaces grids, dividers and stacked cards/);
+  assert.match(css, /backdrop-filter:blur\(28px\) saturate\(140%\)/);
 });

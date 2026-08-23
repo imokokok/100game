@@ -1350,3 +1350,100 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .survey-shell .survey-step-head{padding-top:44px}.survey-shell .survey-step-head h1{font-size:38px}.survey-shell .question-list{padding-inline:18px}.survey-shell .question,.survey-shell .question.answered{padding:40px 0!important}.survey-shell .q-label{font-size:23px}.survey-shell .focus-note{margin-top:24px}
 }
 @media(max-width:380px){.surveyCatalogue>header{grid-template-columns:42px 1fr 62px}.surveyCatalogue>a{grid-template-columns:42px minmax(0,1fr)}.surveyCatalogue h2{font-size:28px}.surveyStatus>strong{min-width:116px;padding-inline:12px}.surveyHub>footer{gap:16px;flex-wrap:wrap}}
+
+/* Glass survey direction: depth replaces grids, dividers and stacked cards. */
+.surveyHub,.survey-shell{
+ --glass-bg:rgba(255,255,255,.58);
+ --glass-strong:rgba(255,255,255,.76);
+ --glass-shadow:0 24px 70px rgba(34,28,24,.09);
+ background:
+  radial-gradient(circle at 12% 6%,rgba(201,46,37,.14),transparent 31%),
+  radial-gradient(circle at 88% 24%,rgba(30,29,27,.07),transparent 27%),
+  linear-gradient(145deg,#f2eee8 0%,#faf9f6 52%,#ebe8e2 100%);
+ background-attachment:fixed;
+}
+.surveyHub>header,.survey-shell .survey-head{
+ border:0!important;
+ background:rgba(255,255,255,.56)!important;
+ box-shadow:0 10px 34px rgba(36,31,27,.06)!important;
+ -webkit-backdrop-filter:blur(24px) saturate(135%);
+ backdrop-filter:blur(24px) saturate(135%);
+}
+.surveyHub>header:after,.survey-shell .survey-head:after{content:""!important;display:block!important;position:absolute;left:clamp(20px,5vw,72px);right:clamp(20px,5vw,72px);bottom:0;height:2px;background:var(--survey-red);opacity:.9}
+.surveyHub>header>button,.survey-shell .lang-switch{border:0!important;border-radius:99px!important;background:rgba(255,255,255,.7)!important;box-shadow:inset 0 0 0 1px rgba(22,22,20,.1),0 6px 18px rgba(35,30,26,.05)}
+.surveyHubIntro{padding-top:clamp(82px,10vw,138px)}
+.surveyHubStatement{padding:0;border:0}.surveyHubStatement b{margin-bottom:20px}.surveyHubStatement span{color:#4e4c47}
+.surveyCatalogue>header{display:none}
+.surveyCatalogue>a{
+ min-height:230px;
+ padding:42px!important;
+ grid-template-columns:78px minmax(0,1fr) 164px;
+ border:0!important;
+ border-radius:26px!important;
+ background:var(--glass-bg)!important;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.72),var(--glass-shadow)!important;
+ -webkit-backdrop-filter:blur(28px) saturate(140%);
+ backdrop-filter:blur(28px) saturate(140%);
+ overflow:hidden;
+}
+.surveyCatalogue>a:hover,.surveyCatalogue>a:focus-visible{padding:42px!important;background:rgba(255,255,255,.7)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.82),0 30px 80px rgba(34,28,24,.12)!important}
+.surveyIndex{padding-top:2px}.surveyCatalogue h2{max-width:760px}.surveyStatus>strong{border:0!important;border-radius:99px!important;box-shadow:0 12px 26px rgba(201,46,37,.2)}
+.surveyHub>footer{border:0;background:rgba(255,255,255,.34);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+
+.survey-shell .survey-intro{
+ width:min(1040px,calc(100% - 40px));
+ margin:clamp(38px,6vw,74px) auto 48px;
+ padding:clamp(48px,7vw,82px);
+ border:0!important;
+ border-radius:30px;
+ background:var(--glass-bg);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.72),var(--glass-shadow);
+ -webkit-backdrop-filter:blur(28px) saturate(135%);
+ backdrop-filter:blur(28px) saturate(135%);
+}
+.survey-shell .intro-grid{margin-top:52px;padding:0;border:0;gap:clamp(30px,7vw,86px)}
+.survey-shell .survey-step-head{padding-bottom:30px;border:0!important}
+.survey-shell .question-list,.survey-shell .review-panel{
+ width:min(940px,calc(100% - 40px));
+ margin:0 auto clamp(54px,7vw,96px);
+ padding:30px clamp(24px,5vw,58px) 48px;
+ border-radius:28px;
+ background:var(--glass-bg);
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.68),var(--glass-shadow);
+ -webkit-backdrop-filter:blur(28px) saturate(135%);
+ backdrop-filter:blur(28px) saturate(135%);
+}
+.survey-shell .section-progress{padding:6px!important;border:0!important;border-radius:18px!important;background:rgba(255,255,255,.42)!important;gap:4px!important}
+.survey-shell .section-progress button,.survey-shell .section-progress button+button{min-height:50px;padding:9px 10px!important;border:0!important;border-radius:13px!important;background:transparent!important}
+.survey-shell .section-progress button.active{border:0!important;background:rgba(201,46,37,.11)!important}.survey-shell .section-progress button.active span{color:var(--survey-red)!important}
+.survey-shell .focus-note,.survey-shell .focus-note.complete{margin:24px 0 10px;padding:16px 18px;border:0;border-radius:16px;background:rgba(255,255,255,.48)}
+.survey-shell .question,.survey-shell .question.answered{padding:46px 0!important;border:0!important;background:transparent!important}.survey-shell .question+.question{border-top:0!important}
+.survey-shell .question.answered{padding-left:0!important}.survey-shell .answer-confirmation{color:#55524d}
+.survey-shell .q-body input,.survey-shell .q-body textarea{
+ border:0!important;
+ border-radius:16px!important;
+ background:rgba(255,255,255,.7)!important;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.84),0 10px 28px rgba(34,29,25,.05)!important;
+}
+.survey-shell .q-body input:focus,.survey-shell .q-body textarea:focus{outline:0;box-shadow:inset 0 0 0 2px var(--survey-red),0 12px 30px rgba(34,29,25,.07)!important}
+.survey-shell .option-grid{gap:10px}.survey-shell .option{
+ border:0!important;
+ border-radius:15px!important;
+ background:rgba(255,255,255,.62)!important;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.82),0 8px 22px rgba(34,29,25,.045)!important;
+}
+.survey-shell .option:hover{border:0!important;background:rgba(255,255,255,.86)!important;box-shadow:inset 0 0 0 1px rgba(22,22,20,.12),0 12px 28px rgba(34,29,25,.07)!important}
+.survey-shell .option.selected,.survey-shell .option.selected:nth-child(3n+1),.survey-shell .option.selected:nth-child(3n){background:rgba(22,22,20,.94)!important;border:0!important;box-shadow:0 14px 30px rgba(22,22,20,.15)!important}
+.survey-shell .button{border:0!important;border-radius:99px!important;background:rgba(255,255,255,.64)!important;box-shadow:inset 0 0 0 1px rgba(22,22,20,.1),0 8px 20px rgba(34,29,25,.05)}
+.survey-shell .button.primary{border:0!important;box-shadow:0 12px 28px rgba(201,46,37,.2)}
+.survey-shell .proposal-note{padding:24px;border:0;border-radius:18px;background:rgba(255,255,255,.46)}
+.survey-shell .step-actions{padding-top:28px}.survey-shell .survey-footer{border:0;background:rgba(255,255,255,.28);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+
+@media(max-width:700px){
+ .surveyHub>header:after,.survey-shell .survey-head:after{left:16px;right:16px}
+ .surveyHubIntro{padding-top:66px}.surveyCatalogue>a{padding:28px 24px!important;grid-template-columns:42px minmax(0,1fr);border-radius:22px!important}.surveyCatalogue>a:hover,.surveyCatalogue>a:focus-visible{padding:28px 24px!important}.surveyStatus{grid-column:2}.surveyHub>footer{background:rgba(255,255,255,.38)}
+ .survey-shell .survey-intro{width:calc(100% - 24px);margin:18px auto 26px;padding:36px 24px;border-radius:24px}.survey-shell .intro-grid{margin-top:36px}
+ .survey-shell .survey-step-head{padding-bottom:22px}.survey-shell .question-list,.survey-shell .review-panel{width:calc(100% - 20px);padding:16px 16px 34px;border-radius:22px}.survey-shell .section-progress{border-radius:15px!important}.survey-shell .section-progress button,.survey-shell .section-progress button+button{border-radius:11px!important}
+ .survey-shell .focus-note,.survey-shell .focus-note.complete{margin-top:18px}.survey-shell .question,.survey-shell .question.answered{padding:36px 0!important}.survey-shell .q-body input,.survey-shell .q-body textarea,.survey-shell .option{border-radius:13px!important}.survey-shell .proposal-note{padding:20px;border-radius:15px}
+}
+@media(prefers-reduced-transparency:reduce){.surveyHub>header,.survey-shell .survey-head,.surveyCatalogue>a,.survey-shell .survey-intro,.survey-shell .question-list,.survey-shell .review-panel{background:#fff!important;-webkit-backdrop-filter:none;backdrop-filter:none}}
