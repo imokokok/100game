@@ -354,8 +354,8 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(css, /Glass survey direction: depth replaces grids, dividers and stacked cards/);
   assert.match(css, /backdrop-filter:blur\(28px\) saturate\(140%\)/);
   assert.match(css, /Neumorphic survey system: fixed top-left light, soft clay surfaces/);
-  assert.match(css, /--neu-raised:8px 8px 16px #b8bcc2,-8px -8px 16px #ffffff/);
-  assert.match(css, /--neu-inset-focus:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff/);
+  assert.match(css, /--neu-raised:8px 8px 16px #c4bdb3,-8px -8px 16px #ffffff/);
+  assert.match(css, /--neu-inset-focus:inset 2px 2px 4px #c4bdb3,inset -2px -2px 4px #ffffff/);
   assert.match(css, /Project red is the only interaction accent across the survey surface/);
 });
 
@@ -363,16 +363,16 @@ test("uses the same neumorphic system for the public and invitation entry", asyn
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /Neumorphic entry system: the public gate now shares the survey language/);
   assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/);
-  assert.match(css, /\.entryChoices \.entryChoice:active\{box-shadow:inset 4px 4px 8px #b8bcc2,inset -4px -4px 8px #ffffff!important/);
-  assert.match(css, /\.gateInvite input:focus\{box-shadow:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff!important/);
+  assert.match(css, /\.entryChoices \.entryChoice:active\{box-shadow:inset 4px 4px 8px #c4bdb3,inset -4px -4px 8px #ffffff!important/);
+  assert.match(css, /\.gateInvite input:focus\{box-shadow:inset 2px 2px 4px #c4bdb3,inset -2px -2px 4px #ffffff!important/);
 });
 
 test("shares the neumorphic system across public pages, workspace and lead tools", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /Site-wide neumorphic unification: one surface, one light source, one accent/);
-  assert.match(css, /\.app>aside\{background:#e0e5ec!important/);
-  assert.match(css, /\.publicPage \.top\{[\s\S]*background:#e0e5ec!important/);
-  assert.match(css, /\.conceptStandalone>\.conceptLabelBlock\{[\s\S]*background:#e0e5ec!important;[\s\S]*color:#9f211a!important;[\s\S]*box-shadow:inset 3px 3px 6px/);
+  assert.match(css, /\.app>aside\{background:#e8e2d8!important/);
+  assert.match(css, /\.publicPage \.top\{[\s\S]*background:#e8e2d8!important/);
+  assert.match(css, /\.conceptStandalone>\.conceptLabelBlock\{[\s\S]*background:#e8e2d8!important;[\s\S]*color:#9f211a!important;[\s\S]*box-shadow:inset 3px 3px 6px/);
   assert.match(css, /\.conceptStandalone \.conceptHeadlineLine\.accent\{color:#c72d24!important\}/);
   assert.match(css, /\.conceptQuestions\{[^}]*padding:clamp\(36px,5vw,64px\)/);
   assert.match(css, /\.workspace input:not\(\[type="file"\]\)[\s\S]*box-shadow:var\(--neu-inset\)!important/);
@@ -383,6 +383,14 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /Publication-style copyright line/);
   assert.match(css, /letter-spacing:\.02em/);
   assert.match(css, /\.libraryWeeks \.weekFolder\{padding-inline:clamp\(20px,3vw,32px\)!important\}/);
+});
+
+test("uses a warm stone surface instead of pale blue-grey", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /--neu-bg:#e8e2d8/);
+  assert.match(css, /--neu-soft:#f5f1ea/);
+  assert.match(css, /--neu-dark:#c4bdb3/);
+  assert.doesNotMatch(css, /#e0e5ec|#f0f0f3|#b8bcc2/);
 });
 
 test("keeps the survey reading surface free of a decorative halo", async () => {
