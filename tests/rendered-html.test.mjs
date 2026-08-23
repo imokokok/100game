@@ -579,5 +579,7 @@ test("defers nonessential workspace requests until after the active view is read
   assert.match(studio, /requestIdleCallback" in window/);
   assert.match(studio, /timeout:2200/);
   assert.match(studio, /window\.setTimeout\(load,1200\)/);
+  assert.match(studio, /requestIdleCallback\(warm,\{timeout:3000\}\)/);
+  assert.match(studio, /void loadLiveFlows\(\)/);
   assert.match(studio, /window\.setTimeout\(\(\)=>record\("view"\),1500\)/);
 });
