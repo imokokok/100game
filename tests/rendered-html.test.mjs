@@ -314,4 +314,7 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(css, /Survey register: one coherent red, white and black editorial system/);
   assert.match(css, /Glass survey direction: depth replaces grids, dividers and stacked cards/);
   assert.match(css, /backdrop-filter:blur\(28px\) saturate\(140%\)/);
+  assert.match(css, /Neumorphic survey system: fixed top-left light, soft clay surfaces/);
+  assert.match(css, /--neu-raised:8px 8px 16px #b8bcc2,-8px -8px 16px #ffffff/);
+  assert.match(css, /--neu-inset-focus:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff/);
 });
