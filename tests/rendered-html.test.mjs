@@ -390,3 +390,31 @@ test("renders the project game title in red across public and workspace surfaces
   assert.match(css, /\.entryGate \.wordmark,\s*\.publicPage \.mark \.wordmark,\s*\.app \.brand \.wordmark,/);
   assert.match(css, /\.surveyHub>header>a,[\s\S]*\.survey-confirm>\.eyebrow\{color:#c72d24!important\}/);
 });
+
+test("keeps the concept callout in normal reading flow on mobile", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Public editorial asides stay in the document flow instead of inheriting the studio rail/);
+  assert.match(css, /\.publicPage \.conceptRecruitment\{[\s\S]*position:static!important;[\s\S]*width:auto!important;[\s\S]*height:auto!important;[\s\S]*display:block!important/);
+});
+
+test("does not present participant identity as a non-working button", async () => {
+  const studio = await readFile(new URL("../app/studio.tsx", import.meta.url), "utf8");
+  assert.match(studio, /<span className="avatar" aria-label=\{participantLabel\}>/);
+  assert.doesNotMatch(studio, /<button className="avatar"/);
+});
+
+test("uses the current project name in public page metadata", async () => {
+  const [concept, people] = await Promise.all([
+    readFile(new URL("../app/concept/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/people/page.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.doesNotMatch(concept + people, /HOW 100 PEOPLE CALL A GAME/);
+  assert.match(concept, /理念 — WHAT 100 PEOPLE DO TO A GAME/);
+  assert.match(people, /共同创作者 — WHAT 100 PEOPLE DO TO A GAME/);
+});
+
+test("keeps public navigation labels intact on mobile", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Public navigation labels remain readable as single units on narrow screens/);
+  assert.match(css, /\.publicPage \.top>nav a\{white-space:nowrap\}/);
+});

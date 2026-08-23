@@ -1830,3 +1830,19 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .surveyHub>header>a,
 .survey-shell .survey-footer>span,
 .survey-confirm>.eyebrow{color:#c72d24!important}
+
+/* Public editorial asides stay in the document flow instead of inheriting the studio rail. */
+.publicPage .conceptRecruitment{
+ position:static!important;
+ inset:auto!important;
+ width:auto!important;
+ height:auto!important;
+ display:block!important;
+ overflow:visible!important;
+}
+
+/* The participant badge is identity information, not an inert control. */
+.worktop .avatar{display:inline-grid;place-items:center;cursor:default}
+
+/* Public navigation labels remain readable as single units on narrow screens. */
+.publicPage .top>nav a{white-space:nowrap}
