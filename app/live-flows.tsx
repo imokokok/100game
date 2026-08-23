@@ -45,7 +45,9 @@ export function LiveTasks({t,lang,onOpenSurvey}:{t:Translation;lang:Language;onO
  async function save(submit=false){if(!task)return;setSaving(true);localStorage.setItem(`w100-draft-${task.id}`,text);const res=await fetch("/api/tasks",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({taskId:task.id,body:text,status:submit?"submitted":"draft"})}).catch(()=>null);setSaving(false);if(res?.ok){localStorage.removeItem(`w100-draft-${task.id}`);setStatus(t.tasks.saved)}else setStatus(shortError(lang))}
  if(!loaded)return <div className="page narrow"><div className="kicker">{t.nav.tasks}</div><h1>{t.nav.tasks}</h1><div className="workspaceLoading" aria-label={lang==="zh"?"正在读取任务":"Loading tasks"}/></div>;
  if(!tasks.length)return <div className="page narrow"><div className="kicker">{t.nav.tasks}</div><h1>{t.nav.tasks}</h1><div className="lock">{status||(lang==="zh"?"暂无已发布任务。":"No tasks have been published.")}</div></div>;
- const taskTitle=(x:TaskRow)=>lang==="zh"?x.title_zh:lang==="en"?x.title_en:t.tasks.title;
+ const taskTitle=(x:TaskRow)=>x.id==="week0-digital-proposal"&&lang==="zh"
+  ?"Digital Proposal / 电子提案（可选）"
+  :lang==="zh"?x.title_zh:lang==="en"?x.title_en:t.tasks.title;
  const weekTasks=tasks.filter(x=>x.week===week);
  const ownerPending=task?.id==="week0-top-five-games";
  const participantSurvey=task?.id==="week0-participant-survey";

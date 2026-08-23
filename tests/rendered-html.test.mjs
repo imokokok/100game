@@ -303,6 +303,7 @@ test("gives the Week 0 proposal and participant survey their real task flows", a
   ]);
   assert.match(flows, /const digitalProposal=task\?\.id==="week0-digital-proposal"/);
   assert.match(flows, /提案说明（可选）/);
+  assert.match(flows, /Digital Proposal \/ 电子提案（可选）/);
   assert.match(flows, /可参考群公告整理提案/);
   assert.match(flows, /const participantSurvey=task\?\.id==="week0-participant-survey"/);
   assert.match(flows, /href="\/workspace\?view=survey"/);
