@@ -342,7 +342,7 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(css, /Neumorphic survey system: fixed top-left light, soft clay surfaces/);
   assert.match(css, /--neu-raised:8px 8px 16px #b8bcc2,-8px -8px 16px #ffffff/);
   assert.match(css, /--neu-inset-focus:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff/);
-  assert.match(css, /No red in the survey surface: purple is the only interaction accent/);
+  assert.match(css, /Project red is the only interaction accent across the survey surface/);
 });
 
 test("uses the same neumorphic system for the public and invitation entry", async () => {
@@ -358,7 +358,7 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /Site-wide neumorphic unification: one surface, one light source, one accent/);
   assert.match(css, /\.app>aside\{background:#e0e5ec!important/);
   assert.match(css, /\.publicPage \.top\{[\s\S]*background:#e0e5ec!important/);
-  assert.match(css, /\.conceptStandalone>\.conceptLabelBlock\{[\s\S]*background:#e0e5ec!important;[\s\S]*color:#4f46d8!important;[\s\S]*box-shadow:inset 3px 3px 6px/);
+  assert.match(css, /\.conceptStandalone>\.conceptLabelBlock\{[\s\S]*background:#e0e5ec!important;[\s\S]*color:#9f211a!important;[\s\S]*box-shadow:inset 3px 3px 6px/);
   assert.match(css, /\.conceptStandalone \.conceptHeadlineLine\.accent\{color:#c72d24!important\}/);
   assert.match(css, /\.conceptQuestions\{[^}]*padding:clamp\(36px,5vw,64px\)/);
   assert.match(css, /\.workspace input:not\(\[type="file"\]\)[\s\S]*box-shadow:var\(--neu-inset\)!important/);
@@ -374,4 +374,12 @@ test("keeps the survey reading surface free of a decorative halo", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /Survey structure stays flat: no decorative halo around the reading surface/);
   assert.match(css, /\.survey-shell \.survey-intro,\s*\.survey-shell \.question-list,\s*\.survey-shell \.review-panel\{box-shadow:none!important\}/);
+});
+
+test("uses project red instead of blue or purple accents", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /--neu-accent:#c72d24/);
+  assert.match(css, /--entry-accent:#c72d24/);
+  assert.match(css, /--survey-blue:#c72d24!important/);
+  assert.doesNotMatch(css, /#(?:6d5dfc|5d50df|4f46d8|315f83|174ba0|397da4|8fbbcc|91b6c8|8eb5c5)/i);
 });
