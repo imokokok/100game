@@ -49,6 +49,18 @@ test("invited participants can create and immediately join chat groups", async (
   assert.match(concept, /className="publicBack" href="\/"/);
 });
 
+test("keeps the shared participant invitation as a leading-zero string and preserves returning sessions", async () => {
+  const [migration, accessRoute] = await Promise.all([
+    readFile(new URL("../drizzle/0018_update_participant_invitation_080911.sql", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/access/route.ts", import.meta.url), "utf8"),
+  ]);
+  assert.match(migration, /invite-shared-080911/);
+  assert.match(migration, /fcc809c0eb76c85f325634dbb1cfa3c0934a481d76890aea9ebdf4633a52450f/);
+  assert.match(migration, /'080911',1/);
+  assert.match(accessRoute, /String\(code\?\?""\)\.trim\(\)/);
+  assert.match(accessRoute, /participantHeaders\.set\("cookie",participantCookie\)/);
+});
+
 test("language switching uses complete local copy without an online translator", async () => {
   const [locale, ui, studio, concept, flows] = await Promise.all([
     readFile(new URL("../app/locale-copy.ts", import.meta.url), "utf8"),

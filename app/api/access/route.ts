@@ -16,7 +16,10 @@ export async function POST(req:NextRequest){
   res.cookies.set("lead_session",token,{httpOnly:true,secure:true,sameSite:"strict",path:"/",maxAge:60*60*8});
   return res;
  }
- const participantReq=new NextRequest(new URL("/api/participant",req.url),{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({token:value,name})});
+ const participantHeaders=new Headers({"content-type":"application/json"});
+ const participantCookie=req.headers.get("cookie");
+ if(participantCookie)participantHeaders.set("cookie",participantCookie);
+ const participantReq=new NextRequest(new URL("/api/participant",req.url),{method:"POST",headers:participantHeaders,body:JSON.stringify({token:value,name})});
  const res=await participantLogin(participantReq);
  if(!res.ok)return res;
  const data=await res.clone().json() as {participant:unknown};
