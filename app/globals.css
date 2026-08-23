@@ -1797,3 +1797,17 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  .driveFolder,.driveRecent,.weekFolder,.categoryFolder,.workspaceCategory,.photoJournalLink,.announcementBoard,.weekNoticeCard,.taskOwnerPending,.journalEmpty,.journalEditor,.opsCard,.contentManager,.ownerOperations,.libraryCategoryDetail{border-radius:16px!important}.libraryWeeks>div:last-child,.driveFolders>div,.libraryCategories>div:last-child{gap:16px!important}
 }
 @media(prefers-reduced-motion:reduce){.publicPage a,.publicPage button,.app nav button,.driveFolder,.driveRecent>button,.weekFolder,.categoryFolder,.photoJournalLink,.workspace button,.lead-shell button,.lead-login button{transition:none!important}}
+
+/* Keep the red invitation interaction state readable. */
+.entryChoices .entryChoice:nth-child(2):hover,
+.entryChoices .entryChoice:nth-child(2):focus-visible,
+.entryChoices .entryChoice:nth-child(2):active{color:#ffffff!important}
+.entryChoices .entryChoice:nth-child(2):hover:before,
+.entryChoices .entryChoice:nth-child(2):focus-visible:before,
+.entryChoices .entryChoice:nth-child(2):active:before,
+.entryChoices .entryChoice:nth-child(2):hover b,
+.entryChoices .entryChoice:nth-child(2):focus-visible b,
+.entryChoices .entryChoice:nth-child(2):active b,
+.entryChoices .entryChoice:nth-child(2):hover span,
+.entryChoices .entryChoice:nth-child(2):focus-visible span,
+.entryChoices .entryChoice:nth-child(2):active span{color:#ffffff!important}
