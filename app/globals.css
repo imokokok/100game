@@ -1822,3 +1822,11 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .survey-shell .survey-intro,
 .survey-shell .question-list,
 .survey-shell .review-panel{box-shadow:none!important}
+
+/* The project title is consistently red wherever it identifies the game. */
+.entryGate .wordmark,
+.publicPage .mark .wordmark,
+.app .brand .wordmark,
+.surveyHub>header>a,
+.survey-shell .survey-footer>span,
+.survey-confirm>.eyebrow{color:#c72d24!important}

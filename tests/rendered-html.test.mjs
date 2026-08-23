@@ -383,3 +383,10 @@ test("uses project red instead of blue or purple accents", async () => {
   assert.match(css, /--survey-blue:#c72d24!important/);
   assert.doesNotMatch(css, /#(?:6d5dfc|5d50df|4f46d8|315f83|174ba0|397da4|8fbbcc|91b6c8|8eb5c5)/i);
 });
+
+test("renders the project game title in red across public and workspace surfaces", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /The project title is consistently red wherever it identifies the game/);
+  assert.match(css, /\.entryGate \.wordmark,\s*\.publicPage \.mark \.wordmark,\s*\.app \.brand \.wordmark,/);
+  assert.match(css, /\.surveyHub>header>a,[\s\S]*\.survey-confirm>\.eyebrow\{color:#c72d24!important\}/);
+});
