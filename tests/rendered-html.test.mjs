@@ -173,8 +173,8 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.match(page, /<EntryStudio\s*\/>/);
   assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
   assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=journal":"\/workspace"\)/);
-  assert.match(workspace, /<Studio\s*\/>/);
-  assert.match(studio, /location\.pathname!=="\/workspace"/);
+  assert.match(workspace, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\}\/>/);
+  assert.match(workspace, /participantId\(request\)/);
   assert.match(studio, /import \{WorkspaceFiles\} from "\.\/workspace-files"/);
   assert.doesNotMatch(studio, /lazy\(\(\)=>import\("\.\/workspace-files"\)/);
   assert.match(studio, /workspaceHomeButton/);
@@ -258,8 +258,9 @@ test("keeps the bilingual client payload lean and overlaps workspace loading", a
   assert.doesNotMatch(`${studio}\n${flows}\n${concept}`, /from ["']\.\.?\/i18n["']|from ["']\.\.?\/locale-copy["']|from ["']\.\.?\/ui-copy["']/);
   assert.match(i18n, /export type Language = "zh" \| "en"/);
   assert.doesNotMatch(`${i18n}\n${locale}\n${ui}`, /\bja\s*:|\bes\s*:|\bfr\s*:/);
-  assert.match(studio, /if\(requested==="tasks"\|\|requested==="links"\|\|requested==="journal"\|\|requested==="dashboard"\)void loadLiveFlows\(\)/);
-  assert.match(studio, /if\(!entered\)return <main className="workspaceBoot"/);
+  assert.match(studio, /function preloadView\(view:View,role:WorkspaceRole\)/);
+  assert.match(studio, /if\(view==="survey"\)void \(role==="lead"\?loadLeadResponses\(\):loadSurvey\(\)\)/);
+  assert.doesNotMatch(studio, /fetch\("\/api\/participant"/);
 });
 
 test("keeps Top 5 Games as an owner-upload status instead of a participant form", async () => {
@@ -558,4 +559,25 @@ test("keeps same-route invitation navigation synchronized with browser history",
   assert.match(entry, /history\.pushState\(\{\},"","\/\?access=invite"\)/);
   assert.match(entry, /href="\/\?access=invite" onClick=\{openInvite\}/);
   assert.match(entry, /href="\/" onClick=\{closeInvite\}/);
+});
+
+test("server-renders an authenticated workspace shell without a client identity waterfall", async () => {
+  const [page, studio] = await Promise.all([
+    readFile(new URL("../app/workspace/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(page, /participantId\(request\)/);
+  assert.match(page, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\}\/>/);
+  assert.match(studio, /useState<View>\(initialView\)/);
+  assert.match(studio, /role==="lead"\?loadLeadResponses\(\):loadSurvey\(\)/);
+  assert.doesNotMatch(studio, /fetch\("\/api\/participant"/);
+  assert.doesNotMatch(studio, /if\(!entered\)return <main className="workspaceBoot"/);
+});
+
+test("defers nonessential workspace requests until after the active view is ready", async () => {
+  const studio = await readFile(new URL("../app/studio.tsx", import.meta.url), "utf8");
+  assert.match(studio, /requestIdleCallback" in window/);
+  assert.match(studio, /timeout:2200/);
+  assert.match(studio, /window\.setTimeout\(load,1200\)/);
+  assert.match(studio, /window\.setTimeout\(\(\)=>record\("view"\),1500\)/);
 });
