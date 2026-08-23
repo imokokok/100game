@@ -2,8 +2,8 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 
 import {useEffect,useState,type MouseEvent} from "react";
-import {languageOptions,translations,type Language} from "../i18n";
-import {localeCopy} from "../locale-copy";
+import {languageOptions,translations,type Language} from "../bilingual-i18n";
+import {localeCopy} from "../bilingual-locale-copy";
 import {PublicDesignerRanking} from "../live-flows";
 import {Wordmark} from "../wordmark";
 

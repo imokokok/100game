@@ -1015,6 +1015,7 @@ html,body{max-width:100%;overflow-x:clip}img,video,canvas{max-width:100%;height:
 .peoplePage .collaboratorPending b{font-size:clamp(28px,4vw,52px);font-weight:560;letter-spacing:-.035em;color:#171715}
 @media(max-width:600px){.peoplePage .publicCreditsPending{min-height:calc(100vh - 130px)}.peoplePage .publicCreditsPending .creditsHead{padding-bottom:30px}.peoplePage .collaboratorPending{min-height:140px;padding:22px 18px;align-items:flex-start;flex-direction:column}.peoplePage .collaboratorPending b{align-self:flex-end}}
 .workspaceLoading{min-height:55vh;background:linear-gradient(90deg,#f8f7f3 0,#fff 50%,#f8f7f3 100%);background-size:200% 100%}
+.workspaceBoot{min-height:100vh;display:grid;grid-template-rows:auto 1fr;gap:28px;padding:28px clamp(20px,5vw,72px);background:#f6f5f1;color:#191a18}.workspaceBoot>.wordmark{align-self:start}.workspaceBoot .workspaceLoading{min-height:0;border-radius:12px;background:linear-gradient(90deg,#ecebe7 0,#faf9f6 50%,#ecebe7 100%);background-size:200% 100%}
 @media(prefers-reduced-motion:no-preference){.workspaceLoading{animation:workspaceLoad .7s ease-out 1}}@keyframes workspaceLoad{from{opacity:.45;background-position:100% 0}to{opacity:1;background-position:0 0}}
 
 /* Quiet, non-verbal interaction feedback */

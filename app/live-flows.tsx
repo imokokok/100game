@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { translations, type Language, type Translation } from "./i18n";
-import { localeCopy } from "./locale-copy";
-import { uiCopy } from "./ui-copy";
+import { translations, type Language, type Translation } from "./bilingual-i18n";
+import { localeCopy } from "./bilingual-locale-copy";
+import { uiCopy } from "./bilingual-ui-copy";
 import { ProjectAnnouncement } from "./project-announcement";
 
 type TaskRow={id:string;title_zh:string;title_en:string;body:string|null;submission_status:string|null;updated_at:number|null;status:string;week:number};

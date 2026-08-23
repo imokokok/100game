@@ -223,11 +223,25 @@ test("keeps entry cards free of redundant arrows", async () => {
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
   ]);
   const entryChoices = entry.match(/className="entryChoices">([\s\S]*?)<\/div><\/section>/)?.[1] ?? "";
-  const studioChoices = studio.match(/className="entryChoices">([\s\S]*?)<\/div><\/section>/)?.[1] ?? "";
   assert.ok(entryChoices);
-  assert.ok(studioChoices);
   assert.doesNotMatch(entryChoices, /<i>→<\/i>/);
-  assert.doesNotMatch(studioChoices, /<i>→<\/i>/);
+  assert.doesNotMatch(studio, /className="entryChoices"/);
+});
+
+test("keeps the bilingual client payload lean and overlaps workspace loading", async () => {
+  const [studio, flows, concept, i18n, locale, ui] = await Promise.all([
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/bilingual-i18n.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/bilingual-locale-copy.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/bilingual-ui-copy.ts", import.meta.url), "utf8"),
+  ]);
+  assert.doesNotMatch(`${studio}\n${flows}\n${concept}`, /from ["']\.\.?\/i18n["']|from ["']\.\.?\/locale-copy["']|from ["']\.\.?\/ui-copy["']/);
+  assert.match(i18n, /export type Language = "zh" \| "en"/);
+  assert.doesNotMatch(`${i18n}\n${locale}\n${ui}`, /\bja\s*:|\bes\s*:|\bfr\s*:/);
+  assert.match(studio, /if\(requested==="tasks"\|\|requested==="links"\|\|requested==="journal"\|\|requested==="dashboard"\)void loadLiveFlows\(\)/);
+  assert.match(studio, /if\(!entered\)return <main className="workspaceBoot"/);
 });
 
 test("keeps Top 5 Games as an owner-upload status instead of a participant form", async () => {
