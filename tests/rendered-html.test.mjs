@@ -140,7 +140,7 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.doesNotMatch(layout, /ClickFeedback/);
   assert.match(page, /<EntryStudio\s*\/>/);
   assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
-  assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/lead":"\/workspace"\)/);
+  assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=journal":"\/workspace"\)/);
   assert.match(workspace, /<Studio\s*\/>/);
   assert.match(studio, /location\.pathname!=="\/workspace"/);
   assert.match(studio, /import \{WorkspaceFiles\} from "\.\/workspace-files"/);
@@ -223,4 +223,43 @@ test("keeps Top 5 Games as an owner-upload status instead of a participant form"
   assert.match(migration, /`status` = 'owner_pending'/);
   assert.match(migration, /等待主策划整理上传/);
   assert.match(css, /\.taskOwnerPending\{/);
+});
+
+test("opens the participant survey inside the workspace without a page refresh", async () => {
+  const [studio, survey, css] = await Promise.all([
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/survey/survey-app.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(studio, /const EmbeddedSurvey=lazy/);
+  assert.match(studio, /view==="survey"&&<EmbeddedSurvey embedded\/>/);
+  assert.doesNotMatch(studio, /location\.href=participant\?"\/survey"/);
+  assert.match(survey, /SurveyApp\(\{embedded=false\}/);
+  assert.match(survey, /embeddedSurvey/);
+  assert.match(css, /\.workspace \.embeddedSurvey\{min-height:0/);
+});
+
+test("keeps the production photo journal readable to creators and editable only by the lead", async () => {
+  const [journalApi, shared, participantApi, flows, migration, schema, css] = await Promise.all([
+    readFile(new URL("../app/api/journal/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/_shared.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/participant/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0017_professional_photo_journal.sql", import.meta.url), "utf8"),
+    readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(shared, /export async function isLead/);
+  assert.match(participantApi, /isOwner\(req\)\|\|await isLead\(req\)/);
+  assert.match(journalApi, /async function canEdit/);
+  assert.match(journalApi, /if\(!participant&&!editor\)/);
+  assert.match(journalApi, /if\(!\(await canEdit\(req\)\)\)return NextResponse\.json\(\{error:"Only the Lead Designer can publish journal entries"/);
+  assert.doesNotMatch(journalApi, /const participant=await participantId\(req\);if\(!participant&&!isOwner\(req\)\).*formData/);
+  assert.match(journalApi, /export async function PATCH/);
+  assert.match(flows, /PRODUCTION PHOTO JOURNAL/);
+  assert.match(flows, /\{canEdit&&<section className="journalEditor"/);
+  assert.match(migration, /ADD `body_zh`/);
+  assert.match(migration, /idx_journal_entries_stage_occurred/);
+  assert.match(schema, /bodyZh:text\("body_zh"\)/);
+  assert.match(css, /\.productionEntry\{/);
 });

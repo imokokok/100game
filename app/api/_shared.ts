@@ -19,6 +19,24 @@ export function isOwner(req: NextRequest) {
   return Boolean(ownerId && userId && ownerId === userId);
 }
 
+function safeEq(a:string,b:string){
+  if(a.length!==b.length)return false;
+  let value=0;
+  for(let i=0;i<a.length;i++)value|=a.charCodeAt(i)^b.charCodeAt(i);
+  return value===0;
+}
+
+export async function isLead(req:Request){
+  const raw=req.headers.get("cookie")?.match(/(?:^|; )lead_session=([^;]+)/)?.[1];
+  if(!raw)return false;
+  const [expiry,sig]=decodeURIComponent(raw).split(".");
+  if(!expiry||!sig||Date.now()>Number(expiry)||!env.LEAD_SESSION_SECRET)return false;
+  const key=await crypto.subtle.importKey("raw",new TextEncoder().encode(env.LEAD_SESSION_SECRET),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
+  const bytes=new Uint8Array(await crypto.subtle.sign("HMAC",key,new TextEncoder().encode(expiry)));
+  const expected=btoa(String.fromCharCode(...bytes)).replace(/=+$/g,"");
+  return safeEq(sig,expected);
+}
+
 export async function sha256(value:string){
   const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));
   return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join("");

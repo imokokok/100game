@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, participantId, sha256 } from "../_shared";
+import { d1, isLead, isOwner, participantId, sha256 } from "../_shared";
 
 export async function GET(req: NextRequest) {
+  if(isOwner(req)||await isLead(req))return NextResponse.json({participant:{id:"owner",display_code:"Hera",locale:"zh"},role:"lead"});
   const id = await participantId(req);
   if (!id) return NextResponse.json({ participant: null });
   const row = await d1().prepare("SELECT id, display_code, locale FROM participants WHERE id = ?").bind(id).first();
