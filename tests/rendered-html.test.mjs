@@ -173,7 +173,7 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.match(page, /<EntryStudio\s*\/>/);
   assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
   assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=journal":"\/workspace"\)/);
-  assert.match(workspace, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\}\/>/);
+  assert.match(workspace, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\} initialResponses=\{initialResponses\}\/>/);
   assert.match(workspace, /participantId\(request\)/);
   assert.match(studio, /import \{WorkspaceFiles\} from "\.\/workspace-files"/);
   assert.doesNotMatch(studio, /lazy\(\(\)=>import\("\.\/workspace-files"\)/);
@@ -288,7 +288,7 @@ test("opens the participant survey inside the workspace without a page refresh",
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   assert.match(studio, /const EmbeddedSurvey=lazy/);
-  assert.match(studio, /view==="survey"&&\(role==="lead"\?<LeadResponses\/>:<EmbeddedSurvey embedded\/>\)/);
+  assert.match(studio, /view==="survey"&&\(role==="lead"\?<LeadResponses initialRows=\{initialResponses\}\/>:<EmbeddedSurvey embedded\/>\)/);
   assert.doesNotMatch(studio, /location\.href=participant\?"\/survey"/);
   assert.match(survey, /SurveyApp\(\{embedded=false\}/);
   assert.match(survey, /embeddedSurvey/);
@@ -567,11 +567,14 @@ test("server-renders an authenticated workspace shell without a client identity 
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(page, /participantId\(request\)/);
-  assert.match(page, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\}\/>/);
+  assert.match(page, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\} initialResponses=\{initialResponses\}\/>/);
   assert.match(studio, /useState<View>\(initialView\)/);
   assert.match(studio, /role==="lead"\?loadLeadResponses\(\):loadSurvey\(\)/);
   assert.doesNotMatch(studio, /fetch\("\/api\/participant"/);
   assert.doesNotMatch(studio, /if\(!entered\)return <main className="workspaceBoot"/);
+  assert.match(page, /role==="lead"&&initialView==="survey"/);
+  assert.match(page, /FROM questionnaire_responses ORDER BY submitted_at DESC LIMIT 1000/);
+  assert.match(studio, /<LeadResponses initialRows=\{initialResponses\}\/>/);
 });
 
 test("defers nonessential workspace requests until after the active view is ready", async () => {

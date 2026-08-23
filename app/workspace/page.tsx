@@ -3,6 +3,7 @@ import {redirect} from "next/navigation";
 import {NextRequest} from "next/server";
 import {d1,isLead,isOwner,participantId} from "../api/_shared";
 import {Studio,type WorkspaceRole,type WorkspaceView} from "../studio";
+import type {LeadResponse} from "../lead/lead-dashboard";
 
 const allowedViews:WorkspaceView[]=["home","tasks","survey","links","journal","dashboard"];
 
@@ -22,5 +23,10 @@ export default async function WorkspacePage({searchParams}:{searchParams:Promise
  }
  const requested=(await searchParams).view as WorkspaceView|undefined;
  const initialView=requested&&allowedViews.includes(requested)&&(role==="lead"||requested!=="dashboard")?requested:"home";
- return <Studio initialParticipant={participant} initialRole={role} initialView={initialView}/>;
+ let initialResponses:LeadResponse[]|undefined;
+ if(role==="lead"&&initialView==="survey"){
+  const result=await d1().prepare("SELECT id, wechat_name, locale, payload, submitted_at FROM questionnaire_responses ORDER BY submitted_at DESC LIMIT 1000").all<LeadResponse>();
+  initialResponses=result.results;
+ }
+ return <Studio initialParticipant={participant} initialRole={role} initialView={initialView} initialResponses={initialResponses}/>;
 }

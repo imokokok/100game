@@ -6,6 +6,7 @@ import { applyTranslationOverrides, languageOptions, translations, type Language
 import { localeCopy } from "./bilingual-locale-copy";
 import { Wordmark } from "./wordmark";
 import {WorkspaceFiles} from "./workspace-files";
+import type {LeadResponse} from "./lead/lead-dashboard";
 
 const loadLiveFlows=()=>import("./live-flows");
 const loadSurvey=()=>import("./survey/survey-app");
@@ -26,7 +27,7 @@ const views:View[]=["home","tasks","survey","links","journal","dashboard"];
 type ContentByLanguage = Record<Language, Record<string, string>>;
 const emptyContent=Object.fromEntries(languageOptions.map(({value})=>[value,{}])) as ContentByLanguage;
 
-export function Studio({initialParticipant,initialRole,initialView}:{initialParticipant:{id:string;display_code:string};initialRole:WorkspaceRole;initialView:WorkspaceView}){
+export function Studio({initialParticipant,initialRole,initialView,initialResponses}:{initialParticipant:{id:string;display_code:string};initialRole:WorkspaceRole;initialView:WorkspaceView;initialResponses?:LeadResponse[]}){
  const [lang,setLang]=useState<Language>("zh");const [view,setView]=useState<View>(initialView);const [role]=useState<WorkspaceRole>(initialRole);const [notice]=useState("");const [participant]=useState(initialParticipant);const [content,setContent]=useState<ContentByLanguage>(emptyContent);const t=applyTranslationOverrides(translations[lang],content[lang]);const c=localeCopy[lang];
  useEffect(()=>{const saved=localStorage.getItem("hundred-language") as Language|null;const browser=navigator.language.toLowerCase();queueMicrotask(()=>setLang(saved&&translations[saved]?saved:browser.startsWith("en")?"en":"zh"))},[]);
  useEffect(()=>{if(location.pathname!=="/workspace")return;const preload=(requested:View)=>{if(requested==="tasks"||requested==="links"||requested==="journal"||requested==="dashboard")void loadLiveFlows();else if(requested==="survey")void (role==="lead"?loadLeadResponses():loadSurvey())};preload(initialView)},[initialView,role]);
@@ -40,7 +41,7 @@ export function Studio({initialParticipant,initialRole,initialView}:{initialPart
  const participantLabel=participant?.display_code||"OWNER";
  const visibleViews=role==="lead"?views:views.filter(id=>id!=="dashboard");
  return <main className="app"><aside><button className="brand" onClick={()=>selectView("home")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><Wordmark stacked/></button><nav aria-label={c.choose}>{visibleViews.map(id=>{const i=views.indexOf(id);return <button key={id} className={view===id?"active":""} onClick={()=>selectView(id)}><b>{String(i+1).padStart(2,"0")}</b>{navLabels[i]}</button>})}</nav><div className="asideFoot"><span>{participantLabel}</span></div></aside><section className="workspace"><header className="worktop"><div className="worktopLead"><button className="workspaceHomeButton" onClick={()=>selectView("home")}>← {lang==="zh"?"创作资料":"Creative files"}</button></div><div><LanguageSwitcher lang={lang} setLang={setLang} label={c.language}/><span className="privacy">● {t.privacy}</span><span className="avatar" aria-label={participantLabel}>{participantLabel.slice(-2)}</span></div></header>{notice&&<div className="toast">✓ {notice}</div>}<Suspense fallback={<div className="workspaceLoading" aria-label={lang==="zh"?"正在打开":"Opening"}/> }>
- {view==="home"&&<WorkspaceFiles t={t} lang={lang}/>} {view==="tasks"&&<LiveTasks t={t} lang={lang}/>} {view==="survey"&&(role==="lead"?<LeadResponses/>:<EmbeddedSurvey embedded/>)} {view==="links"&&<LiveLinks t={t} lang={lang}/>} {view==="journal"&&<LiveJournal t={t} lang={lang}/>} {view==="dashboard"&&role==="lead"&&<Dashboard t={t} lang={lang}/>}</Suspense><Footer text={t.copyright}/></section></main>
+ {view==="home"&&<WorkspaceFiles t={t} lang={lang}/>} {view==="tasks"&&<LiveTasks t={t} lang={lang}/>} {view==="survey"&&(role==="lead"?<LeadResponses initialRows={initialResponses}/>:<EmbeddedSurvey embedded/>)} {view==="links"&&<LiveLinks t={t} lang={lang}/>} {view==="journal"&&<LiveJournal t={t} lang={lang}/>} {view==="dashboard"&&role==="lead"&&<Dashboard t={t} lang={lang}/>}</Suspense><Footer text={t.copyright}/></section></main>
 }
 
 function preloadView(view:View,role:WorkspaceRole){
