@@ -1799,19 +1799,29 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 }
 @media(prefers-reduced-motion:reduce){.publicPage a,.publicPage button,.app nav button,.driveFolder,.driveRecent>button,.weekFolder,.categoryFolder,.photoJournalLink,.workspace button,.lead-shell button,.lead-login button{transition:none!important}}
 
-/* Keep the red invitation interaction state readable. */
+/* Entry card palette: public is red, invitation is black. */
+.entryChoices .entryChoice:first-child,
+.entryChoices .entryChoice:first-child:hover,
+.entryChoices .entryChoice:first-child:focus-visible,
+.entryChoices .entryChoice:first-child:active{
+ background:#c72d24!important;
+ color:#ffffff!important;
+ box-shadow:8px 8px 16px rgba(159,33,26,.24),-8px -8px 16px #ffffff!important;
+}
+.entryChoices .entryChoice:nth-child(2),
 .entryChoices .entryChoice:nth-child(2):hover,
 .entryChoices .entryChoice:nth-child(2):focus-visible,
-.entryChoices .entryChoice:nth-child(2):active{color:#ffffff!important}
-.entryChoices .entryChoice:nth-child(2):hover:before,
-.entryChoices .entryChoice:nth-child(2):focus-visible:before,
-.entryChoices .entryChoice:nth-child(2):active:before,
-.entryChoices .entryChoice:nth-child(2):hover b,
-.entryChoices .entryChoice:nth-child(2):focus-visible b,
-.entryChoices .entryChoice:nth-child(2):active b,
-.entryChoices .entryChoice:nth-child(2):hover span,
-.entryChoices .entryChoice:nth-child(2):focus-visible span,
-.entryChoices .entryChoice:nth-child(2):active span{color:#ffffff!important}
+.entryChoices .entryChoice:nth-child(2):active{
+ background:#171715!important;
+ color:#ffffff!important;
+ box-shadow:8px 8px 16px rgba(23,23,21,.22),-8px -8px 16px #ffffff!important;
+}
+.entryChoices .entryChoice:first-child:before,
+.entryChoices .entryChoice:first-child b,
+.entryChoices .entryChoice:nth-child(2):before,
+.entryChoices .entryChoice:nth-child(2) b{color:#ffffff!important}
+.entryChoices .entryChoice:first-child span,
+.entryChoices .entryChoice:nth-child(2) span{color:rgba(255,255,255,.76)!important}
 
 /* Publication-style copyright line. */
 .copyright,.entryGate>.copyright,.publicPage>.copyright{font-family:"Avenir Next","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif!important;font-size:12px;line-height:1.5;font-weight:500;letter-spacing:.02em}

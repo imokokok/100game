@@ -377,8 +377,9 @@ test("shares the neumorphic system across public pages, workspace and lead tools
   assert.match(css, /\.conceptQuestions\{[^}]*padding:clamp\(36px,5vw,64px\)/);
   assert.match(css, /\.workspace input:not\(\[type="file"\]\)[\s\S]*box-shadow:var\(--neu-inset\)!important/);
   assert.match(css, /\.lead-login form,\.lead-shell \.filters,\.lead-shell \.response-card,\.profile-sheet/);
-  assert.match(css, /Keep the red invitation interaction state readable/);
-  assert.match(css, /\.entryChoices \.entryChoice:nth-child\(2\):hover b,[\s\S]*color:#ffffff!important/);
+  assert.match(css, /Entry card palette: public is red, invitation is black/);
+  assert.match(css, /\.entryChoices \.entryChoice:first-child,[\s\S]*background:#c72d24!important/);
+  assert.match(css, /\.entryChoices \.entryChoice:nth-child\(2\),[\s\S]*background:#171715!important/);
   assert.match(css, /Publication-style copyright line/);
   assert.match(css, /letter-spacing:\.02em/);
   assert.match(css, /\.libraryWeeks \.weekFolder\{padding-inline:clamp\(20px,3vw,32px\)!important\}/);
