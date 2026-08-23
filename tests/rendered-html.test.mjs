@@ -643,3 +643,23 @@ test("keeps aggregate site traffic visible only to the lead", async () => {
   assert.match(schema, /siteTrafficDaily=sqliteTable\("site_traffic_daily"/);
   assert.match(migration, /CREATE TABLE IF NOT EXISTS `site_traffic_daily`/);
 });
+
+test("keeps the creator contribution ranking private and awards completed tasks automatically", async () => {
+  const [route, studio] = await Promise.all([
+    readFile(new URL("../app/api/contributions/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(route, /if \(!\(isOwner\(req\)\|\|await isLead\(req\)\)\)/);
+  assert.match(route, /WITH completed_task_rows AS/);
+  assert.match(route, /WHERE s\.status = 'submitted'/);
+  assert.match(route, /SELECT f\.participant_id, f\.task_id/);
+  assert.match(route, /COUNT\(DISTINCT task_id\) AS submitted_points/);
+  assert.match(route, /FROM questionnaire_responses q/);
+  assert.match(route, /AS task_points/);
+  assert.match(route, /AS manual_points/);
+  assert.match(route, /ORDER BY contribution_score DESC/);
+  assert.match(studio, /创作者贡献排行榜/);
+  assert.match(studio, /每项已完成任务自动计 1 分/);
+  assert.match(studio, /手动调整贡献分/);
+  assert.match(studio, /w100-contribution-ranking-/);
+});

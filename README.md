@@ -1,100 +1,86 @@
-# vinext-starter
+# WHAT 100 PEOPLE DO TO A GAME
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+“WHAT 100 PEOPLE DO TO A GAME / 一百个人怎么做游戏”项目网站与创作者协作区的完整源码。
 
-## Prerequisites
+## 技术架构
 
-- Node.js `>=22.13.0`
+- React 19 + TypeScript
+- Vinext + Vite 8
+- Cloudflare Workers
+- Cloudflare D1（结构化数据）
+- Cloudflare R2（上传文件）
+- Drizzle ORM / SQL migrations
 
-## Quick Start
+Node.js 版本要求：`>=22.13.0`。项目使用 `pnpm`，锁定文件为 `pnpm-lock.yaml`。
+
+## 本地安装与检查
 
 ```bash
-npm install
-npm run dev
-npm run build
+corepack enable
+pnpm install --frozen-lockfile
+pnpm test
+pnpm dev
 ```
 
-This starter does not use `wrangler.jsonc`.
+`pnpm test` 会执行静态检查、生产构建与项目测试。开发服务启动后按终端显示的本地地址访问。
 
-## Included Shape
+## 环境变量
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+复制 `.env.example` 为本地私密配置文件，并替换其中的占位值。不要提交真实邀请码、会话密钥、API Key 或 Token。
 
-## Workspace Auth Headers
+- `LEAD_ACCESS_CODE`：主策划验证码
+- `LEAD_SESSION_SECRET`：服务端会话签名密钥，至少 32 个随机字节
+- `OWNER_USER_ID`：被授权查看主策划数据的站点用户标识；迁移到非 Sites 环境时应改接目标服务器的认证系统
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
+Cloudflare 本地开发建议使用 `.dev.vars`，线上使用平台 Secrets。
 
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
+## 数据库与存储
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+- D1 binding：`DB`
+- R2 binding：`UPLOADS`
+- 数据结构：`db/schema.ts`
+- 数据迁移：`drizzle/`
+- Drizzle 配置：`drizzle.config.ts`
 
-Treat the full name as optional and fall back to email when it is absent:
+创作者名单、问卷回答、任务提交、访问统计和贡献分记录均为服务端数据。贡献分由已完成任务自动累计，主策划也可以在私密界面手动增减。普通参与者不能读取主策划统计、完整问卷回答或贡献排行榜。
 
-```tsx
-import { headers } from "next/headers";
+## 部署
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
+### 部署到 Cloudflare
 
-  const displayName = fullName ?? email;
-  // ...
-}
-```
+这是当前架构迁移成本最低的方式：
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+1. 创建 Workers 项目。
+2. 创建并绑定一个 D1 数据库为 `DB`。
+3. 创建并绑定一个 R2 bucket 为 `UPLOADS`。
+4. 执行 `drizzle/` 中的迁移。
+5. 设置 `.env.example` 中列出的线上 Secrets。
+6. 构建并部署 Worker。
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+### 不能直接脱离 ChatGPT Sites 的部分
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+本源码可以交给外部程序员继续部署，但以下能力当前依赖 ChatGPT Sites / Cloudflare 运行环境，不能把 ZIP 直接放到普通静态空间后原样工作：
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+1. `cloudflare:workers` 运行时与 Worker bindings。
+2. D1 数据库读写。
+3. R2 文件上传与读取。
+4. `oai-authenticated-user-id` 请求头所提供的站点所有者身份。迁移到普通服务器时必须替换成可靠的登录与授权系统。
+5. `.openai/hosting.json` 中的 Sites 项目绑定。
+6. `worker/index.ts` 使用的 `ASSETS` / `IMAGES` 平台绑定。
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+源码没有为这些依赖伪造客户端替代功能。若部署到普通 Node.js/VPS，外部程序员需要为数据库、对象存储、认证和静态资源绑定编写适配层；若继续部署到 Cloudflare Workers，则改动最少。
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+## 上线前检查
 
-## Useful Commands
+- 更换所有共享邀请码和主策划密钥。
+- 确认普通邀请码不会取得主策划权限。
+- 确认主策划页面、问卷完整回答、贡献排行和访问量只对授权身份开放。
+- 为 D1 和 R2 配置备份与保留策略。
+- 检查上传大小、文件类型、访问日志和速率限制。
+- 在桌面与手机宽度分别验证首页、理念、问卷、协作区和主策划界面。
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+## 源码包范围
 
-## Learn More
+源码包包含前端、服务端 routes、Worker、Assets、依赖配置、数据库 Schema / Migration、`.env.example` 和本说明。线上 D1 中的真实问卷/用户数据及 R2 中的真实上传文件属于持久化运行数据，不属于源码，不会写入导出包。
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+© 2026 HuieChen. All rights reserved.
