@@ -186,3 +186,10 @@ test("keeps invitation placeholders visible on narrow screens", async () => {
   assert.match(css, /\.gateInvite label\{min-width:0\}/);
   assert.match(css, /\.gateInvite input\{font-size:15px!important;padding-inline:14px\}/);
 });
+
+test("keeps public back navigation visually lightweight", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Public navigation stays quiet/);
+  assert.match(css, /\.publicPage \.top>\.publicBack\{[^}]*border:0!important;[^}]*background:transparent!important/);
+  assert.match(css, /\.publicPage \.top>\.publicBack:focus-visible\{[^}]*outline:2px solid #c72d24/);
+});

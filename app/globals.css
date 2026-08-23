@@ -1136,3 +1136,9 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .entryChoices .entryChoice span{font-size:14px;line-height:1.6}
  .gateInvite input{font-size:15px!important;padding-inline:14px}
 }
+
+/* Public navigation stays quiet: the back action reads as navigation, not a form control. */
+.publicPage .top>.publicBack{display:inline-flex;align-items:center;min-height:44px;border:0!important;background:transparent!important;padding:9px 4px!important;color:#45443f!important;font-size:15px;font-weight:620;line-height:1;text-decoration:none;transition:color .18s ease,transform .18s ease}
+.publicPage .top>.publicBack:hover{border:0!important;background:transparent!important;color:#c72d24!important;transform:translateX(-2px)}
+.publicPage .top>.publicBack:focus-visible{border:0!important;background:transparent!important;color:#c72d24!important;outline:2px solid #c72d24;outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.publicPage .top>.publicBack{transition:none}.publicPage .top>.publicBack:hover{transform:none}}
