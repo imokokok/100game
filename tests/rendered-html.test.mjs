@@ -622,3 +622,24 @@ test("defers nonessential workspace requests until after the active view is read
   assert.match(studio, /void loadLiveFlows\(\)/);
   assert.match(studio, /window\.setTimeout\(\(\)=>record\("view"\),1500\)/);
 });
+
+test("keeps aggregate site traffic visible only to the lead", async () => {
+  const [layout, tracker, analytics, studio, schema, migration] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/visit-tracker.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/analytics/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0020_private_site_traffic.sql", import.meta.url), "utf8"),
+  ]);
+  assert.match(layout, /<VisitTracker\/>/);
+  assert.match(tracker, /sessionStorage\.getItem\(SESSION_KEY\)/);
+  assert.match(tracker, /fetch\("\/api\/analytics",\{method:"POST",keepalive:true\}\)/);
+  assert.match(analytics, /if\(!\(isOwner\(req\)\|\|await isLead\(req\)\)\)/);
+  assert.match(analytics, /SUM\(visits\)/);
+  assert.doesNotMatch(analytics, /user-agent|ip_address|display_code|participant_id/i);
+  assert.match(studio, /仅主策划可见 · 北京时间/);
+  assert.match(studio, /不保存访客姓名、IP 地址或设备信息/);
+  assert.match(schema, /siteTrafficDaily=sqliteTable\("site_traffic_daily"/);
+  assert.match(migration, /CREATE TABLE IF NOT EXISTS `site_traffic_daily`/);
+});

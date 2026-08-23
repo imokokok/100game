@@ -2069,3 +2069,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .creatorTaskAction{margin:34px 0;padding:28px 0;border-top:1px solid #c9c6be;border-bottom:1px solid #c9c6be}
 .creatorTaskAction p{max-width:700px;margin:0 0 24px;color:#50504b;font-size:15px;line-height:1.75}
 .creatorTaskAction .primary{display:inline-flex;text-decoration:none}
+
+/* Private, aggregate traffic summary for the Lead Designer dashboard. */
+.trafficPanel{margin:28px 0 34px;padding:28px;border-radius:20px;background:#e8e2d8;box-shadow:var(--neu-raised)}
+.trafficPanel>header{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:20px}
+.trafficPanel h2{margin:5px 0 0;font-size:30px}
+.trafficPanel>header small,.trafficPanel>p{color:#666d76}
+.trafficPanel>div{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.trafficPanel article{min-width:0;padding:18px;border-radius:14px;background:#eee9e0;box-shadow:var(--neu-inset-soft)}
+.trafficPanel article b{display:block;font-size:30px;line-height:1.15;overflow-wrap:anywhere}
+.trafficPanel article span{display:block;margin-top:7px;font-size:12px;color:#626873}
+.trafficPanel>p{margin:18px 0 0;font-size:12px}
+@media(max-width:800px){.trafficPanel>header{align-items:flex-start;flex-direction:column}.trafficPanel>div{grid-template-columns:1fr 1fr}.trafficPanel article b{font-size:24px}}

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isOwner } from "../_shared";
+import { d1, isLead, isOwner } from "../_shared";
 
 export async function GET(req: NextRequest) {
-  if (!isOwner(req)) return NextResponse.json({ error: "Owner sign-in required" }, { status: 401 });
+  if (!(isOwner(req)||await isLead(req))) return NextResponse.json({ error: "Lead sign-in required" }, { status: 401 });
   const db = d1();
   const rows = await db.prepare(`
     SELECT p.id, p.display_code, p.last_active_at, p.activity_count,
