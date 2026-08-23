@@ -307,6 +307,7 @@ test("gives the Week 0 proposal and participant survey their real task flows", a
   assert.match(flows, /const participantSurvey=task\?\.id==="week0-participant-survey"/);
   assert.match(flows, /href="\/workspace\?view=survey"/);
   assert.match(flows, /event\.preventDefault\(\);onOpenSurvey\(\)/);
+  assert.match(flows, /fetch\("\/api\/tasks",\{cache:"no-store"\}\)[\s\S]*\.finally\(\(\)=>setLoaded\(true\)\)\},\[\]\)/);
   assert.doesNotMatch(flows, /function shortError\(lang:Language\)\{return translations\[lang\]\.tasks\.auto\}/);
   assert.match(css, /\.workspaceHomeButton\{max-width:132px;overflow:visible;text-overflow:clip/);
   assert.match(css, /\.creatorTaskAction\{/);
