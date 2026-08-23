@@ -179,6 +179,15 @@ test("keeps public pages bilingual", async () => {
   assert.match(concept, /x\.value==="zh"\|\|x\.value==="en"/);
 });
 
+test("states resource equality and universal creative agency in both languages", async () => {
+  const concept = await readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8");
+  assert.match(concept, /任何人都可以做游戏/);
+  assert.match(concept, /阶级位置与资源占有/);
+  assert.match(concept, /重新分配进入、表达与决定的权利/);
+  assert.match(concept, /Anyone can make a game/);
+  assert.match(concept, /Class position and control of resources/);
+});
+
 test("keeps supporting interface text legible", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /Readability pass/);
