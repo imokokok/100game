@@ -321,3 +321,11 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(css, /--neu-inset-focus:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff/);
   assert.match(css, /No red in the survey surface: purple is the only interaction accent/);
 });
+
+test("uses the same neumorphic system for the public and invitation entry", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Neumorphic entry system: the public gate now shares the survey language/);
+  assert.match(css, /grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/);
+  assert.match(css, /\.entryChoices \.entryChoice:active\{box-shadow:inset 4px 4px 8px #b8bcc2,inset -4px -4px 8px #ffffff!important/);
+  assert.match(css, /\.gateInvite input:focus\{box-shadow:inset 2px 2px 4px #b8bcc2,inset -2px -2px 4px #ffffff!important/);
+});
