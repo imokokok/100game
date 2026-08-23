@@ -2063,3 +2063,6 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .survey-shell .section-progress button.done:active{
  box-shadow:inset 4px 4px 8px #c4bdb3,inset -4px -4px 8px #ffffff!important;
 }
+
+/* Workspace home is a location label once selected, not another navigation action. */
+.workspaceHomeButton:disabled{cursor:default!important;opacity:1!important;color:#4f5660!important}

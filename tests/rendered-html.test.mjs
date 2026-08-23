@@ -329,7 +329,8 @@ test("keeps workspace navigation refresh-safe and gives the lead the correct ext
     readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(studio, /const LeadResponses=lazy/);
-  assert.match(studio, /history\.pushState\(\{\},"",next==="home"\?"\/workspace":`\/workspace\?view=\$\{next\}`\)/);
+  assert.match(studio, /const target=next==="home"\?"\/workspace":`\/workspace\?view=\$\{next\}`/);
+  assert.match(studio, /history\.pushState\(\{view:next\},"",target\)/);
   assert.match(studio, /window\.addEventListener\("popstate",sync\)/);
   assert.match(studio, /role==="lead"\?views:views\.filter\(id=>id!=="dashboard"\)/);
   assert.match(studio, /view==="dashboard"&&role==="lead"/);
@@ -337,6 +338,17 @@ test("keeps workspace navigation refresh-safe and gives the lead the correct ext
   assert.match(leadResponsesApi, /!isOwner\(req\)&&!await isLead\(req\)/);
   assert.match(css, /Mobile navigation and filter rails remain complete without browser scrollbars/);
   assert.match(entry, /busy\?c\.entering:c\.verify/);
+});
+
+test("returns to workspace home once and resets the rendered scroll surface", async () => {
+  const studio = await readFile(new URL("../app/studio.tsx", import.meta.url), "utf8");
+  assert.match(studio, /const workspaceRef=useRef<HTMLElement>\(null\)/);
+  assert.match(studio, /if\(next===view\)return/);
+  assert.match(studio, /if\(`\$\{location\.pathname\}\$\{location\.search\}`!==target\)history\.pushState/);
+  assert.match(studio, /requestAnimationFrame\(\(\)=>\{window\.scrollTo\(\{top:0,behavior:"auto"\}\);workspaceRef\.current\?\.scrollTo/);
+  assert.match(studio, /section className="workspace" ref=\{workspaceRef\}/);
+  assert.match(studio, /disabled=\{view==="home"\}/);
+  assert.match(studio, /返回创作资料/);
 });
 
 test("uses one editorial system instead of assembling the interface from rounded cards", async () => {
