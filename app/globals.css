@@ -1855,5 +1855,120 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 /* The participant badge is identity information, not an inert control. */
 .worktop .avatar{display:inline-grid;place-items:center;cursor:default}
 
+/* Purposeful motion: movement confirms navigation, selection and completed actions. */
+@keyframes surfaceEnter{
+ from{opacity:0;transform:translateY(10px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@keyframes feedbackEnter{
+ 0%{opacity:0;transform:translateY(-8px) scale(.98)}
+ 100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes choiceConfirm{
+ 0%{transform:scale(1)}
+ 55%{transform:scale(.985)}
+ 100%{transform:scale(1)}
+}
+@keyframes revealContent{
+ from{opacity:0;transform:translateY(-5px)}
+ to{opacity:1;transform:translateY(0)}
+}
+.entryGate>section,
+.publicPage>.conceptStandalone,
+.peoplePage>.publicCredits,
+.surveyHubIntro,
+.survey-shell .survey-intro,
+.workspace>.page,
+.lead-login>form,
+.lead-shell>.response-list{animation:surfaceEnter .42s cubic-bezier(.22,1,.36,1) both}
+.surveyCatalogue{animation:surfaceEnter .42s .06s cubic-bezier(.22,1,.36,1) both}
+.toast,.survey-confirm{animation:feedbackEnter .3s cubic-bezier(.22,1,.36,1) both}
+.announcementBoard details[open]>div{animation:revealContent .24s ease-out both}
+.survey-shell .option.selected,
+.survey-shell .option[aria-pressed="true"],
+.weekTabs button.active,
+.journalFilters button.active{animation:choiceConfirm .2s ease-out}
+.survey-shell .survey-progress i{transition:width .36s cubic-bezier(.22,1,.36,1)}
+.entryChoices .entryChoice,
+.publicPage .top>.publicBack,
+.publicPage .top>nav a,
+.conceptStandalone .peopleCta,
+.driveFolder,
+.driveRecent>button,
+.weekFolder,
+.categoryFolder,
+.workspaceCategory,
+.photoJournalLink,
+.workspace button,
+.survey-shell .button,
+.survey-shell .option,
+.surveyHub .surveyCta,
+.lead-shell button,
+.lead-login button{
+ transition:transform .16s ease-out,box-shadow .22s ease-out,color .18s ease-out!important;
+ transform-origin:center;
+}
+@media(hover:hover){
+ .entryChoices .entryChoice:hover,
+ .conceptStandalone .peopleCta:hover,
+ .driveFolder:hover,
+ .driveRecent>button:hover,
+ .weekFolder:hover,
+ .categoryFolder:hover,
+ .workspaceCategory:hover,
+ .photoJournalLink:hover,
+ .surveyHub .surveyCatalogue>a:hover .surveyCta,
+ .lead-shell .response-card:hover{transform:translateY(-2px)!important}
+}
+.entryChoices .entryChoice:active,
+.publicPage .top>.publicBack:active,
+.publicPage .top>nav a:active,
+.conceptStandalone .peopleCta:active,
+.driveFolder:active,
+.driveRecent>button:active,
+.weekFolder:active,
+.categoryFolder:active,
+.workspaceCategory:active,
+.photoJournalLink:active,
+.workspace button:active,
+.survey-shell .button:active,
+.surveyHub .surveyCatalogue>a:active .surveyCta,
+.lead-shell button:active,
+.lead-login button:active{transform:translateY(1px) scale(.99)!important}
+@media(prefers-reduced-motion:reduce){
+ .entryGate>section,
+ .publicPage>.conceptStandalone,
+ .peoplePage>.publicCredits,
+ .surveyHubIntro,
+ .surveyCatalogue,
+ .survey-shell .survey-intro,
+ .workspace>.page,
+ .lead-login>form,
+ .lead-shell>.response-list,
+ .toast,
+ .survey-confirm,
+ .announcementBoard details[open]>div,
+ .survey-shell .option.selected,
+ .survey-shell .option[aria-pressed="true"],
+ .weekTabs button.active,
+ .journalFilters button.active{animation:none!important}
+ .entryChoices .entryChoice,
+ .publicPage a,
+ .publicPage button,
+ .driveFolder,
+ .driveRecent>button,
+ .weekFolder,
+ .categoryFolder,
+ .workspaceCategory,
+ .photoJournalLink,
+ .workspace button,
+ .survey-shell .button,
+ .survey-shell .option,
+ .survey-shell .survey-progress i,
+ .surveyHub .surveyCta,
+ .lead-shell button,
+ .lead-login button{transition:none!important;transform:none!important}
+}
+
 /* Public navigation labels remain readable as single units on narrow screens. */
 .publicPage .top>nav a{white-space:nowrap}

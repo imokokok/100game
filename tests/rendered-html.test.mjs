@@ -441,3 +441,15 @@ test("keeps public navigation labels intact on mobile", async () => {
   assert.match(css, /Public navigation labels remain readable as single units on narrow screens/);
   assert.match(css, /\.publicPage \.top>nav a\{white-space:nowrap\}/);
 });
+
+test("uses purposeful motion with tactile feedback and a reduced-motion fallback", async () => {
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  assert.match(css, /Purposeful motion: movement confirms navigation, selection and completed actions/);
+  assert.match(css, /@keyframes surfaceEnter/);
+  assert.match(css, /@keyframes feedbackEnter/);
+  assert.match(css, /@keyframes choiceConfirm/);
+  assert.match(css, /\.survey-shell \.survey-progress i\{transition:width \.36s/);
+  assert.match(css, /@media\(hover:hover\)/);
+  assert.match(css, /transform:translateY\(1px\) scale\(\.99\)!important/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{[\s\S]*animation:none!important[\s\S]*transition:none!important;transform:none!important/);
+});
