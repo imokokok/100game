@@ -288,11 +288,28 @@ test("opens the participant survey inside the workspace without a page refresh",
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   assert.match(studio, /const EmbeddedSurvey=lazy/);
+  assert.match(studio, /<LiveTasks t=\{t\} lang=\{lang\} onOpenSurvey=\{\(\)=>selectView\("survey"\)\}\/>/);
   assert.match(studio, /view==="survey"&&\(role==="lead"\?<LeadResponses initialRows=\{initialResponses\}\/>:<EmbeddedSurvey embedded\/>\)/);
   assert.doesNotMatch(studio, /location\.href=participant\?"\/survey"/);
   assert.match(survey, /SurveyApp\(\{embedded=false\}/);
   assert.match(survey, /embeddedSurvey/);
   assert.match(css, /\.workspace \.embeddedSurvey\{min-height:0/);
+});
+
+test("gives the Week 0 proposal and participant survey their real task flows", async () => {
+  const [flows, css] = await Promise.all([
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(flows, /const digitalProposal=task\?\.id==="week0-digital-proposal"/);
+  assert.match(flows, /提案说明（可选）/);
+  assert.match(flows, /可参考群公告整理提案/);
+  assert.match(flows, /const participantSurvey=task\?\.id==="week0-participant-survey"/);
+  assert.match(flows, /href="\/workspace\?view=survey"/);
+  assert.match(flows, /event\.preventDefault\(\);onOpenSurvey\(\)/);
+  assert.doesNotMatch(flows, /function shortError\(lang:Language\)\{return translations\[lang\]\.tasks\.auto\}/);
+  assert.match(css, /\.workspaceHomeButton\{max-width:132px;overflow:visible;text-overflow:clip/);
+  assert.match(css, /\.creatorTaskAction\{/);
 });
 
 test("keeps the production photo journal readable to creators and editable only by the lead", async () => {
@@ -332,6 +349,7 @@ test("keeps workspace navigation refresh-safe and gives the lead the correct ext
   assert.match(studio, /const target=next==="home"\?"\/workspace":`\/workspace\?view=\$\{next\}`/);
   assert.match(studio, /history\.pushState\(\{view:next\},"",target\)/);
   assert.match(studio, /window\.addEventListener\("popstate",sync\)/);
+  assert.match(studio, /if\(requested&&!allowed\)history\.replaceState\(\{view:"home"\},"","\/workspace"\)/);
   assert.match(studio, /role==="lead"\?views:views\.filter\(id=>id!=="dashboard"\)/);
   assert.match(studio, /view==="dashboard"&&role==="lead"/);
   assert.match(participantApi, /role: row \? "participant" : null/);
@@ -379,6 +397,8 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(hub, /surveyIndex/);
   assert.match(hub, /surveyStatus/);
   assert.match(hub, /surveyCta/);
+  assert.match(hub, /返回项目入口/);
+  assert.doesNotMatch(hub, /返回创作者协作区/);
   assert.doesNotMatch(hub, /<strong>\{zh\?"进入问卷"/);
   assert.match(hub, /© 2026 HuieChen/);
   assert.match(css, /Survey register: one coherent red, white and black editorial system/);

@@ -1286,7 +1286,7 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .worktop{height:54px;padding-inline:14px;gap:8px}
  .worktop>div:last-child{gap:7px}.worktop .privacy{display:none}.worktop .avatar{width:34px;height:34px;margin-left:0}
  .worktop .languagePicker select{min-width:82px!important;max-width:92px}
- .workspaceHomeButton{max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .workspaceHomeButton{max-width:132px;overflow:visible;text-overflow:clip;white-space:nowrap;font-size:12px}
  .workspace .embeddedSurvey .survey-head{position:relative;top:0!important;height:48px;padding-inline:16px}
  .workspace .embeddedSurvey .survey-title{font-size:12px}.workspace .embeddedSurvey .survey-title span,.workspace .embeddedSurvey .lang-switch{display:none}
  .workspace .embeddedSurvey .survey-progress{min-width:82px}
@@ -2066,3 +2066,6 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 
 /* Workspace home is a location label once selected, not another navigation action. */
 .workspaceHomeButton:disabled{cursor:default!important;opacity:1!important;color:#4f5660!important}
+.creatorTaskAction{margin:34px 0;padding:28px 0;border-top:1px solid #c9c6be;border-bottom:1px solid #c9c6be}
+.creatorTaskAction p{max-width:700px;margin:0 0 24px;color:#50504b;font-size:15px;line-height:1.75}
+.creatorTaskAction .primary{display:inline-flex;text-decoration:none}
