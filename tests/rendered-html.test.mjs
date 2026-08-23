@@ -206,3 +206,21 @@ test("keeps entry cards free of redundant arrows", async () => {
   assert.doesNotMatch(entryChoices, /<i>→<\/i>/);
   assert.doesNotMatch(studioChoices, /<i>→<\/i>/);
 });
+
+test("keeps Top 5 Games as an owner-upload status instead of a participant form", async () => {
+  const [tasks, notice, legacyNotice, migration, css] = await Promise.all([
+    readFile(new URL("../app/live-flows.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/week-announcement.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/project-announcement.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0016_top_five_owner_upload.sql", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(tasks, /task\?\.id==="week0-top-five-games"/);
+  assert.match(tasks, /这里不需要再次填写/);
+  assert.match(tasks, /请等待主策划 Hera 整理并上传至网站/);
+  assert.match(notice, /等待整理上传：Top 5 Games/);
+  assert.doesNotMatch(`${notice}\n${legacyNotice}`, /Complete your Top 5 Games now|Choose your five favourite games/);
+  assert.match(migration, /`status` = 'owner_pending'/);
+  assert.match(migration, /等待主策划整理上传/);
+  assert.match(css, /\.taskOwnerPending\{/);
+});

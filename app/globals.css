@@ -1142,3 +1142,10 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
 .publicPage .top>.publicBack:hover{border:0!important;background:transparent!important;color:#c72d24!important;transform:translateX(-2px)}
 .publicPage .top>.publicBack:focus-visible{border:0!important;background:transparent!important;color:#c72d24!important;outline:2px solid #c72d24;outline-offset:4px}
 @media(prefers-reduced-motion:reduce){.publicPage .top>.publicBack{transition:none}.publicPage .top>.publicBack:hover{transform:none}}
+
+/* A collected task becomes a clear status note, never an empty submission form. */
+.taskOwnerPending{display:grid;gap:12px;margin-top:30px;padding:28px 30px;border-left:4px solid #c72d24;border-radius:8px;background:#fff;box-shadow:0 8px 24px rgba(20,20,18,.06)}
+.taskOwnerPending span{color:#a52a24;font-size:11px;font-weight:750;letter-spacing:.12em}
+.taskOwnerPending strong{font-size:clamp(22px,3vw,31px);font-weight:650;letter-spacing:-.025em;line-height:1.25}
+.taskOwnerPending p{max-width:620px;margin:0;color:#4f4e49;font-size:15px;line-height:1.7}
+@media(max-width:700px){.taskOwnerPending{margin-top:22px;padding:22px 20px}.taskOwnerPending p{font-size:14px}}
