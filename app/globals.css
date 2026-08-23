@@ -1855,6 +1855,17 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 /* The participant badge is identity information, not an inert control. */
 .worktop .avatar{display:inline-grid;place-items:center;cursor:default}
 
+/* The public concept page presents the original project poster as a primary artefact. */
+.projectPoster{width:min(100%,760px);margin:clamp(48px,7vw,90px) auto clamp(58px,8vw,104px)}
+.projectPoster a{display:block;border-radius:22px;overflow:hidden;background:#050505;box-shadow:10px 10px 20px #c4bdb3,-10px -10px 20px #ffffff;line-height:0}
+.projectPoster img{display:block;width:100%;height:auto;object-fit:contain}
+.projectPoster figcaption{margin-top:16px;color:#5d5750;font-size:11px;font-weight:650;letter-spacing:.12em;text-transform:uppercase}
+@media(max-width:700px){
+ .projectPoster{width:100%;margin:42px auto 64px}
+ .projectPoster a{border-radius:16px;box-shadow:6px 6px 12px #c4bdb3,-6px -6px 12px #ffffff}
+ .projectPoster figcaption{margin-top:12px;font-size:10px}
+}
+
 /* Embedded survey navigation stays anchored while only the questionnaire moves. */
 .worktop{position:sticky!important;top:0;z-index:30}
 .workspace .embeddedSurvey .survey-head{

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render(path="/") {
@@ -488,4 +488,18 @@ test("allows only the lead to delete explicitly identified questionnaire respons
   assert.match(route, /DELETE FROM questionnaire_responses WHERE id = \?/);
   assert.match(route, /found\.length!==ids\.length/);
   assert.doesNotMatch(route, /DELETE FROM questionnaire_responses WHERE wechat_name/);
+});
+
+test("shows the original recruitment poster inside public access", async () => {
+  const [concept, css] = await Promise.all([
+    readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  await access(new URL("../public/project-recruitment-poster.jpg", import.meta.url));
+  assert.match(concept, /className="projectPoster"/);
+  assert.match(concept, /src="\/project-recruitment-poster\.jpg"/);
+  assert.match(concept, /width="1024" height="1536" loading="lazy" decoding="async"/);
+  assert.match(concept, /项目招募海报 · 2026/);
+  assert.match(css, /The public concept page presents the original project poster as a primary artefact/);
+  assert.match(css, /\.projectPoster\{width:min\(100%,760px\)/);
 });
