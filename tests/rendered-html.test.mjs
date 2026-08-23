@@ -527,4 +527,10 @@ test("keeps the lead response drawer edge crisp and free of glow", async () => {
   assert.match(css, /Lead response drawer uses a crisp boundary without glow or fuzzy shadow/);
   assert.match(css, /\.profile-sheet\{[\s\S]*border-left:1px solid #9f988e!important;[\s\S]*border-radius:0!important;[\s\S]*box-shadow:none!important;[\s\S]*filter:none!important/);
   assert.match(css, /\.profile-backdrop\{-webkit-backdrop-filter:none!important;backdrop-filter:none!important\}/);
+  assert.match(css, /Drawer motion communicates opening and closing without reintroducing glow/);
+  assert.match(css, /@keyframes profileBackdropEnter/);
+  assert.match(css, /@keyframes profileSheetEnter/);
+  assert.match(css, /\.profile-sheet\{animation:profileSheetEnter \.28s/);
+  assert.match(css, /\.profile-close:active\{background:#c72d24!important;color:#fff!important;transform:scale\(\.92\)!important\}/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)\{[\s\S]*\.profile-backdrop,\.profile-sheet\{animation:none!important\}/);
 });

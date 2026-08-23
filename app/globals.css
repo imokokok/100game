@@ -2013,3 +2013,29 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  backdrop-filter:none!important;
 }
 .profile-backdrop{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+
+/* Drawer motion communicates opening and closing without reintroducing glow. */
+@keyframes profileBackdropEnter{
+ from{background:rgba(20,20,16,0)}
+ to{background:rgba(20,20,16,.46)}
+}
+@keyframes profileSheetEnter{
+ from{opacity:.94;transform:translateX(24px)}
+ to{opacity:1;transform:translateX(0)}
+}
+.profile-backdrop{animation:profileBackdropEnter .2s ease-out both}
+.profile-sheet{animation:profileSheetEnter .28s cubic-bezier(.22,1,.36,1) both}
+.profile-close{
+ width:42px;
+ height:42px;
+ display:grid;
+ place-items:center;
+ border-radius:50%!important;
+ transition:transform .14s ease-out,background-color .16s ease-out,color .16s ease-out!important;
+}
+@media(hover:hover){.profile-close:hover{background:#d8d1c7!important}}
+.profile-close:active{background:#c72d24!important;color:#fff!important;transform:scale(.92)!important}
+@media(prefers-reduced-motion:reduce){
+ .profile-backdrop,.profile-sheet{animation:none!important}
+ .profile-close{transition:none!important;transform:none!important}
+}
