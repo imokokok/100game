@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   const id = await participantId(req);
   if (!id) return NextResponse.json({ participant: null });
   const row = await d1().prepare("SELECT id, display_code, locale FROM participants WHERE id = ?").bind(id).first();
-  return NextResponse.json({ participant: row ?? null });
+  return NextResponse.json({ participant: row ?? null, role: row ? "participant" : null });
 }
 
 export async function POST(req: NextRequest) {

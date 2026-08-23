@@ -232,7 +232,7 @@ test("opens the participant survey inside the workspace without a page refresh",
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   assert.match(studio, /const EmbeddedSurvey=lazy/);
-  assert.match(studio, /view==="survey"&&<EmbeddedSurvey embedded\/>/);
+  assert.match(studio, /view==="survey"&&\(role==="lead"\?<LeadResponses\/>:<EmbeddedSurvey embedded\/>\)/);
   assert.doesNotMatch(studio, /location\.href=participant\?"\/survey"/);
   assert.match(survey, /SurveyApp\(\{embedded=false\}/);
   assert.match(survey, /embeddedSurvey/);
@@ -262,4 +262,23 @@ test("keeps the production photo journal readable to creators and editable only 
   assert.match(migration, /idx_journal_entries_stage_occurred/);
   assert.match(schema, /bodyZh:text\("body_zh"\)/);
   assert.match(css, /\.productionEntry\{/);
+});
+
+test("keeps workspace navigation refresh-safe and gives the lead the correct extra views", async () => {
+  const [studio, participantApi, leadResponsesApi, css, entry] = await Promise.all([
+    readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/participant/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/lead/responses/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+  ]);
+  assert.match(studio, /const LeadResponses=lazy/);
+  assert.match(studio, /history\.pushState\(\{\},"",next==="home"\?"\/workspace":`\/workspace\?view=\$\{next\}`\)/);
+  assert.match(studio, /window\.addEventListener\("popstate",sync\)/);
+  assert.match(studio, /role==="lead"\?views:views\.filter\(id=>id!=="dashboard"\)/);
+  assert.match(studio, /view==="dashboard"&&role==="lead"/);
+  assert.match(participantApi, /role: row \? "participant" : null/);
+  assert.match(leadResponsesApi, /!isOwner\(req\)&&!await isLead\(req\)/);
+  assert.match(css, /Mobile navigation and filter rails remain complete without browser scrollbars/);
+  assert.match(entry, /busy\?c\.entering:c\.verify/);
 });

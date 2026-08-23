@@ -1192,3 +1192,12 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
 .journalEditor>footer{display:flex;align-items:center;justify-content:space-between;gap:20px}.journalEditor>footer small{color:#66645e;line-height:1.5}.journalEditor>footer button{min-width:150px;padding:13px 18px;border-radius:5px}
 @media(max-width:820px){.workspace .embeddedSurvey .survey-head{top:112px}.productionEntry{grid-template-columns:30px minmax(0,1fr);gap:16px}.productionEntry figure,.journalStory{grid-column:2}.journalHero{grid-template-columns:1fr}.journalHero>strong{justify-self:start}.journalEditorGrid{grid-template-columns:1fr}.journalEditorGrid .wide{grid-column:auto}.journalEditor>footer{align-items:flex-start;flex-direction:column}.journalEditor>footer button{width:100%}}
 @media(max-width:520px){.productionJournal{padding-inline:16px}.journalHero h1{font-size:42px}.journalHero p{font-size:14px}.journalHero>strong{font-size:64px}.journalFilters{margin-inline:-16px;padding-inline:16px}.productionEntry{grid-template-columns:22px minmax(0,1fr);padding:26px 0}.productionEntry figure{border-radius:7px}.journalStory h2{font-size:29px}.journalEditor{margin-inline:-4px;padding:22px 18px}.workspace .embeddedSurvey .survey-head{top:104px}}
+
+/* Mobile navigation and filter rails remain complete without browser scrollbars. */
+.app>aside nav,.journalFilters{scrollbar-width:none;-ms-overflow-style:none}
+.app>aside nav::-webkit-scrollbar,.journalFilters::-webkit-scrollbar{display:none}
+@media(max-width:600px){.app>aside nav{overflow:hidden}.app>aside nav button{flex:1 1 0;min-width:0;padding-inline:2px}.app>aside nav button b{width:auto}}
+.gateInvite[aria-busy="true"] .primary{position:relative;padding-right:42px;opacity:.9}
+.gateInvite[aria-busy="true"] .primary:after{content:"";position:absolute;right:17px;top:50%;width:13px;height:13px;margin-top:-8px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:gateSpin .7s linear infinite}
+@keyframes gateSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.gateInvite[aria-busy="true"] .primary:after{animation:none}}
