@@ -301,3 +301,15 @@ test("reflows the mobile workspace without tiny navigation or controls covering 
   assert.match(css, /\.journalFilters\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
   assert.match(css, /\.worktop \.privacy\{display:none\}/);
 });
+
+test("presents the survey centre as a restrained project register", async () => {
+  const [hub, css] = await Promise.all([
+    readFile(new URL("../app/survey/survey-hub.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+  assert.match(hub, /surveyHubStatement/);
+  assert.match(hub, /surveyIndex/);
+  assert.match(hub, /surveyStatus/);
+  assert.match(hub, /© 2026 HuieChen/);
+  assert.match(css, /Survey register: one coherent red, white and black editorial system/);
+});

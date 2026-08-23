@@ -1308,3 +1308,45 @@ input::placeholder,textarea::placeholder{color:#6b6963;opacity:1}
  .survey-shell .q-label{font-size:20px}
  .journalFilters button{padding-inline:8px;font-size:11px}
 }
+
+/* Survey register: one coherent red, white and black editorial system. */
+.surveyHub,.survey-shell{--survey-ink:#161614;--survey-paper:#f7f6f2;--survey-line:#d5d2ca;--survey-red:#c92e25;background:var(--survey-paper);color:var(--survey-ink)}
+.surveyHub>header,.survey-shell .survey-head{height:72px;padding-inline:clamp(20px,5vw,72px);border:0!important;border-top:4px solid var(--survey-red)!important;border-bottom:1px solid var(--survey-line)!important;background:rgba(255,255,255,.96)!important;box-shadow:none!important}
+.surveyHub>header>a{font-size:12px;line-height:1.1;letter-spacing:.035em}.surveyHub>header>a span{margin-top:5px;color:#5f5d57;font-size:11px;letter-spacing:.045em}
+.surveyHub>header>button,.survey-shell .lang-switch{min-width:52px;min-height:36px;border:1px solid #aaa79f!important;border-radius:0!important;background:transparent!important;color:var(--survey-ink);font-size:12px;font-weight:700}
+.surveyHubIntro{width:min(1180px,100%);max-width:none;margin:0 auto;padding:clamp(72px,9vw,126px) clamp(20px,5vw,72px) clamp(54px,7vw,84px);display:grid;grid-template-columns:minmax(320px,1fr) minmax(300px,.72fr);gap:clamp(44px,8vw,120px);align-items:end}
+.surveyHubIntro>div>p{margin:0 0 22px;color:var(--survey-red);font:700 11px/1.3 Inter,"Noto Sans SC",sans-serif;letter-spacing:.13em}
+.surveyHubIntro h1{max-width:none;margin:0;font-size:clamp(54px,8vw,104px);font-weight:560;line-height:.88;letter-spacing:-.065em}
+.surveyHubStatement{padding-top:22px;border-top:2px solid var(--survey-ink)}.surveyHubStatement b{display:block;max-width:500px;margin-bottom:18px;font-size:clamp(20px,2.2vw,28px);font-weight:610;line-height:1.35;letter-spacing:-.025em}.surveyHubStatement span{display:block;max-width:560px;color:#55534e;font-size:14px;line-height:1.75}
+.surveyCatalogue{width:min(1180px,100%);margin:0 auto;padding:0 clamp(20px,5vw,72px) clamp(86px,10vw,140px)}
+.surveyCatalogue>header{display:grid;grid-template-columns:74px minmax(0,1fr) 164px;padding:12px 0;border-top:2px solid var(--survey-ink);border-bottom:1px solid var(--survey-line);color:#706e68;font-size:10px;font-weight:750;letter-spacing:.14em}
+.surveyCatalogue>a{max-width:none;min-height:220px;margin:0!important;padding:34px 0!important;display:grid;grid-template-columns:74px minmax(0,1fr) 164px;gap:0;align-items:center;border:0!important;border-bottom:1px solid var(--survey-line)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:inherit;text-decoration:none}
+.surveyCatalogue>a:hover,.surveyCatalogue>a:focus-visible{padding:34px 0!important;background:transparent!important}.surveyCatalogue>a:hover h2,.surveyCatalogue>a:focus-visible h2{color:var(--survey-red)}
+.surveyIndex{align-self:start;padding-top:5px;color:var(--survey-red)!important;font:500 26px/1 Georgia,serif!important;letter-spacing:-.04em!important}
+.surveyCatalogue small{color:#686660;font-size:10px;font-weight:700;letter-spacing:.11em}.surveyCatalogue h2{margin:13px 0 14px;font-size:clamp(31px,4vw,56px);font-weight:570;line-height:1.02;letter-spacing:-.048em;transition:color .16s ease}.surveyCatalogue p{max-width:720px;margin:0;color:#55534e;font-size:14px;line-height:1.7}
+.surveyStatus{align-self:stretch;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between}.surveyStatus>span{color:var(--survey-red);font-size:10px;font-weight:800;letter-spacing:.12em}.surveyStatus>strong{display:grid!important;place-items:center;min-width:146px;min-height:48px;padding:12px 16px;border:1px solid var(--survey-red)!important;border-radius:0!important;background:var(--survey-red)!important;color:#fff!important;font-size:13px;font-weight:750}
+.surveyCatalogue>a:hover .surveyStatus>strong,.surveyCatalogue>a:focus-visible .surveyStatus>strong{background:#9f211a!important;border-color:#9f211a!important}
+.surveyHub>footer{padding:24px clamp(20px,5vw,72px);border-top:1px solid var(--survey-line);background:#fff;color:#5e5c56}.surveyHub>footer a{font-weight:650}.surveyHub>footer a:hover{color:var(--survey-red)}
+
+.survey-shell .survey-head{height:68px}.survey-shell .survey-title{font-size:13px;font-weight:760;letter-spacing:.02em}.survey-shell .survey-title span{margin-top:4px;color:#66635d;font-size:10px;letter-spacing:.07em}
+.survey-shell .survey-progress:before{background:#d5d2ca}.survey-shell .survey-progress i{background:var(--survey-red)}.survey-shell .draft-status{color:#4d5e49}
+.survey-shell .survey-intro{max-width:1060px;padding-top:clamp(72px,9vw,118px)}.survey-shell .survey-intro .eyebrow,.survey-shell .survey-step-head .eyebrow{color:var(--survey-red)}
+.survey-shell .survey-intro h1{max-width:980px;font-size:clamp(42px,5.4vw,72px);font-weight:570;line-height:1.08;letter-spacing:-.052em}.survey-shell .survey-intro h1 em{color:var(--survey-red);font-weight:570}
+.survey-shell .intro-grid{margin-top:56px;padding-top:30px;border-top:2px solid var(--survey-ink);grid-template-columns:1fr 1fr;gap:clamp(28px,7vw,96px)}.survey-shell .intro-grid p{color:#4f4d48;font-size:15px;line-height:1.8}
+.survey-shell .survey-step-head,.survey-shell .question-list,.survey-shell .review-panel{max-width:940px}.survey-shell .survey-step-head{padding-top:64px}.survey-shell .survey-step-head h1{font-size:clamp(40px,5vw,62px);font-weight:570;letter-spacing:-.05em}
+.survey-shell .section-progress button.active{border-bottom-color:var(--survey-red)!important}.survey-shell .section-progress button.active span{color:var(--survey-red)!important}.survey-shell .focus-note,.survey-shell .focus-note.complete{border-top-color:var(--survey-red);background:transparent}.survey-shell .focus-note.complete strong{color:#30302d}
+.survey-shell .q-number{color:var(--survey-red)}.survey-shell .q-label{font-weight:610}.survey-shell .q-label sup{color:var(--survey-red)}
+.survey-shell .q-body input,.survey-shell .q-body textarea,.survey-shell .option{border-color:#c8c5bd!important;background:#fff!important}.survey-shell .q-body input:focus,.survey-shell .q-body textarea:focus{border-color:var(--survey-ink)!important;box-shadow:none!important}.survey-shell .option:hover{background:#f0eee8!important}.survey-shell .option.selected,.survey-shell .option.selected:nth-child(3n+1),.survey-shell .option.selected:nth-child(3n){background:var(--survey-ink)!important;border-color:var(--survey-ink)!important}.survey-shell .option.selected span{color:#ff665b!important}
+.survey-shell .button{border-radius:0!important}.survey-shell .button.primary{background:var(--survey-red)!important;border-color:var(--survey-red)!important}.survey-shell .button.primary:hover{background:#9f211a!important;border-color:#9f211a!important}
+.survey-shell .proposal-note{border-top:2px solid var(--survey-ink)}
+
+@media(max-width:700px){
+ .surveyHub>header,.survey-shell .survey-head{height:62px;padding-inline:16px;border-top-width:3px!important}
+ .surveyHub>header>a{max-width:230px}.surveyHub>header>a span{display:none}
+ .surveyHubIntro{padding:56px 18px 40px;grid-template-columns:1fr;gap:38px}.surveyHubIntro h1{font-size:clamp(48px,15vw,64px)}.surveyHubStatement{padding-top:18px}.surveyHubStatement b{font-size:22px}.surveyHubStatement span{font-size:14px}
+ .surveyCatalogue{padding:0 18px 76px}.surveyCatalogue>header{grid-template-columns:46px 1fr 68px}.surveyCatalogue>a{min-height:0;padding:28px 0!important;grid-template-columns:46px minmax(0,1fr);align-items:start}.surveyCatalogue>a:hover,.surveyCatalogue>a:focus-visible{padding:28px 0!important}.surveyCatalogue h2{font-size:31px}.surveyCatalogue p{font-size:13px}.surveyIndex{font-size:21px!important}.surveyStatus{grid-column:2;align-self:auto;margin-top:22px;flex-direction:row;align-items:center}.surveyStatus>strong{min-width:128px;min-height:46px}.surveyCatalogue>header span:last-child{justify-self:end}
+ .surveyHub>footer{padding-inline:18px}.surveyHub>footer span{display:block}
+ .survey-shell .survey-intro{padding:54px 18px 42px}.survey-shell .survey-intro h1{font-size:34px;line-height:1.16}.survey-shell .intro-grid{margin-top:38px;padding-top:22px;grid-template-columns:1fr;gap:18px}
+ .survey-shell .survey-step-head{padding-top:44px}.survey-shell .survey-step-head h1{font-size:38px}.survey-shell .question-list{padding-inline:18px}.survey-shell .question,.survey-shell .question.answered{padding:40px 0!important}.survey-shell .q-label{font-size:23px}.survey-shell .focus-note{margin-top:24px}
+}
+@media(max-width:380px){.surveyCatalogue>header{grid-template-columns:42px 1fr 62px}.surveyCatalogue>a{grid-template-columns:42px minmax(0,1fr)}.surveyCatalogue h2{font-size:28px}.surveyStatus>strong{min-width:116px;padding-inline:12px}.surveyHub>footer{gap:16px;flex-wrap:wrap}}
