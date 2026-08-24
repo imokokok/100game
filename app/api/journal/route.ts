@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isLead, isOwner, participantId, r2 } from "../_shared";
+import { d1, isLead, isOwner, participantId, getBlob, putBlob, deleteBlob } from "../_shared";
 
 const imageTypes=new Set(["image/jpeg","image/png","image/webp","image/heic","image/heif"]);
 const stages=new Set(["week-0","week-1","week-2","week-3","week-4"]);
@@ -17,9 +17,9 @@ export async function GET(req:NextRequest){
   if(id){
     const row=await d1().prepare("SELECT file_key, content_type, file_name FROM journal_entries WHERE id = ?").bind(id).first<{file_key:string;content_type:string|null;file_name:string|null}>();
     if(!row)return NextResponse.json({error:"Entry not found"},{status:404});
-    const object=await r2().get(row.file_key);
-    if(!object?.body)return NextResponse.json({error:"File missing"},{status:404});
-    return new Response(object.body,{headers:{"content-type":row.content_type||"application/octet-stream","content-disposition":`inline; filename*=UTF-8''${encodeURIComponent(row.file_name||"journal")}`,"cache-control":"private, max-age=300"}});
+    const object=await getBlob(row.file_key);
+    if(!object)return NextResponse.json({error:"File missing"},{status:404});
+    return new Response(object.body,{headers:{"content-type":row.content_type||object.contentType,"content-disposition":`inline; filename*=UTF-8''${encodeURIComponent(row.file_name||"journal")}`,"cache-control":"private, max-age=300"}});
   }
   const rows=await d1().prepare("SELECT id, title_zh, title_en, body_zh, body_en, stage, tags, participant_id, content_type, file_name, occurred_at FROM journal_entries ORDER BY occurred_at DESC LIMIT 100").all();
   return NextResponse.json({entries:rows.results,canEdit:editor},{headers:{"cache-control":"private, no-store"}});
@@ -35,7 +35,7 @@ export async function POST(req:NextRequest){
   const stage=cleanStage(form.get("stage")),tags=clean(form.get("tags"),300),occurredAt=cleanOccurredAt(form.get("occurredAt"));
   if(!titleZh)return NextResponse.json({error:"Title required"},{status:400});
   const id=crypto.randomUUID(),safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-120)||"image",key=`journal/${id}-${safe}`;
-  await r2().put(key,file.stream(),{httpMetadata:{contentType:file.type}});
+  await putBlob(key,file,file.type);
   await d1().prepare("INSERT INTO journal_entries (id, title_zh, title_en, body_zh, body_en, stage, tags, file_key, participant_id, content_type, file_name, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'owner', ?, ?, ?)").bind(id,titleZh,titleEn,bodyZh,bodyEn,stage,tags,key,file.type,file.name.slice(0,240),occurredAt).run();
   return NextResponse.json({ok:true,id},{status:201});
 }
@@ -58,7 +58,7 @@ export async function DELETE(req:NextRequest){
   const id=req.nextUrl.searchParams.get("id")??"";
   const row=await d1().prepare("SELECT file_key FROM journal_entries WHERE id = ?").bind(id).first<{file_key:string}>();
   if(!row)return NextResponse.json({error:"Entry not found"},{status:404});
-  await r2().delete(row.file_key);
+  await deleteBlob(row.file_key);
   await d1().prepare("DELETE FROM journal_entries WHERE id = ?").bind(id).run();
   return NextResponse.json({ok:true});
 }

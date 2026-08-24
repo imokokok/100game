@@ -48,7 +48,7 @@ export function PublicPages({initialView}:{initialView:PublicView}){
  const [lang,setLang]=useState<Language>("zh");
  const [view,setView]=useState<PublicView>(initialView);
  useEffect(()=>{if(new URLSearchParams(location.search).get("public")==="1")history.replaceState({},"",location.pathname);const saved=localStorage.getItem("hundred-language") as Language|null;queueMicrotask(()=>{if(saved&&translations[saved])setLang(saved)});const sync=()=>setView(location.pathname==="/people"?"people":"concept");addEventListener("popstate",sync);fetch("/api/designers",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(data=>{if(data?.designers)sessionStorage.setItem("w100-designers-cache",JSON.stringify(data.designers))}).catch(()=>undefined);return()=>removeEventListener("popstate",sync)},[]);
- useEffect(()=>{localStorage.setItem("hundred-language",lang);document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr"},[lang]);
+ useEffect(()=>{localStorage.setItem("hundred-language",lang);document.documentElement.lang=lang;document.documentElement.dir=(lang as string)==="ar"?"rtl":"ltr"},[lang]);
  const c=localeCopy[lang];const t=translations[lang];
  useEffect(()=>{document.title=`${view==="concept"?c.concept:c.people} — WHAT 100 PEOPLE DO TO A GAME`},[view,c.concept,c.people]);
  const go=(next:PublicView)=>(event:MouseEvent<HTMLAnchorElement>)=>{event.preventDefault();if(view===next)return;history.pushState({},"",next==="concept"?"/concept":"/people");setView(next);window.scrollTo(0,0)};

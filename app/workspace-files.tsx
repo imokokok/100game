@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Language, Translation } from "./i18n";
+import type { Language, Translation } from "./bilingual-i18n";
 import { GroupFileGallery, LiveUpload } from "./live-flows";
 import { WeekAnnouncementPage } from "./week-announcement";
 
-type FileRow={id:string;name:string;size:number;content_type:string;created_at:number;uploader_code:string};
+type FileRow={id:string;name:string;content_type:string;size:number;created_at:number;participant_id:string};
 type CategoryId="draft"|"process"|"final";
 
 function beijingGreeting(lang:Language){

@@ -1,1 +1,0 @@
-ALTER TABLE `tasks` ADD COLUMN `week` integer NOT NULL DEFAULT 0;

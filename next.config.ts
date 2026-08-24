@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* Runtime response policy lives in proxy.ts. */
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
