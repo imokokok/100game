@@ -17,7 +17,16 @@ function getClient(): Sql {
   if (!client) {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("DATABASE_URL is not set");
-    client = postgres(url, { prepare: false });
+    client = postgres(url, {
+      prepare: false,
+      // Postgres int8 (bigint) defaults to JS BigInt. Our epoch-ms timestamps
+      // fit in Number's safe range, so parse them back to numbers to match the
+      // original D1 (SQLite 64-bit integer) behavior and avoid JSON.stringify
+      // throwing on BigInt values.
+      types: {
+        bigint: { to: 20, from: [20], parse: (x: string) => Number(x), serialize: (x: unknown) => String(x) },
+      },
+    });
   }
   return client;
 }
