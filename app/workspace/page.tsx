@@ -1,13 +1,13 @@
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {NextRequest} from "next/server";
-import {d1,isLead,isOwner,participantId} from "../api/_shared";
+import {d1,isLead,isOwner,participantId,sha256} from "../api/_shared";
 import {Studio,type WorkspaceRole,type WorkspaceView} from "../studio";
 import type {LeadResponse} from "../lead/lead-dashboard";
 
 const allowedViews:WorkspaceView[]=["home","tasks","survey","links","journal","dashboard"];
 
-export default async function WorkspacePage({searchParams}:{searchParams:Promise<{view?:string}>}){
+export default async function WorkspacePage({searchParams}:{searchParams:Promise<{view?:string;k?:string}>}){
  const requestHeaders=await headers();
  const request=new NextRequest("https://hundred-people-game.jzwjf5xs57.chatgpt.site/workspace",{headers:requestHeaders});
  let participant:{id:string;display_code:string};
@@ -15,7 +15,17 @@ export default async function WorkspacePage({searchParams}:{searchParams:Promise
  if(isOwner(request)||await isLead(request)){
   participant={id:"owner",display_code:"Hera"};role="lead";
  }else{
-  const id=await participantId(request);
+  let id=await participantId(request);
+  if(!id){
+   // Fallback for WebViews/browsers that refuse to store the session cookie
+   // (e.g. Safari "Block All Cookies"): a one-shot credential in the URL,
+   // placed there by the entry form right after a successful login.
+   const k=(await searchParams).k;
+   if(k){
+    const sid=await d1().prepare("SELECT participant_id FROM participant_sessions WHERE token_hash = ? AND expires_at > ?").bind(await sha256(k),Date.now()).first<{participant_id:string}>();
+    if(sid)id=sid.participant_id;
+   }
+  }
   if(!id)redirect("/?access=invite");
   const row=await d1().prepare("SELECT id, display_code FROM participants WHERE id = ?").bind(id).first<{id:string;display_code:string}>();
   if(!row)redirect("/?access=invite");

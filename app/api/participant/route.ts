@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   if(!participant.id||!row.reusable&&!row.display_code)return NextResponse.json({error:"Invitation participant unavailable"},{status:403});
   if(participant.display_code!==displayName){await d1().prepare("UPDATE participants SET display_code = ? WHERE id = ?").bind(displayName,participant.id).run();participant={...participant,display_code:displayName}}
   const session=crypto.randomUUID()+crypto.randomUUID();const expires=now+60*60*24*30*1000;await d1().prepare("INSERT INTO participant_sessions (token_hash, participant_id, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(await sha256(session),participant.id,now,expires).run();
-  const res = NextResponse.json({ participant });
+  const res = NextResponse.json({ participant, session });
   res.cookies.set("participant_session", session, { httpOnly: true, sameSite: "lax", secure: true, maxAge: 60 * 60 * 24 * 30 });
   return res;
 }

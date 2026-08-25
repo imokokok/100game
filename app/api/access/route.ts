@@ -18,6 +18,6 @@ export async function POST(req:NextRequest){
  const res=await participantLogin(participantReq);
  clearLeadSession(res);
  if(!res.ok)return res;
- const data=await res.clone().json() as {participant:unknown};
- return new NextResponse(JSON.stringify({role:"participant",participant:data.participant}),{status:res.status,headers:res.headers});
+ const data=await res.clone().json() as {participant:unknown;session?:string};
+ return new NextResponse(JSON.stringify({role:"participant",participant:data.participant,session:data.session}),{status:res.status,headers:res.headers});
 }
