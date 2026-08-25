@@ -50,3 +50,62 @@ export async function copyText(text: string): Promise<boolean> {
     return false;
   }
 }
+
+// Safe storage access. Some in-app WebViews (private mode, strict ITP) throw
+// a SecurityError on direct localStorage/sessionStorage access, which would
+// crash the component on mount. These never throw.
+export function storageGet(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+export function storageSet(key: string, value: string): void {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable — ignore */
+  }
+}
+export function storageRemove(key: string): void {
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    /* storage unavailable — ignore */
+  }
+}
+export function sessionGet(key: string): string | null {
+  try {
+    return sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+export function sessionSet(key: string, value: string): void {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch {
+    /* storage unavailable — ignore */
+  }
+}
+
+// Safe URL query parsing for WebViews that predate URLSearchParams
+// (Android 5.x system WebView, older X5 kernels). Returns decoded key->value map.
+export function parseQuery(search: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  const s = search.startsWith("?") ? search.slice(1) : search;
+  if (!s) return out;
+  for (const pair of s.split("&")) {
+    if (!pair) continue;
+    const i = pair.indexOf("=");
+    const k = i < 0 ? pair : pair.slice(0, i);
+    const v = i < 0 ? "" : pair.slice(i + 1);
+    try {
+      out[decodeURIComponent(k)] = decodeURIComponent(v.replace(/\+/g, " "));
+    } catch {
+      out[k] = v;
+    }
+  }
+  return out;
+}

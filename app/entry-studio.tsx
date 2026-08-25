@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect,useState,type FormEvent,type MouseEvent} from "react";
+import {parseQuery,storageGet,storageSet} from "./client-compat";
 
 type Lang="zh"|"en";
 const copy={
@@ -10,8 +11,8 @@ const copy={
 
 export function EntryStudio(){
  const [lang,setLang]=useState<Lang>("zh"),[invite,setInvite]=useState(false),[name,setName]=useState(""),[code,setCode]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false);const c=copy[lang];
- useEffect(()=>{const saved=localStorage.getItem("hundred-language");const next:Lang=saved==="en"||(!saved&&navigator.language.toLowerCase().startsWith("en"))?"en":"zh";setLang(next);const sync=()=>{const params=new URLSearchParams(location.search);setInvite(params.get("access")==="invite"||params.has("invite"));const token=params.get("invite");if(token)setCode(token)};sync();window.addEventListener("popstate",sync);return()=>window.removeEventListener("popstate",sync)},[]);
- useEffect(()=>{localStorage.setItem("hundred-language",lang);document.documentElement.lang=lang==="zh"?"zh-CN":"en"},[lang]);
+ useEffect(()=>{const saved=storageGet("hundred-language");const next:Lang=saved==="en"||(!saved&&navigator.language.toLowerCase().startsWith("en"))?"en":"zh";setLang(next);const sync=()=>{const params=parseQuery(location.search);setInvite(params.access==="invite"||"invite" in params);const token=params.invite;if(token)setCode(token)};sync();window.addEventListener("popstate",sync);return()=>window.removeEventListener("popstate",sync)},[]);
+ useEffect(()=>{storageSet("hundred-language",lang);document.documentElement.lang=lang==="zh"?"zh-CN":"en"},[lang]);
  function openInvite(event:MouseEvent<HTMLAnchorElement>){event.preventDefault();history.pushState({},"","/?access=invite");setNotice("");setInvite(true)}
  function closeInvite(event:MouseEvent<HTMLAnchorElement>){event.preventDefault();history.pushState({},"","/");setNotice("");setInvite(false)}
  async function submit(event:FormEvent){event.preventDefault();if(busy)return;setBusy(true);setNotice("");try{const response=await fetch("/api/access",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({code,name})});if(!response.ok){const data=await response.json().catch(()=>({})) as {error?:string};setNotice(data.error==="Participant name is required"?c.required:c.error);return}const data=await response.json() as {role:"lead"|"participant"};go(data.role==="lead"?"/workspace?view=journal":"/workspace");return}catch{setNotice(c.networkError)}finally{setBusy(false)}}
