@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 
 import {useEffect,useState,type MouseEvent} from "react";
+import {runMicrotask} from "../client-compat";
 import {languageOptions,translations,type Language} from "../bilingual-i18n";
 import {localeCopy} from "../bilingual-locale-copy";
 import {PublicDesignerRanking} from "../live-flows";
@@ -47,7 +48,7 @@ const conceptEditorial={
 export function PublicPages({initialView}:{initialView:PublicView}){
  const [lang,setLang]=useState<Language>("zh");
  const [view,setView]=useState<PublicView>(initialView);
- useEffect(()=>{if(new URLSearchParams(location.search).get("public")==="1")history.replaceState({},"",location.pathname);const saved=localStorage.getItem("hundred-language") as Language|null;queueMicrotask(()=>{if(saved&&translations[saved])setLang(saved)});const sync=()=>setView(location.pathname==="/people"?"people":"concept");addEventListener("popstate",sync);fetch("/api/designers",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(data=>{if(data?.designers)sessionStorage.setItem("w100-designers-cache",JSON.stringify(data.designers))}).catch(()=>undefined);return()=>removeEventListener("popstate",sync)},[]);
+ useEffect(()=>{if(new URLSearchParams(location.search).get("public")==="1")history.replaceState({},"",location.pathname);const saved=localStorage.getItem("hundred-language") as Language|null;runMicrotask(()=>{if(saved&&translations[saved])setLang(saved)});const sync=()=>setView(location.pathname==="/people"?"people":"concept");addEventListener("popstate",sync);fetch("/api/designers",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(data=>{if(data?.designers)sessionStorage.setItem("w100-designers-cache",JSON.stringify(data.designers))}).catch(()=>undefined);return()=>removeEventListener("popstate",sync)},[]);
  useEffect(()=>{localStorage.setItem("hundred-language",lang);document.documentElement.lang=lang;document.documentElement.dir=(lang as string)==="ar"?"rtl":"ltr"},[lang]);
  const c=localeCopy[lang];const t=translations[lang];
  useEffect(()=>{document.title=`${view==="concept"?c.concept:c.people} — WHAT 100 PEOPLE DO TO A GAME`},[view,c.concept,c.people]);
