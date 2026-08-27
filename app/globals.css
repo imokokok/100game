@@ -4519,6 +4519,78 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .publicPage.conceptPage.motion-ready .conceptHero.is-visible :where(h1,.conceptSubtitle){
   animation:publicHeadlineSettle .52s cubic-bezier(.18,.82,.22,1) .24s both!important;
 }
+
+/* Punk print wordmark: irregular type without sacrificing the audited grid. */
+.publicPage.conceptPage .conceptLabelBlock .conceptWord{
+  overflow:visible!important;
+  perspective:500px;
+}
+.publicPage.conceptPage .conceptWordInk{
+  display:inline-flex;
+  align-items:baseline;
+  gap:.012em;
+  max-width:100%;
+  color:#fffaf0;
+  font-family:Impact,"Arial Narrow Bold","Arial Black","Noto Sans SC",sans-serif;
+  font-weight:900;
+  line-height:.88;
+  text-shadow:1.4px 1px 0 rgba(24,20,17,.34);
+  -webkit-text-stroke:.28px rgba(255,255,255,.72);
+  transform-origin:50% 56%;
+  backface-visibility:hidden;
+}
+.publicPage.conceptPage .conceptWordInk>span{
+  display:inline-block;
+  min-width:0;
+  transform-origin:50% 72%;
+}
+.publicPage.conceptPage .conceptWordInk>span:nth-child(4n+1){transform:rotate(-1.8deg) skewY(-2deg) scaleY(1.045)}
+.publicPage.conceptPage .conceptWordInk>span:nth-child(4n+2){transform:translateY(.018em) rotate(1.25deg) scaleX(.96) scaleY(.975)}
+.publicPage.conceptPage .conceptWordInk>span:nth-child(4n+3){transform:translateY(-.012em) rotate(-.65deg) skewX(2deg) scaleX(1.025)}
+.publicPage.conceptPage .conceptWordInk>span:nth-child(4n){transform:rotate(1.5deg) skewY(1.5deg) scaleX(.975) scaleY(1.025)}
+.publicPage.conceptPage .conceptWordWhat .conceptWordInk{
+  transform:rotate(-2.4deg) skewX(-7deg) scaleX(.93) scaleY(1.08);
+  transform-origin:left bottom;
+}
+.publicPage.conceptPage .conceptWordHundred .conceptWordInk{
+  transform:rotate(.7deg) skewX(-4deg) scaleX(.91) scaleY(1.08);
+  transform-origin:left center;
+  letter-spacing:-.065em;
+}
+.publicPage.conceptPage .conceptWordPeople .conceptWordInk{
+  transform:rotate(-1.1deg) skewX(4deg) scaleX(.96) scaleY(1.04);
+  transform-origin:left bottom;
+  letter-spacing:-.045em;
+}
+.publicPage.conceptPage .conceptWordConnector .conceptWordInk{
+  transform:translateX(3px) rotate(1.4deg) skewX(-6deg) scaleX(.91) scaleY(1.05);
+  transform-origin:left top;
+}
+.publicPage.conceptPage .conceptWordGame .conceptWordInk{
+  transform:rotate(-1.5deg) skewX(-5deg) scaleX(.95) scaleY(1.08);
+  transform-origin:left top;
+  letter-spacing:-.055em;
+}
+.publicPage.conceptPage .conceptWordYear .conceptWordInk{
+  transform:skewY(-4deg) scaleX(.94);
+  letter-spacing:.01em;
+}
+@media(max-width:700px){
+  .publicPage.conceptPage .conceptWordInk{
+    text-shadow:1px 1px 0 rgba(24,20,17,.30);
+    -webkit-text-stroke:.2px rgba(255,255,255,.7);
+  }
+  .publicPage.conceptPage .conceptWordWhat .conceptWordInk{transform:rotate(-1.6deg) skewX(-4deg) scaleX(.96) scaleY(1.04)}
+  .publicPage.conceptPage .conceptWordHundred .conceptWordInk{transform:rotate(.4deg) skewX(-2.5deg) scaleX(.94) scaleY(1.04)}
+  .publicPage.conceptPage .conceptWordPeople .conceptWordInk{transform:rotate(-.7deg) skewX(2.5deg) scaleX(.97) scaleY(1.02)}
+  .publicPage.conceptPage .conceptWordConnector .conceptWordInk{transform:translateX(1px) rotate(.8deg) skewX(-3deg) scaleX(.94)}
+  .publicPage.conceptPage .conceptWordGame .conceptWordInk{transform:rotate(-.8deg) skewX(-3deg) scaleX(.97) scaleY(1.04)}
+  .publicPage.conceptPage .conceptWordYear .conceptWordInk{transform:skewY(-2deg) scaleX(.96)}
+  .publicPage.conceptPage .conceptWordInk>span:nth-child(n){transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage .conceptWordInk{transition:none!important}
+}
 .publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptSubtitle{animation-delay:.32s!important}
 
 /* The manifesto arrives as a sequence of paper panels, not one long wall of cards. */
