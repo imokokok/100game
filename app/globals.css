@@ -4567,3 +4567,34 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     transition:none!important;
   }
 }
+
+/* Keep public navigation identical before and after the in-page route switch. */
+.publicPage{
+  --public-glass:rgba(250,247,240,.76);
+  --public-glass-line:rgba(86,70,50,.16);
+  --public-glass-inset:inset 0 0 0 1px rgba(255,255,255,.58),inset 3px 3px 8px rgba(74,60,44,.10),inset -3px -3px 8px rgba(255,255,255,.66);
+  --public-glass-inset-active:inset 0 0 0 1px rgba(93,72,52,.18),inset 4px 4px 10px rgba(74,60,44,.14),inset -4px -4px 10px rgba(255,255,255,.72);
+}
+.publicPage .top nav a,
+.publicPage .top nav a.active{
+  min-height:44px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:var(--ed-ink,#171715)!important;
+  border:1px solid var(--public-glass-line)!important;
+  border-radius:12px!important;
+  background:var(--public-glass)!important;
+  box-shadow:var(--public-glass-inset)!important;
+}
+.publicPage .top nav a.active{
+  color:var(--ed-red,#c92d25)!important;
+  box-shadow:var(--public-glass-inset-active)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  .publicPage .top nav a:hover,
+  .publicPage .top nav a.active:hover{
+    color:var(--ed-red,#c92d25)!important;
+    background:rgba(250,247,240,.84)!important;
+  }
+}
