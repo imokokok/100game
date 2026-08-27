@@ -2661,3 +2661,315 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 @media(min-width:601px) and (max-width:800px){
   .publicPage .top{grid-template-areas:"back mark language" "nav nav nav"!important;grid-template-columns:auto minmax(0,1fr) auto!important;padding-top:9px!important;padding-bottom:9px!important}
 }
+
+
+/* === PUBLIC CONCEPT PERFORMANCE + MOBILE POLISH / 2026-08-27 === */
+.publicPage.conceptPage :where(a,button,select){touch-action:manipulation;-webkit-tap-highlight-color:rgba(202,45,37,.14)}
+.publicPage.conceptPage .top{background:var(--cp-paper)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.publicPage.conceptPage .conceptMetrics>span:nth-child(2),
+.publicPage.conceptPage .conceptMetrics>span:nth-child(2) :where(b,small){color:var(--cp-sheet)!important}
+
+/* A compact paper corner: lifted sheet + local contact shadow, never a glow. */
+.publicPage.conceptPage .conceptFeatureCopy p{
+  --curl-w:96px;
+  --curl-h:68px;
+  position:relative!important;
+  isolation:isolate;
+  overflow:visible!important;
+  padding:clamp(26px,3vw,38px)!important;
+  padding-bottom:calc(var(--curl-h) + 18px)!important;
+  background:
+    radial-gradient(circle at 24% 31%,rgba(91,67,43,.018) 0 .8px,transparent 1px),
+    repeating-linear-gradient(2deg,rgba(80,64,46,.018) 0 1px,transparent 1px 5px),
+    #f8f3e9!important;
+  background-size:17px 15px,100% 100%,100% 100%!important;
+  box-shadow:0 2px 0 rgba(0,0,0,.14),0 10px 22px rgba(0,0,0,.18)!important;
+  clip-path:none!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy p>span{position:relative;z-index:3;display:block}
+.publicPage.conceptPage .conceptFeatureCopy p::before{
+  content:"";
+  position:absolute;
+  z-index:1;
+  right:2px;
+  bottom:-5px;
+  width:calc(var(--curl-w) * .78);
+  height:10px;
+  border-radius:50%;
+  background:rgba(35,28,22,.12)!important;
+  box-shadow:-2px 3px 5px rgba(35,28,22,.12)!important;
+  transform:none!important;
+  opacity:1!important;
+  pointer-events:none;
+}
+.publicPage.conceptPage .conceptFeatureCopy p::after{
+  content:"";
+  position:absolute;
+  z-index:2;
+  right:-1px;
+  bottom:-1px;
+  width:var(--curl-w);
+  height:var(--curl-h);
+  border-radius:100% 0 0 0 / 100% 0 0 0;
+  background:linear-gradient(145deg,#fffdf8 0 18%,#eee7dc 38%,#cfc5b7 52%,#faf7f0 72%,#e8e0d5 100%)!important;
+  box-shadow:-5px -3px 8px rgba(35,28,22,.14),inset 1px 1px 0 rgba(255,255,255,.75)!important;
+  transform:none!important;
+  opacity:1!important;
+  pointer-events:none;
+}
+
+/* Manifesto is fully readable on larger screens and an accessible accordion on phones. */
+.publicPage.conceptPage .conceptManifesto article,
+.publicPage.conceptPage .conceptManifesto article:nth-child(n){
+  min-width:0!important;
+  padding:clamp(52px,5.5vw,84px) clamp(28px,5vw,76px)!important;
+  overflow:hidden!important;
+  contain:layout style;
+}
+.publicPage.conceptPage .manifestoToggle{
+  appearance:none;
+  width:100%;
+  margin:0;
+  padding:0;
+  display:block;
+  color:inherit;
+  background:transparent;
+  border:0;
+  font:inherit;
+  text-align:left;
+  cursor:default;
+}
+.publicPage.conceptPage .manifestoCode{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0 0 34px!important;
+  padding:0!important;
+  color:inherit!important;
+  background:transparent!important;
+  font-size:13px!important;
+  letter-spacing:.15em;
+}
+.publicPage.conceptPage .manifestoToggle h2{margin:0 0 30px!important;color:inherit!important}
+.publicPage.conceptPage .manifestoToggle i{display:none}
+.publicPage.conceptPage .manifestoBody{display:grid;grid-template-rows:1fr}
+.publicPage.conceptPage .manifestoBody>div{min-height:0;overflow:hidden}
+.publicPage.conceptPage .manifestoBody p{margin:0!important;color:inherit!important}
+
+/* Lightweight, purposeful motion. Content stays visible if JS or observer support is missing. */
+@keyframes cpWordEnter{from{opacity:.01;transform:translateY(9px) scaleY(.96)}to{opacity:1;transform:translateY(0) scaleY(1)}}
+@keyframes cpMetricEnter{from{opacity:.01;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes cpSectionEnter{from{opacity:.01;transform:translateY(10px)}to{opacity:1;transform:none}}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord{animation:cpWordEnter .38s cubic-bezier(.2,.72,.25,1) both}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord:nth-child(2){animation-delay:.04s}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord:nth-child(3){animation-delay:.08s}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord:nth-child(4){animation-delay:.11s}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord:nth-child(5){animation-delay:.14s}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord:nth-child(6){animation-delay:.17s}
+.publicPage.conceptPage .conceptHero.is-visible .conceptMetrics>span{animation:cpMetricEnter .34s cubic-bezier(.2,.72,.25,1) both}
+.publicPage.conceptPage .conceptHero.is-visible .conceptMetrics>span:nth-child(2){animation-delay:.06s}
+.publicPage.conceptPage .conceptHero.is-visible .conceptMetrics>span:nth-child(3){animation-delay:.12s}
+.publicPage.conceptPage.motion-ready :where(.conceptFeature,.conceptQuestions,.conceptRecruitment,.peopleCta)[data-reveal].is-visible{animation:cpSectionEnter .4s cubic-bezier(.2,.72,.25,1) both}
+.publicPage.conceptPage :where(.top a,.top select,.peopleCta,.manifestoToggle){transition:transform .18s ease,color .18s ease,background-color .18s ease}
+.publicPage.conceptPage :where(.top a,.peopleCta,.manifestoToggle):active{transform:scale(.985)}
+
+@supports(content-visibility:auto){
+  .publicPage.conceptPage .conceptFeature{content-visibility:auto;contain-intrinsic-size:auto 940px}
+  .publicPage.conceptPage .conceptQuestions{content-visibility:auto;contain-intrinsic-size:auto 520px}
+  .publicPage.conceptPage .conceptRecruitment{content-visibility:auto;contain-intrinsic-size:auto 660px}
+}
+@media(hover:hover) and (pointer:fine){
+  .publicPage.conceptPage .projectPoster a{overflow:hidden}
+  .publicPage.conceptPage .projectPoster img{transition:transform .36s cubic-bezier(.2,.72,.25,1)}
+  .publicPage.conceptPage .projectPoster a:hover img{transform:scale(1.018)}
+  .publicPage.conceptPage .top nav a:hover{background:rgba(23,23,21,.07)!important}
+  .publicPage.conceptPage .top nav a.active:hover{background:var(--cp-ink)!important}
+  .publicPage.conceptPage .peopleCta:hover{transform:translateX(6px)}
+}
+
+@media(max-width:700px){
+  /* Two compact header rows instead of three; all controls remain 44px targets. */
+  .publicPage.conceptPage .top{
+    position:relative!important;
+    grid-template-areas:"mark language" "back nav"!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    gap:7px 8px!important;
+    padding:9px 10px 10px!important;
+    overflow:hidden!important;
+  }
+  .publicPage.conceptPage .top>.mark{
+    grid-area:mark;
+    min-width:0!important;
+    min-height:44px!important;
+    display:flex!important;
+    align-items:center;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .publicPage.conceptPage .top>.publicBack{
+    grid-area:back;
+    min-width:64px!important;
+    min-height:44px!important;
+    padding:9px 10px!important;
+  }
+  .publicPage.conceptPage .top>nav{
+    grid-area:nav;
+    width:auto!important;
+    min-width:0!important;
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  .publicPage.conceptPage .top>nav a{
+    min-width:0!important;
+    min-height:44px!important;
+    padding:8px 7px!important;
+    font-size:clamp(11px,3.25vw,14px)!important;
+    line-height:1.15!important;
+    overflow-wrap:anywhere;
+  }
+  .publicPage.conceptPage .top>.languagePicker{
+    grid-area:language;
+    justify-self:end;
+    width:min(132px,42vw)!important;
+    min-width:106px!important;
+  }
+  .publicPage.conceptPage .conceptHero{padding-top:46px!important}
+  .publicPage.conceptPage .conceptMetrics{margin-top:48px!important}
+  .publicPage.conceptPage .conceptFeature{padding:54px 20px!important;row-gap:42px!important}
+  .publicPage.conceptPage .projectPoster{max-width:none!important}
+  .publicPage.conceptPage .projectPoster a{aspect-ratio:4 / 5;overflow:hidden;background:#111}
+  .publicPage.conceptPage .projectPoster img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:50% 8%!important;
+    box-shadow:none!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy p{
+    --curl-w:54px;
+    --curl-h:38px;
+    width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    padding:24px!important;
+    padding-bottom:calc(var(--curl-h) + 16px)!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy p::before{bottom:-3px;height:7px;box-shadow:-1px 2px 4px rgba(35,28,22,.13)!important}
+  .publicPage.conceptPage .conceptFeatureCopy p::after{box-shadow:-3px -2px 5px rgba(35,28,22,.14),inset 1px 1px 0 rgba(255,255,255,.7)!important}
+
+  .publicPage.conceptPage .conceptManifesto{
+    padding:10px!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:10px!important;
+    background:var(--cp-ink)!important;
+  }
+  .publicPage.conceptPage .conceptManifesto article,
+  .publicPage.conceptPage .conceptManifesto article:nth-child(n){
+    min-height:0!important;
+    padding:0!important;
+    contain:none;
+  }
+  .publicPage.conceptPage .manifestoToggle{
+    position:relative;
+    min-height:132px;
+    padding:20px 64px 20px 20px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 44px;
+    grid-template-rows:auto 1fr;
+    align-content:center;
+    cursor:pointer;
+  }
+  .publicPage.conceptPage .manifestoCode{
+    grid-column:1;
+    grid-row:1;
+    margin:0 0 12px!important;
+    font-size:11px!important;
+  }
+  .publicPage.conceptPage .manifestoToggle h2{
+    grid-column:1;
+    grid-row:2;
+    margin:0!important;
+    font-size:clamp(28px,7.7vw,34px)!important;
+    line-height:1.12!important;
+    letter-spacing:-.025em!important;
+  }
+  .publicPage.conceptPage .manifestoToggle i{
+    position:absolute;
+    right:14px;
+    top:50%;
+    width:44px;
+    height:44px;
+    display:block;
+    border:1px solid currentColor;
+    border-radius:50%;
+    transform:translateY(-50%);
+  }
+  .publicPage.conceptPage .manifestoToggle i::before,
+  .publicPage.conceptPage .manifestoToggle i::after{
+    content:"";
+    position:absolute;
+    left:12px;
+    top:21px;
+    width:18px;
+    height:1px;
+    background:currentColor;
+    transition:transform .22s ease,opacity .22s ease;
+  }
+  .publicPage.conceptPage .manifestoToggle i::after{transform:rotate(90deg)}
+  .publicPage.conceptPage .conceptManifesto article.is-open .manifestoToggle i::after{transform:rotate(0);opacity:0}
+  .publicPage.conceptPage .manifestoBody{
+    grid-template-rows:0fr;
+    opacity:.01;
+    transition:grid-template-rows .22s ease,opacity .18s ease;
+  }
+  .publicPage.conceptPage .conceptManifesto article.is-open .manifestoBody{grid-template-rows:1fr;opacity:1}
+  .publicPage.conceptPage .manifestoBody>div{overflow:hidden}
+  .publicPage.conceptPage .manifestoBody p{
+    max-width:none!important;
+    padding:0 20px 28px!important;
+    font-size:16px!important;
+    line-height:1.75!important;
+  }
+  .publicPage.conceptPage .conceptQuestions,
+  .publicPage.conceptPage .conceptRecruitment{padding:56px 20px!important}
+  .publicPage.conceptPage .conceptQuestions>span{margin-bottom:24px!important}
+  .publicPage.conceptPage .conceptQuestions p{font-size:clamp(33px,9vw,48px)!important}
+  .publicPage.conceptPage .conceptRecruitment{row-gap:24px!important}
+  .publicPage.conceptPage .conceptRecruitment h2{font-size:clamp(46px,12vw,64px)!important}
+  .publicPage.conceptPage .peopleCta{
+    min-height:64px!important;
+    padding:18px 48px 18px 24px!important;
+    margin-top:48px!important;
+    margin-bottom:64px!important;
+  }
+}
+
+@media(max-width:360px){
+  .publicPage.conceptPage .top>.mark{font-size:11px!important}
+  .publicPage.conceptPage .top>.languagePicker{width:104px!important;min-width:104px!important}
+  .publicPage.conceptPage .languagePicker>span{display:none!important}
+  .publicPage.conceptPage .languagePicker{grid-template-columns:minmax(0,1fr)!important}
+  .publicPage.conceptPage .manifestoToggle{min-height:120px;padding:18px 56px 18px 16px}
+  .publicPage.conceptPage .manifestoCode{margin-bottom:10px!important}
+  .publicPage.conceptPage .manifestoToggle h2{font-size:27px!important;line-height:1.12!important}
+  .publicPage.conceptPage .manifestoToggle i{right:8px}
+  .publicPage.conceptPage .manifestoBody p{padding-left:16px!important;padding-right:16px!important}
+  .publicPage.conceptPage .conceptFeatureCopy p{--curl-w:46px;--curl-h:32px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage .conceptWord,
+  .publicPage.conceptPage .conceptMetrics>span,
+  .publicPage.conceptPage [data-reveal].is-visible{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+  .publicPage.conceptPage .manifestoBody,
+  .publicPage.conceptPage .manifestoToggle i::before,
+  .publicPage.conceptPage .manifestoToggle i::after,
+  .publicPage.conceptPage :where(a,button,img,select){transition:none!important}
+}
