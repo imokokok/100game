@@ -2847,8 +2847,8 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage.conceptPage .projectPoster img{
     width:100%!important;
     height:100%!important;
-    object-fit:cover!important;
-    object-position:50% 8%!important;
+    object-fit:contain!important;
+    object-position:center!important;
     box-shadow:none!important;
   }
   .publicPage.conceptPage .conceptFeatureCopy p{
