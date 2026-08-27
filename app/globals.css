@@ -2665,6 +2665,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 
 /* === PUBLIC CONCEPT PERFORMANCE + MOBILE POLISH / 2026-08-27 === */
 .publicPage.conceptPage :where(a,button,select){touch-action:manipulation;-webkit-tap-highlight-color:rgba(202,45,37,.14)}
+.publicPage.conceptPage .compactPublicMark{display:none}
 .publicPage.conceptPage .top{background:var(--cp-paper)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 .publicPage.conceptPage .conceptMetrics>span:nth-child(2),
 .publicPage.conceptPage .conceptMetrics>span:nth-child(2) :where(b,small){color:var(--cp-sheet)!important}
@@ -2758,8 +2759,10 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .publicPage.conceptPage .manifestoBody p{margin:0!important;color:inherit!important}
 
 /* Lightweight, purposeful motion. Content stays visible if JS or observer support is missing. */
-@keyframes cpWordEnter{from{opacity:.01;transform:translateY(9px) scaleY(.96)}to{opacity:1;transform:translateY(0) scaleY(1)}}
-@keyframes cpMetricEnter{from{opacity:.01;transform:translateY(8px)}to{opacity:1;transform:none}}
+.publicPage.conceptPage,.publicPage.conceptPage>.conceptStandalone{animation:none!important}
+.publicPage.conceptPage .conceptHero[data-reveal].is-visible{animation:none!important}
+@keyframes cpWordEnter{from{transform:translateY(9px) scaleY(.96)}to{transform:translateY(0) scaleY(1)}}
+@keyframes cpMetricEnter{from{transform:translateY(8px)}to{transform:none}}
 @keyframes cpSectionEnter{from{opacity:.01;transform:translateY(10px)}to{opacity:1;transform:none}}
 .publicPage.conceptPage .conceptHero.is-visible .conceptWord{animation:cpWordEnter .38s cubic-bezier(.2,.72,.25,1) both}
 .publicPage.conceptPage .conceptHero.is-visible .conceptWord:nth-child(2){animation-delay:.04s}
@@ -2880,8 +2883,9 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     grid-template-columns:minmax(0,1fr) 44px;
     grid-template-rows:auto 1fr;
     align-content:center;
-    cursor:pointer;
+    cursor:default;
   }
+  .publicPage.conceptPage.manifesto-ready .manifestoToggle{cursor:pointer}
   .publicPage.conceptPage .manifestoCode{
     grid-column:1;
     grid-row:1;
@@ -2896,7 +2900,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     line-height:1.12!important;
     letter-spacing:-.025em!important;
   }
-  .publicPage.conceptPage .manifestoToggle i{
+  .publicPage.conceptPage.manifesto-ready .manifestoToggle i{
     position:absolute;
     right:14px;
     top:50%;
@@ -2920,12 +2924,12 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   }
   .publicPage.conceptPage .manifestoToggle i::after{transform:rotate(90deg)}
   .publicPage.conceptPage .conceptManifesto article.is-open .manifestoToggle i::after{transform:rotate(0);opacity:0}
-  .publicPage.conceptPage .manifestoBody{
+  .publicPage.conceptPage.manifesto-ready .manifestoBody{
     grid-template-rows:0fr;
     opacity:.01;
     transition:grid-template-rows .22s ease,opacity .18s ease;
   }
-  .publicPage.conceptPage .conceptManifesto article.is-open .manifestoBody{grid-template-rows:1fr;opacity:1}
+  .publicPage.conceptPage.manifesto-ready .conceptManifesto article.is-open .manifestoBody{grid-template-rows:1fr;opacity:1}
   .publicPage.conceptPage .manifestoBody>div{overflow:hidden}
   .publicPage.conceptPage .manifestoBody p{
     max-width:none!important;
@@ -2949,6 +2953,8 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 
 @media(max-width:360px){
   .publicPage.conceptPage .top>.mark{font-size:11px!important}
+  .publicPage.conceptPage .fullPublicMark{display:none!important}
+  .publicPage.conceptPage .compactPublicMark{display:inline!important;font-weight:800;letter-spacing:-.02em;white-space:nowrap}
   .publicPage.conceptPage .top>.languagePicker{width:104px!important;min-width:104px!important}
   .publicPage.conceptPage .languagePicker>span{display:none!important}
   .publicPage.conceptPage .languagePicker{grid-template-columns:minmax(0,1fr)!important}
