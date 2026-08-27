@@ -4497,3 +4497,73 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     transition:none!important;
   }
 }
+
+/* Editorial spatial motion, adapted from the supplied portfolio reference. */
+@keyframes publicWordAssemble{
+  from{opacity:0;transform:translate3d(var(--word-x,0),var(--word-y,10px),0) rotate(var(--word-r,0deg)) scale(.985)}
+  to{opacity:1;transform:none}
+}
+@keyframes publicHeadlineSettle{
+  from{opacity:0;transform:translate3d(0,16px,0)}
+  to{opacity:1;transform:none}
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWord{
+  animation:publicWordAssemble .5s cubic-bezier(.18,.82,.22,1) both!important;
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWordWhat{--word-x:-14px;--word-r:-2deg;animation-delay:.08s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWordHundred{--word-y:18px;animation-delay:.13s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWordPeople{--word-x:16px;--word-r:1.2deg;animation-delay:.18s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWordConnector{--word-x:-9px;animation-delay:.22s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWordGame{--word-y:-14px;--word-r:-1deg;animation-delay:.26s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWordYear{--word-x:9px;animation-delay:.3s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible :where(h1,.conceptSubtitle){
+  animation:publicHeadlineSettle .52s cubic-bezier(.18,.82,.22,1) .24s both!important;
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptSubtitle{animation-delay:.32s!important}
+
+/* The manifesto arrives as a sequence of paper panels, not one long wall of cards. */
+.publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal]{
+  transform:translate3d(-30px,22px,0) rotate(-.7deg) scale(.975)!important;
+  transform-origin:50% 50%!important;
+  transition-duration:.58s!important;
+}
+.publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal]:nth-child(even){
+  transform:translate3d(30px,22px,0) rotate(.7deg) scale(.975)!important;
+}
+.publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal].is-visible{
+  transform:none!important;
+}
+@media(hover:hover) and (pointer:fine){
+  .publicPage.conceptPage .conceptManifesto article{
+    transition:transform .2s cubic-bezier(.2,.76,.24,1),border-color .2s ease!important;
+  }
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal].is-visible:hover{
+    transform:translate3d(0,-3px,0)!important;
+    border-color:rgba(23,23,21,.22)!important;
+  }
+}
+@media(max-width:820px){
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal],
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal]:nth-child(even){
+    transform:translate3d(0,12px,0) scale(.99)!important;
+    transition-duration:.36s!important;
+  }
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal].is-visible{
+    transform:none!important;
+  }
+  .publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptWord,
+  .publicPage.conceptPage.motion-ready .conceptHero.is-visible :where(h1,.conceptSubtitle){
+    animation-duration:.38s!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage.motion-ready .conceptHero.is-visible :where(.conceptWord,h1,.conceptSubtitle),
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal],
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal]:nth-child(even),
+  .publicPage.conceptPage.motion-ready .conceptManifesto article[data-reveal].is-visible{
+    opacity:1!important;
+    transform:none!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
