@@ -2096,962 +2096,526 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  .landing,.entryGate,.publicPage,.surveyHub,.survey-shell,.workspace{min-height:100vh!important;min-height:100svh!important;min-height:100dvh!important}
 }
 
-/* Public showcase — editorial project archive with purposeful scroll motion. */
-.conceptPage{--showcase-red:#c72d24;--showcase-ink:#171715;--showcase-paper:#f1ece3;background:var(--showcase-paper)!important;color:var(--showcase-ink)}
-.conceptPage .top{position:sticky;top:0;z-index:60;background:rgba(241,236,227,.94)!important;border-color:rgba(23,23,21,.16)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.conceptPage .languagePicker,.conceptPage .languagePicker select{background:var(--showcase-paper)!important}
-.conceptPage .conceptStandalone{width:100%;max-width:none;padding:0 0 110px}
-.conceptHero{min-height:calc(100svh - 88px);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(54px,8vw,112px) clamp(22px,6vw,92px) 0;border-bottom:1px solid rgba(23,23,21,.22)}
-.conceptHero .conceptLabelBlock{margin:0 0 clamp(28px,5vw,58px);color:var(--showcase-red)!important}
-.conceptHero h1{max-width:1200px;margin:0!important;padding:0!important;border:0!important;font-size:clamp(54px,9.8vw,152px)!important;font-weight:650!important;line-height:.88!important;letter-spacing:-.07em!important}
-.conceptHero h1:before{display:none!important}
-.conceptHero .conceptHeadlineLine{display:block}
-.conceptHero .accent{color:var(--showcase-red)}
-.conceptSubtitle{max-width:760px;margin:clamp(34px,5vw,64px) 0 clamp(48px,6vw,78px);font-size:clamp(18px,2vw,28px)!important;line-height:1.55!important;color:#383733!important}
-.conceptMetrics{display:grid;grid-template-columns:repeat(3,1fr);margin:0 calc(clamp(22px,6vw,92px) * -1);border-top:1px solid rgba(23,23,21,.22)}
-.conceptMetrics>span{min-height:170px;display:flex;align-items:flex-end;gap:14px;padding:28px clamp(22px,6vw,92px);border-right:1px solid rgba(23,23,21,.22)}
-.conceptMetrics>span:last-child{border-right:0}
-.conceptMetrics b{font-size:clamp(58px,8vw,118px);line-height:.8;letter-spacing:-.07em;color:var(--showcase-ink)}
-.conceptMetrics small{padding-bottom:4px;font-size:11px;font-weight:750;letter-spacing:.12em;color:#625f58}
-.conceptFeature{display:grid;grid-template-columns:minmax(300px,.8fr) minmax(380px,1.2fr);gap:clamp(44px,8vw,130px);padding:clamp(86px,12vw,170px) clamp(22px,6vw,92px);background:var(--showcase-ink);color:var(--showcase-paper)}
-.conceptFeature .projectPoster{width:min(100%,620px);margin:0}
-.conceptFeature .projectPoster a{border-radius:0!important;box-shadow:none!important;background:#050505}
-.conceptFeature .projectPoster figcaption{color:rgba(241,236,227,.62)}
-.conceptFeatureCopy{align-self:start;position:sticky;top:150px;padding-top:8px}
-.conceptFeatureCopy>span,.conceptManifesto article>span,.conceptQuestions>span{display:block;margin-bottom:30px;font-size:10px;font-weight:800;letter-spacing:.16em;color:var(--showcase-red)}
-.conceptFeatureCopy h2{max-width:760px;margin:0 0 38px;font-size:clamp(42px,5.7vw,86px);font-weight:620;line-height:1.03;letter-spacing:-.055em}
-.conceptFeatureCopy p{max-width:720px;margin:0 0 44px;font-size:clamp(16px,1.45vw,21px);line-height:1.85;color:rgba(241,236,227,.72)}
-.conceptFeatureCopy strong{display:block;padding-top:30px;border-top:1px solid rgba(241,236,227,.22);font-size:clamp(28px,3.6vw,54px);line-height:1.1;color:var(--showcase-red)}
-.conceptManifesto{counter-reset:manifesto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid rgba(23,23,21,.22)}
-.conceptManifesto article{min-height:520px;padding:clamp(44px,6vw,86px);border-right:1px solid rgba(23,23,21,.22);border-bottom:1px solid rgba(23,23,21,.22)}
-.conceptManifesto article:nth-child(even){border-right:0}
-.conceptManifesto h2{max-width:650px;margin:0 0 44px;font-size:clamp(34px,4.4vw,66px);font-weight:620;line-height:1.06;letter-spacing:-.05em}
-.conceptManifesto p{max-width:680px;margin:0;font-size:17px;line-height:1.9;color:#44413b}
-.conceptQuestions{margin:0!important;padding:clamp(84px,12vw,170px) clamp(22px,6vw,92px)!important;border-radius:0!important;background:var(--showcase-red)!important;color:#fff!important;box-shadow:none!important}
-.conceptQuestions>span{color:rgba(255,255,255,.7)}
-.conceptQuestions p{max-width:1200px;margin:0!important;padding:.24em 0!important;border:0!important;font-size:clamp(40px,6.8vw,104px)!important;font-weight:650!important;line-height:1.02!important;letter-spacing:-.055em!important;color:#fff!important}
-.conceptRecruitment{display:grid!important;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr);gap:28px 70px;margin:0!important;padding:clamp(76px,10vw,140px) clamp(22px,6vw,92px)!important;border-radius:0!important;background:var(--showcase-paper)!important;box-shadow:none!important;color:var(--showcase-ink)!important}
-.conceptRecruitment .kicker{grid-column:1;color:var(--showcase-red)!important}
-.conceptRecruitment h2{grid-column:2;grid-row:1/3;margin:0;font-size:clamp(48px,7.8vw,116px);line-height:.95;letter-spacing:-.06em}
-.conceptRecruitment p,.conceptRecruitment strong,.conceptRecruitment b{grid-column:2;max-width:720px;margin:0;color:#44413b!important;font-size:17px;line-height:1.75}
-.conceptRecruitment strong{margin-top:22px;color:var(--showcase-red)!important}
-.conceptRecruitment b{display:inline-flex;width:max-content;margin-top:18px;padding:18px 24px;background:var(--showcase-ink);color:#fff!important;font-size:13px;letter-spacing:.12em}
-.conceptStandalone .peopleCta{display:flex!important;align-items:center;justify-content:space-between;width:calc(100% - 2 * clamp(22px,6vw,92px));max-width:none;margin:0 clamp(22px,6vw,92px)!important;padding:30px 0!important;border-radius:0!important;border-top:1px solid rgba(23,23,21,.28)!important;border-bottom:1px solid rgba(23,23,21,.28)!important;background:transparent!important;box-shadow:none!important;color:var(--showcase-ink)!important;font-size:clamp(24px,3vw,42px)!important}
-.conceptStandalone .peopleCta:hover{color:var(--showcase-red)!important;transform:none!important}
-.conceptPage.motion-ready [data-reveal]{opacity:0;transform:translateY(34px);transition:opacity .72s cubic-bezier(.22,1,.36,1),transform .72s cubic-bezier(.22,1,.36,1)}
-.conceptPage.motion-ready [data-reveal].is-visible{opacity:1;transform:translateY(0)}
-.conceptPage.motion-ready .conceptManifesto article:nth-child(even){transition-delay:.08s}
-@media(max-width:800px){
- .conceptPage .top{-webkit-backdrop-filter:none;backdrop-filter:none}
- .conceptHero{min-height:calc(100svh - 132px);padding:48px 20px 0}
- .conceptHero h1{font-size:clamp(50px,16vw,78px)!important;line-height:.92!important}
- .conceptSubtitle{font-size:17px!important;line-height:1.7!important}
- .conceptMetrics{grid-template-columns:1fr;margin:0 -20px}
- .conceptMetrics>span{min-height:100px;padding:22px 20px;border-right:0;border-bottom:1px solid rgba(23,23,21,.22)}
- .conceptMetrics>span:last-child{border-bottom:0}
- .conceptMetrics b{font-size:58px}
- .conceptFeature{grid-template-columns:1fr;gap:56px;padding:72px 20px}
- .conceptFeatureCopy{position:static}
- .conceptFeatureCopy h2{font-size:46px}
- .conceptManifesto{grid-template-columns:1fr}
- .conceptManifesto article{min-height:auto;padding:64px 20px;border-right:0}
- .conceptManifesto h2{font-size:39px}
- .conceptManifesto p{font-size:16px;line-height:1.85}
- .conceptQuestions{padding:78px 20px!important}
- .conceptQuestions p{font-size:clamp(36px,12vw,58px)!important;line-height:1.05!important}
- .conceptRecruitment{grid-template-columns:1fr;gap:22px;padding:72px 20px!important}
- .conceptRecruitment .kicker,.conceptRecruitment h2,.conceptRecruitment p,.conceptRecruitment strong,.conceptRecruitment b{grid-column:1;grid-row:auto}
- .conceptRecruitment h2{font-size:54px}
- .conceptStandalone .peopleCta{width:calc(100% - 40px);margin:0 20px!important;font-size:25px!important}
- .conceptPage.motion-ready [data-reveal]{transform:translateY(18px)}
-}
-@media(prefers-reduced-motion:reduce){
- .conceptPage.motion-ready [data-reveal],.conceptPage.motion-ready [data-reveal].is-visible{opacity:1!important;transform:none!important;transition:none!important}
-}
-
-
-/* === Public concept showcase: purposeful geometric silhouettes === */
+/* === PUBLIC CONCEPT SHOWCASE / CONSOLIDATED RELEASE === */
 .conceptPage{
-  --shape-red:#c72d24;
-  --shape-black:#171715;
-  --shape-paper:#f1ece3;
-  --shape-white:#fffdf8;
+  --cp-red:#ca2d25;
+  --cp-ink:#171715;
+  --cp-paper:#f1ece3;
+  --cp-sheet:#faf7f0;
+  --cp-line:rgba(23,23,21,.18);
+  color:var(--cp-ink);
+  background:var(--cp-paper);
+  overflow-x:clip;
 }
+.conceptPage,.conceptPage *{box-sizing:border-box}
+.conceptPage :where(h1,h2,h3,p,span,small,strong,b,a){min-width:0}
+.conceptPage :where(h1,h2,h3,p){overflow-wrap:break-word;word-break:normal}
+.conceptPage .top{
+  position:sticky!important;
+  top:0;
+  z-index:40;
+  min-height:84px;
+  padding:14px clamp(20px,4vw,64px)!important;
+  display:grid!important;
+  grid-template-columns:minmax(220px,1fr) auto auto;
+  align-items:center;
+  gap:22px;
+  color:var(--cp-ink)!important;
+  background:var(--cp-paper)!important;
+  border-bottom:1px solid var(--cp-line)!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.conceptPage .top .mark{font-weight:800!important;letter-spacing:-.025em}
+.conceptPage .top nav{display:flex!important;align-items:center;gap:8px}
+.conceptPage .top nav a{
+  min-height:44px;
+  padding:11px 15px!important;
+  display:inline-flex;
+  align-items:center;
+  color:var(--cp-ink)!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.conceptPage .top nav a.active{color:var(--cp-sheet)!important;background:var(--cp-ink)!important}
+.conceptPage .languagePicker{min-width:148px}
+.conceptPage .conceptStandalone{overflow:visible}
 .conceptPage .conceptHero{
-  position:relative;
+  min-height:calc(100svh - 84px);
+  padding:clamp(64px,8vw,118px) clamp(20px,5.2vw,84px) 0!important;
+  display:block;
   isolation:isolate;
-  overflow:hidden;
+  overflow:visible;
 }
 .conceptPage .conceptLabelBlock{
-  display:inline-flex!important;
-  width:max-content;
-  max-width:100%;
-  padding:12px 34px 12px 18px!important;
-  color:var(--shape-white)!important;
-  background:var(--shape-black)!important;
-  clip-path:polygon(0 0,100% 0,calc(100% - 18px) 100%,0 100%);
-  letter-spacing:.13em!important;
+  position:relative;
+  z-index:2;
+  width:min(1160px,92vw)!important;
+  max-width:100%!important;
+  min-height:clamp(120px,13vw,190px);
+  margin:0 0 clamp(58px,7vw,100px) clamp(-16px,-1vw,-6px)!important;
+  padding:clamp(18px,2vw,30px) clamp(42px,5.4vw,86px)!important;
+  display:grid!important;
+  grid-template-columns:auto auto minmax(0,1fr) auto;
+  grid-template-rows:minmax(0,1fr) minmax(0,.84fr);
+  align-items:center;
+  column-gap:clamp(18px,2.7vw,42px)!important;
+  row-gap:clamp(10px,1.2vw,18px)!important;
+  color:var(--cp-sheet)!important;
+  background:var(--cp-red)!important;
+  clip-path:polygon(0 11%,81% 2%,88% 0,100% 42%,94% 100%,10% 92%,0 98%,2.5% 54%);
+  overflow:visible;
+}
+.conceptPage .conceptWord{
+  display:block;
+  margin:0!important;
+  padding:0!important;
+  min-width:0;
+  color:inherit!important;
+  font-family:Impact,"Arial Black","Helvetica Neue",Arial,sans-serif;
+  font-weight:900!important;
+  line-height:.94!important;
+  letter-spacing:-.03em!important;
+  white-space:nowrap;
+  transform-origin:center;
+}
+.conceptPage .conceptWordWhat{
+  grid-column:1;grid-row:1;align-self:end;
+  font-size:clamp(22px,2.8vw,43px)!important;
+  letter-spacing:-.01em!important;
+  transform:rotate(-1deg) skewX(-2deg);
+}
+.conceptPage .conceptWordHundred{
+  grid-column:2;grid-row:1 / span 2;
+  font-size:clamp(64px,8.4vw,132px)!important;
+  letter-spacing:-.05em!important;
+  transform:scaleY(1.035) skewX(-3.5deg);
+}
+.conceptPage .conceptWordPeople{
+  grid-column:3;grid-row:1;align-self:end;
+  font-size:clamp(34px,4.5vw,70px)!important;
+  transform:scaleX(.98) skewX(-1.5deg);
+}
+.conceptPage .conceptWordConnector{
+  grid-column:1;grid-row:2;align-self:start;
+  font-size:clamp(17px,1.9vw,29px)!important;
+  letter-spacing:.02em!important;
+  transform:translateX(3%) rotate(.6deg);
+}
+.conceptPage .conceptWordGame{
+  grid-column:3;grid-row:2;align-self:start;
+  font-size:clamp(49px,6.8vw,106px)!important;
+  letter-spacing:-.04em!important;
+  transform:scaleY(1.025) skewX(-2.5deg);
+}
+.conceptPage .conceptWordYear{
+  grid-column:4;grid-row:1 / span 2;align-self:center;
+  font-size:clamp(16px,2vw,30px)!important;
+  letter-spacing:.03em!important;
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  opacity:.9;
 }
 .conceptPage .conceptHero h1{
-  position:relative;
-  z-index:1;
-  width:min(1180px,100%);
-}
-.conceptPage .conceptHeadlineLine{
-  display:block;
-  width:max-content;
-  max-width:100%;
-}
-.conceptPage .conceptHeadlineLine.accent{
-  box-sizing:border-box;
-  margin-top:.08em;
-  padding:.08em .42em .14em .16em;
-  color:var(--shape-white)!important;
-  background:var(--shape-red);
-  clip-path:polygon(0 0,94% 0,100% 48%,92% 100%,0 100%,3% 50%);
+  width:min(1240px,100%);
+  margin:0 0 clamp(38px,4vw,62px)!important;
+  font-size:clamp(60px,7.8vw,120px)!important;
+  line-height:1.09!important;
+  letter-spacing:-.052em!important;
   text-wrap:balance;
 }
+.conceptPage .conceptHeadlineLine{
+  display:block!important;
+  width:auto!important;
+  max-width:100%!important;
+  padding:0!important;
+  color:var(--cp-ink)!important;
+  background:transparent!important;
+  clip-path:none!important;
+}
+.conceptPage .conceptHeadlineLine+.conceptHeadlineLine{margin-top:.22em!important}
+.conceptPage .conceptHeadlineLine.accent{color:var(--cp-red)!important}
 .conceptPage .conceptSubtitle{
-  position:relative;
-  z-index:1;
-  max-width:720px!important;
-  padding-left:24px;
-  border-left:8px solid var(--shape-red);
+  max-width:780px!important;
+  margin:0!important;
+  padding:0 0 0 20px!important;
+  color:var(--cp-ink)!important;
+  border-left:6px solid var(--cp-red)!important;
+  font-size:clamp(18px,1.7vw,25px)!important;
+  line-height:1.78!important;
 }
 .conceptPage .conceptMetrics{
-  position:relative;
-  z-index:1;
-  gap:10px!important;
+  width:100%;
+  margin-top:clamp(68px,8vw,116px)!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:8px!important;
   border:0!important;
   background:transparent!important;
 }
 .conceptPage .conceptMetrics>span{
-  position:relative;
-  border:0!important;
-  background:var(--shape-white);
-  clip-path:polygon(0 0,calc(100% - 28px) 0,100% 28px,100% 100%,0 100%);
-}
-.conceptPage .conceptMetrics>span:nth-child(2){
-  color:var(--shape-white);
-  background:var(--shape-black);
-  clip-path:polygon(28px 0,100% 0,100% 100%,0 100%,0 28px);
-}
-.conceptPage .conceptMetrics>span:nth-child(3){
-  color:var(--shape-white);
-  background:var(--shape-red);
-  clip-path:polygon(0 0,100% 0,100% calc(100% - 28px),calc(100% - 28px) 100%,0 100%);
-}
-.conceptPage .conceptMetrics small{color:inherit!important;opacity:.82}
-.conceptPage .conceptFeature{
-  position:relative;
-  overflow:hidden;
-}
-.conceptPage .conceptFeatureCopy h2{
-  width:fit-content;
-  max-width:100%;
-  margin-left:-18px!important;
-  padding:20px 44px 22px 18px;
-  color:var(--shape-white)!important;
-  background:var(--shape-red);
-  clip-path:polygon(0 0,100% 0,calc(100% - 28px) 100%,0 100%);
-}
-.conceptPage .conceptFeatureCopy p{
-  padding:22px 26px;
-  color:var(--shape-black)!important;
-  background:var(--shape-paper);
-  clip-path:polygon(0 0,100% 0,100% calc(100% - 24px),calc(100% - 24px) 100%,0 100%);
-}
-.conceptPage .conceptManifesto{
-  gap:0!important;
-  background:var(--shape-paper);
-}
-.conceptPage .conceptManifesto article{
-  position:relative;
-  isolation:isolate;
-  overflow:hidden;
-  border:0!important;
-}
-.conceptPage .conceptManifesto article:nth-child(4n+1),
-.conceptPage .conceptManifesto article:nth-child(4n+4){
-  color:var(--shape-white);
-  background:var(--shape-black)!important;
-  clip-path:polygon(0 0,100% 0,100% calc(100% - 52px),calc(100% - 52px) 100%,0 100%);
-}
-.conceptPage .conceptManifesto article:nth-child(4n+2){
-  background:var(--shape-white)!important;
-  clip-path:polygon(52px 0,100% 0,100% 100%,0 100%,0 52px);
-}
-.conceptPage .conceptManifesto article:nth-child(4n+3){
-  color:var(--shape-white);
-  background:var(--shape-red)!important;
-  clip-path:polygon(0 0,calc(100% - 52px) 0,100% 52px,100% 100%,0 100%);
-}
-.conceptPage .conceptManifesto article:nth-child(4n+1) *,
-.conceptPage .conceptManifesto article:nth-child(4n+3) *,
-.conceptPage .conceptManifesto article:nth-child(4n+4) *{color:inherit!important}
-.conceptPage .conceptManifesto article>span{
-  display:inline-flex!important;
-  min-width:58px;
-  min-height:58px;
-  align-items:center;
-  justify-content:center;
-  margin-bottom:32px;
-  color:var(--shape-white)!important;
-  background:var(--shape-red);
-  clip-path:polygon(0 0,100% 0,100% 72%,72% 100%,0 100%);
-}
-.conceptPage .conceptManifesto article:nth-child(4n+3)>span{background:var(--shape-black)}
-.conceptPage .conceptQuestions{
-  position:relative;
-  margin-top:-1px;
-  clip-path:polygon(0 54px,54px 0,100% 0,100% calc(100% - 54px),calc(100% - 54px) 100%,0 100%);
-}
-.conceptPage .conceptQuestions p{
-  max-width:1050px!important;
-  text-wrap:balance;
-}
-.conceptPage .conceptRecruitment{
-  position:relative;
-  overflow:hidden;
-}
-.conceptPage .conceptRecruitment h2{
-  width:fit-content;
-  max-width:100%;
-  padding:.16em .56em .22em .2em;
-  color:var(--shape-white)!important;
-  background:var(--shape-black);
-  clip-path:polygon(0 0,calc(100% - .38em) 0,100% 50%,calc(100% - .38em) 100%,0 100%);
-}
-.conceptPage .conceptRecruitment strong{
-  display:inline-flex;
-  width:fit-content;
-  padding:12px 26px 12px 16px;
-  color:var(--shape-white)!important;
-  background:var(--shape-red);
-  clip-path:polygon(0 0,100% 0,calc(100% - 14px) 100%,0 100%);
-}
-.conceptPage .peopleCta{
-  border:0!important;
-  color:var(--shape-white)!important;
-  background:var(--shape-red)!important;
-  clip-path:polygon(0 0,calc(100% - 34px) 0,100% 50%,calc(100% - 34px) 100%,0 100%);
-  border-radius:0!important;
-  box-shadow:none!important;
-}
-@media (hover:hover){
-  .conceptPage .conceptHeadlineLine.accent,
-  .conceptPage .conceptMetrics>span,
-  .conceptPage .conceptFeatureCopy h2,
-  .conceptPage .conceptManifesto article,
-  .conceptPage .conceptRecruitment h2{
-    transition:clip-path .45s cubic-bezier(.2,.75,.25,1),transform .45s cubic-bezier(.2,.75,.25,1);
-  }
-  .conceptPage .conceptMetrics>span:hover{transform:translateY(-8px)}
-  .conceptPage .peopleCta:hover{transform:translateX(8px)}
-}
-@media(max-width:800px){
-  .conceptPage .conceptLabelBlock{padding:10px 24px 10px 14px!important}
-  .conceptPage .conceptHeadlineLine.accent{
-    width:100%;
-    padding:.12em .2em .18em .1em;
-    clip-path:polygon(0 0,96% 0,100% 50%,96% 100%,0 100%);
-  }
-  .conceptPage .conceptSubtitle{padding-left:16px;border-left-width:5px}
-  .conceptPage .conceptMetrics{gap:6px!important}
-  .conceptPage .conceptMetrics>span,
-  .conceptPage .conceptMetrics>span:nth-child(2),
-  .conceptPage .conceptMetrics>span:nth-child(3){
-    min-height:92px;
-    clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%);
-  }
-  .conceptPage .conceptFeatureCopy h2{margin-left:0!important;padding:16px 34px 18px 14px}
-  .conceptPage .conceptFeatureCopy p{padding:20px 18px}
-  .conceptPage .conceptManifesto article,
-  .conceptPage .conceptManifesto article:nth-child(n){
-    clip-path:none;
-  }
-  .conceptPage .conceptManifesto article:nth-child(4n+1),
-  .conceptPage .conceptManifesto article:nth-child(4n+4){
-    clip-path:polygon(0 0,100% 0,100% calc(100% - 28px),calc(100% - 28px) 100%,0 100%);
-  }
-  .conceptPage .conceptManifesto article:nth-child(4n+3){
-    clip-path:polygon(0 0,calc(100% - 28px) 0,100% 28px,100% 100%,0 100%);
-  }
-  .conceptPage .conceptQuestions{
-    clip-path:polygon(0 24px,24px 0,100% 0,100% calc(100% - 24px),calc(100% - 24px) 100%,0 100%);
-  }
-  .conceptPage .conceptRecruitment h2{padding:.15em .42em .2em .12em}
-  .conceptPage .peopleCta{
-    clip-path:polygon(0 0,calc(100% - 22px) 0,100% 50%,calc(100% - 22px) 100%,0 100%);
-  }
-}
-@media(max-width:420px){
-  .conceptPage .conceptHeadlineLine.accent{font-size:.86em}
-  .conceptPage .conceptManifesto article>span{min-width:48px;min-height:48px;margin-bottom:24px}
-}
-@media(prefers-reduced-motion:reduce){
-  .conceptPage .conceptMetrics>span,
-  .conceptPage .peopleCta{transform:none!important}
-}
-
-
-/* === Public concept showcase: typography-first geometry correction === */
-.conceptPage .conceptHero{
-  overflow:visible;
-  padding-top:clamp(72px,9vw,132px)!important;
-}
-.conceptPage .conceptLabelBlock{
-  position:relative;
-  display:flex!important;
-  align-items:center;
-  width:min(1120px,92vw)!important;
-  max-width:none!important;
-  min-height:clamp(96px,12vw,170px);
-  margin-left:clamp(-24px,-2vw,-8px);
-  padding:24px clamp(38px,6vw,92px) 28px clamp(28px,4vw,66px)!important;
-  color:var(--shape-white)!important;
-  background:var(--shape-red)!important;
-  clip-path:polygon(0 15%,88% 0,100% 50%,88% 100%,0 85%,3% 50%);
-  font-family:Arial,"Helvetica Neue",sans-serif!important;
-  font-size:clamp(28px,4.7vw,72px)!important;
-  font-weight:900!important;
-  line-height:.94!important;
-  letter-spacing:-.045em!important;
-  text-transform:uppercase;
-  white-space:normal;
-  text-wrap:balance;
-  overflow-wrap:normal;
-}
-.conceptPage .conceptHero h1{
-  margin-top:clamp(54px,7vw,108px)!important;
-  margin-bottom:clamp(36px,4vw,62px)!important;
-  font-size:clamp(68px,8.4vw,132px)!important;
-  line-height:1.02!important;
-  letter-spacing:-.055em!important;
-  text-wrap:balance;
-}
-.conceptPage .conceptHeadlineLine{
-  display:block;
-  width:auto!important;
-  max-width:1180px!important;
-  padding:0!important;
-  color:var(--shape-black)!important;
-  background:transparent!important;
-  clip-path:none!important;
-  white-space:normal;
-  overflow-wrap:break-word;
-}
-.conceptPage .conceptHeadlineLine+.conceptHeadlineLine{margin-top:.18em!important}
-.conceptPage .conceptHeadlineLine.accent{color:var(--shape-red)!important}
-.conceptPage .conceptSubtitle{
-  max-width:760px!important;
-  margin-top:0!important;
-  font-size:clamp(18px,1.8vw,25px)!important;
-  line-height:1.75!important;
-}
-.conceptPage .conceptMetrics{margin-top:clamp(72px,8vw,118px)!important}
-
-/* Manifesto is deliberately calm: no silhouettes, no clipped reading areas. */
-.conceptPage .conceptManifesto{
-  gap:1px!important;
-  padding:1px;
-  background:rgba(23,23,21,.18)!important;
-}
-.conceptPage .conceptManifesto article,
-.conceptPage .conceptManifesto article:nth-child(n){
-  min-height:460px;
-  padding:clamp(58px,7vw,100px) clamp(34px,6vw,88px)!important;
-  color:var(--shape-black)!important;
-  background:var(--shape-paper)!important;
-  clip-path:none!important;
-  overflow:visible!important;
-}
-.conceptPage .conceptManifesto article:nth-child(4n+1),
-.conceptPage .conceptManifesto article:nth-child(4n+4){
-  color:var(--shape-white)!important;
-  background:var(--shape-black)!important;
-}
-.conceptPage .conceptManifesto article:nth-child(4n+3){
-  color:var(--shape-white)!important;
-  background:var(--shape-red)!important;
-}
-.conceptPage .conceptManifesto article *{color:inherit!important}
-.conceptPage .conceptManifesto article>span,
-.conceptPage .conceptManifesto article:nth-child(n)>span{
-  display:block!important;
-  min-width:0!important;
-  min-height:0!important;
-  width:auto!important;
-  margin:0 0 46px!important;
-  padding:0!important;
-  color:inherit!important;
-  background:transparent!important;
-  clip-path:none!important;
-  font-size:14px!important;
-  letter-spacing:.16em;
-}
-.conceptPage .conceptManifesto h2{
-  max-width:680px;
-  margin-bottom:34px!important;
-  font-size:clamp(36px,4vw,60px)!important;
-  line-height:1.16!important;
-  letter-spacing:-.035em!important;
-}
-.conceptPage .conceptManifesto p{
-  max-width:690px;
-  margin:0!important;
-  font-size:clamp(17px,1.5vw,21px)!important;
-  line-height:1.9!important;
-}
-
-/* Remove the earlier aggressive silhouettes from long text and questions. */
-.conceptPage .conceptFeatureCopy h2{
-  margin-left:0!important;
-  padding:0!important;
-  color:var(--shape-white)!important;
-  background:transparent!important;
-  clip-path:none!important;
-  font-size:clamp(48px,5.6vw,78px)!important;
-  line-height:1.08!important;
-}
-.conceptPage .conceptFeatureCopy p{
+  min-height:148px;
   padding:26px 30px!important;
-  line-height:1.85!important;
-  clip-path:none!important;
+  display:flex!important;
+  flex-direction:column;
+  justify-content:flex-end;
+  color:var(--cp-ink)!important;
+  border:0!important;
+  background:var(--cp-sheet)!important;
+  clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,0 100%);
 }
-.conceptPage .conceptQuestions{
-  clip-path:none!important;
+.conceptPage .conceptMetrics>span:nth-child(2){color:var(--cp-sheet)!important;background:var(--cp-ink)!important}
+.conceptPage .conceptMetrics>span:nth-child(3){color:var(--cp-sheet)!important;background:var(--cp-red)!important}
+.conceptPage .conceptMetrics>span:nth-child(2) :where(b,small),
+.conceptPage .conceptMetrics>span:nth-child(3) :where(b,small){color:var(--cp-sheet)!important}
+.conceptPage .conceptMetrics b{font-size:clamp(48px,5vw,72px)!important;line-height:1!important}
+.conceptPage .conceptMetrics small{margin-top:8px;color:inherit!important;opacity:.82;letter-spacing:.12em}
+.conceptPage .conceptFeature{
+  width:100%;
+  max-width:100%;
+  padding:clamp(72px,9vw,132px) clamp(20px,6vw,96px)!important;
+  display:grid!important;
+  grid-template-columns:minmax(260px,.86fr) minmax(0,1.14fr)!important;
+  align-items:start;
+  column-gap:clamp(56px,8vw,128px)!important;
+  row-gap:60px!important;
+  color:var(--cp-sheet)!important;
+  background:var(--cp-ink)!important;
+  overflow:visible;
 }
-.conceptPage .conceptRecruitment h2{
+.conceptPage .conceptFeature>*{min-width:0}
+.conceptPage .projectPoster{width:100%;max-width:520px;margin:0!important}
+.conceptPage .projectPoster a{display:block}
+.conceptPage .projectPoster img{
+  display:block;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  object-fit:contain;
+  box-shadow:0 18px 42px rgba(0,0,0,.3);
+}
+.conceptPage .projectPoster figcaption{margin-top:14px;color:rgba(255,255,255,.65);font-size:13px;letter-spacing:.08em}
+.conceptPage .conceptFeatureCopy{
+  min-width:0;
+  padding-top:10px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+}
+.conceptPage .conceptFeatureCopy>span{margin-bottom:30px;color:rgba(255,255,255,.62);font-size:13px;letter-spacing:.14em}
+.conceptPage .conceptFeatureCopy h2{
+  max-width:820px;
+  margin:0 0 clamp(40px,4vw,64px)!important;
   padding:0!important;
-  color:var(--shape-black)!important;
+  color:var(--cp-sheet)!important;
   background:transparent!important;
   clip-path:none!important;
-  line-height:1!important;
+  font-size:clamp(46px,5.4vw,78px)!important;
+  line-height:1.14!important;
+  letter-spacing:-.045em!important;
+  text-wrap:balance;
 }
-.conceptPage .conceptRecruitment strong{
-  padding:10px 0!important;
-  color:var(--shape-red)!important;
-  background:transparent!important;
-  clip-path:none!important;
-  border-bottom:4px solid var(--shape-red);
-}
-@media(max-width:800px){
-  .conceptPage .conceptHero{padding-top:56px!important;overflow:hidden}
-  .conceptPage .conceptLabelBlock{
-    width:calc(100vw - 26px)!important;
-    min-height:88px;
-    margin-left:-8px;
-    padding:20px 34px 22px 24px!important;
-    clip-path:polygon(0 10%,91% 0,100% 50%,91% 100%,0 90%,2% 50%);
-    font-size:clamp(24px,7.8vw,42px)!important;
-    line-height:1!important;
-    letter-spacing:-.04em!important;
-  }
-  .conceptPage .conceptHero h1{
-    margin-top:54px!important;
-    font-size:clamp(48px,14vw,72px)!important;
-    line-height:1.04!important;
-    letter-spacing:-.05em!important;
-  }
-  .conceptPage .conceptHeadlineLine+.conceptHeadlineLine{margin-top:.22em!important}
-  .conceptPage .conceptSubtitle{font-size:17px!important;line-height:1.75!important}
-  .conceptPage .conceptMetrics{margin-top:64px!important}
-  .conceptPage .conceptManifesto{grid-template-columns:1fr!important}
-  .conceptPage .conceptManifesto article,
-  .conceptPage .conceptManifesto article:nth-child(n){
-    min-height:0;
-    padding:58px 24px 64px!important;
-  }
-  .conceptPage .conceptManifesto article>span,
-  .conceptPage .conceptManifesto article:nth-child(n)>span{margin-bottom:32px!important}
-  .conceptPage .conceptManifesto h2{font-size:38px!important;line-height:1.18!important}
-  .conceptPage .conceptManifesto p{font-size:16px!important;line-height:1.85!important}
-  .conceptPage .conceptFeatureCopy h2{font-size:44px!important}
-  .conceptPage .conceptFeatureCopy p{padding:22px 20px!important}
-  .conceptPage .conceptQuestions p{font-size:clamp(36px,11vw,56px)!important;line-height:1.16!important}
-}
-@media(max-width:420px){
-  .conceptPage .conceptLabelBlock{font-size:clamp(22px,7.3vw,32px)!important}
-  .conceptPage .conceptHero h1{font-size:clamp(44px,13vw,60px)!important}
-}
-
-
-/* === Public concept feature copy: tactile paper sheets === */
 .conceptPage .conceptFeatureCopy p{
   position:relative;
   isolation:isolate;
   overflow:visible!important;
-  margin:0 0 28px!important;
-  padding:30px 38px 34px 34px!important;
+  width:100%;
+  margin:0 0 30px!important;
+  padding:clamp(26px,3vw,38px) clamp(72px,8vw,116px) clamp(52px,6vw,78px) clamp(28px,3vw,40px)!important;
   color:#1b1a18!important;
-  border:1px solid rgba(72,60,45,.18);
+  border:1px solid rgba(72,60,45,.18)!important;
   background-color:#f4efe5!important;
   background-image:
-    radial-gradient(circle at 18% 24%,rgba(70,52,33,.045) 0 .65px,transparent .8px),
-    radial-gradient(circle at 72% 64%,rgba(255,255,255,.52) 0 .75px,transparent .95px),
-    repeating-linear-gradient(8deg,rgba(89,69,46,.018) 0 1px,transparent 1px 5px),
-    linear-gradient(106deg,#f7f2e9 0%,#f2ecdf 58%,#eee5d7 100%)!important;
+    radial-gradient(circle at 18% 24%,rgba(70,52,33,.042) 0 .65px,transparent .8px),
+    radial-gradient(circle at 72% 64%,rgba(255,255,255,.5) 0 .75px,transparent .95px),
+    repeating-linear-gradient(8deg,rgba(89,69,46,.016) 0 1px,transparent 1px 5px),
+    linear-gradient(106deg,#f8f3ea 0%,#f2ecdf 62%,#eee5d7 100%)!important;
   background-size:13px 11px,17px 15px,100% 100%,100% 100%!important;
   clip-path:none!important;
-  box-shadow:
-    0 2px 2px rgba(0,0,0,.18),
-    0 8px 18px rgba(0,0,0,.22),
-    12px 13px 24px rgba(0,0,0,.12)!important;
+  box-shadow:0 2px 2px rgba(0,0,0,.16),0 9px 20px rgba(0,0,0,.2)!important;
+  font-size:clamp(17px,1.5vw,21px)!important;
+  line-height:1.88!important;
 }
 .conceptPage .conceptFeatureCopy p::before{
   content:"";
   position:absolute;
-  z-index:-1;
-  right:-1px;
-  bottom:-1px;
-  width:44px;
-  height:44px;
+  z-index:2;
+  right:-2px;bottom:-2px;
+  width:clamp(70px,7.5vw,104px);
+  height:clamp(56px,6vw,82px);
   pointer-events:none;
+  border-radius:100% 0 1px 0 / 100% 0 1px 0;
   background:
-    linear-gradient(135deg,transparent 0 47%,rgba(81,62,42,.18) 48% 50%,#dfd2bf 51% 64%,#faf6ee 65% 100%);
-  clip-path:polygon(100% 0,100% 100%,0 100%);
-  filter:drop-shadow(-4px -3px 3px rgba(0,0,0,.16));
+    radial-gradient(ellipse at 18% 12%,rgba(255,255,255,.98) 0 16%,rgba(255,255,255,.34) 36%,transparent 58%),
+    linear-gradient(145deg,#fffdf8 0%,#f7f2e9 27%,#d9cfc0 52%,#b9ad9d 61%,#eee7dc 77%,#fffdf8 100%)!important;
+  box-shadow:-7px -5px 9px rgba(54,43,31,.14),9px 12px 13px rgba(0,0,0,.16)!important;
+  transform:skewX(-8deg) rotate(-1.2deg);
 }
 .conceptPage .conceptFeatureCopy p::after{
   content:"";
   position:absolute;
-  z-index:-2;
-  right:3px;
-  bottom:-9px;
-  width:48px;
-  height:22px;
-  pointer-events:none;
-  background:radial-gradient(ellipse at 70% 20%,rgba(0,0,0,.34),rgba(0,0,0,.12) 42%,transparent 72%);
-  transform:rotate(-7deg);
-  filter:blur(2.2px);
-  opacity:.72;
-}
-@media(hover:hover){
-  .conceptPage .conceptFeatureCopy p{
-    transition:transform .35s cubic-bezier(.2,.75,.25,1),box-shadow .35s ease;
-  }
-  .conceptPage .conceptFeatureCopy p:hover{
-    transform:translateY(-2px) rotate(-.08deg);
-    box-shadow:
-      0 3px 3px rgba(0,0,0,.17),
-      0 13px 26px rgba(0,0,0,.24),
-      14px 17px 28px rgba(0,0,0,.14)!important;
-  }
-}
-@media(max-width:800px){
-  .conceptPage .conceptFeatureCopy p{
-    margin-bottom:22px!important;
-    padding:24px 28px 30px 24px!important;
-    box-shadow:0 2px 2px rgba(0,0,0,.16),0 7px 15px rgba(0,0,0,.19)!important;
-  }
-  .conceptPage .conceptFeatureCopy p::before{width:34px;height:34px}
-  .conceptPage .conceptFeatureCopy p::after{right:2px;bottom:-7px;width:38px;height:18px}
-}
-@media(prefers-reduced-motion:reduce){
-  .conceptPage .conceptFeatureCopy p,
-  .conceptPage .conceptFeatureCopy p:hover{transform:none!important;transition:none!important}
-}
-
-
-/* === Public concept showcase: final layout, spacing and performance guardrails === */
-.conceptPage,
-.conceptPage *{box-sizing:border-box}
-.conceptPage :where(h1,h2,h3,p,span,small,strong,b,a){min-width:0}
-.conceptPage :where(h1,h2,h3,p){
-  overflow-wrap:break-word;
-  word-break:normal;
-}
-.conceptPage :where(.conceptHero,.conceptFeature,.conceptManifesto,.conceptQuestions,.conceptRecruitment){
-  width:100%;
-  max-width:100%;
-}
-.conceptPage .conceptHero{
-  display:block;
-}
-.conceptPage .conceptHero h1,
-.conceptPage .conceptSubtitle,
-.conceptPage .conceptMetrics{
-  position:relative;
   z-index:1;
+  right:5px;bottom:-15px;
+  width:clamp(86px,9.5vw,132px);
+  height:clamp(24px,3vw,39px);
+  pointer-events:none;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.34) 0%,rgba(0,0,0,.16) 40%,rgba(0,0,0,.05) 62%,transparent 78%)!important;
+  transform:rotate(-8deg);
+  opacity:.76;
 }
-.conceptPage .conceptLabelBlock{
-  z-index:2;
-  max-height:none;
-  overflow:visible;
-}
-.conceptPage .conceptMetrics{
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-}
-.conceptPage .conceptMetrics>span{
-  min-width:0;
-  justify-content:flex-end;
-}
-.conceptPage .conceptFeature{
-  grid-template-columns:minmax(260px,.86fr) minmax(0,1.14fr)!important;
-  column-gap:clamp(52px,7vw,120px)!important;
-  row-gap:64px!important;
-}
-.conceptPage .conceptFeature>*,.conceptPage .conceptFeatureCopy{min-width:0}
-.conceptPage .conceptFeature img,
-.conceptPage .conceptFeature picture,
-.conceptPage .conceptFeature video{
+.conceptPage .conceptFeatureCopy strong{
   display:block;
+  margin-top:12px;
+  color:var(--cp-sheet)!important;
+  font-size:clamp(24px,2.4vw,36px)!important;
+  line-height:1.35!important;
+}
+.conceptPage .conceptManifesto{
   width:100%;
   max-width:100%;
-  height:auto;
-}
-.conceptPage .conceptFeatureCopy{
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  gap:0;
-}
-.conceptPage .conceptFeatureCopy p:last-child{margin-bottom:0!important}
-.conceptPage .conceptManifesto{
+  padding:1px;
+  display:grid!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:1px!important;
+  background:var(--cp-line)!important;
 }
-.conceptPage .conceptManifesto article{
+.conceptPage .conceptManifesto article,
+.conceptPage .conceptManifesto article:nth-child(n){
+  min-height:440px;
+  padding:clamp(56px,6vw,92px) clamp(30px,5.5vw,84px)!important;
+  color:var(--cp-ink)!important;
+  background:var(--cp-paper)!important;
+  clip-path:none!important;
+  overflow:visible!important;
   contain:layout style;
 }
-.conceptPage .conceptQuestions p,
-.conceptPage .conceptRecruitment h2{
-  max-width:100%;
+.conceptPage .conceptManifesto article:nth-child(1),
+.conceptPage .conceptManifesto article:nth-child(4){color:var(--cp-sheet)!important;background:var(--cp-ink)!important}
+.conceptPage .conceptManifesto article:nth-child(3){color:var(--cp-sheet)!important;background:var(--cp-red)!important}
+.conceptPage .conceptManifesto article *{color:inherit!important}
+.conceptPage .conceptManifesto article>span{
+  display:block!important;
+  width:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0 0 42px!important;
+  padding:0!important;
+  color:inherit!important;
+  background:transparent!important;
+  clip-path:none!important;
+  font-size:13px!important;
+  letter-spacing:.15em;
 }
+.conceptPage .conceptManifesto h2{
+  max-width:700px;
+  margin:0 0 32px!important;
+  font-size:clamp(34px,3.8vw,58px)!important;
+  line-height:1.18!important;
+  letter-spacing:-.035em!important;
+}
+.conceptPage .conceptManifesto p{
+  max-width:700px;
+  margin:0!important;
+  font-size:clamp(17px,1.45vw,21px)!important;
+  line-height:1.9!important;
+}
+.conceptPage .conceptQuestions{
+  width:100%;
+  max-width:100%;
+  padding:clamp(76px,9vw,132px) clamp(20px,6vw,96px)!important;
+  color:var(--cp-sheet)!important;
+  background:var(--cp-red)!important;
+  clip-path:none!important;
+}
+.conceptPage .conceptQuestions>span{display:block;margin-bottom:34px;font-size:13px;letter-spacing:.16em;opacity:.78}
+.conceptPage .conceptQuestions p{
+  max-width:1120px;
+  margin:0!important;
+  color:inherit!important;
+  font-size:clamp(42px,5.7vw,88px)!important;
+  line-height:1.18!important;
+  letter-spacing:-.045em!important;
+  text-wrap:balance;
+}
+.conceptPage .conceptQuestions p+p{margin-top:.34em!important}
+.conceptPage .conceptRecruitment{
+  width:100%;
+  max-width:100%;
+  padding:clamp(76px,9vw,132px) clamp(20px,6vw,96px)!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(260px,.72fr);
+  gap:clamp(34px,7vw,112px);
+  align-items:start;
+  color:var(--cp-ink)!important;
+  background:var(--cp-paper)!important;
+}
+.conceptPage .conceptRecruitment>*{min-width:0}
+.conceptPage .conceptRecruitment>span{grid-column:1 / -1;color:var(--cp-red)!important}
+.conceptPage .conceptRecruitment h2{
+  margin:0!important;
+  padding:0!important;
+  color:var(--cp-ink)!important;
+  background:transparent!important;
+  clip-path:none!important;
+  font-size:clamp(54px,7vw,108px)!important;
+  line-height:1.12!important;
+  letter-spacing:-.055em!important;
+}
+.conceptPage .conceptRecruitment p{margin:0 0 24px!important;font-size:clamp(17px,1.5vw,21px)!important;line-height:1.8!important}
+.conceptPage .conceptRecruitment strong{display:block;margin:4px 0 24px;color:var(--cp-red)!important;font-size:20px}
+.conceptPage .conceptRecruitment b{font-size:clamp(24px,2.7vw,40px)!important;line-height:1.3!important}
 .conceptPage .peopleCta{
-  min-height:64px;
+  width:calc(100% - clamp(40px,12vw,192px))!important;
+  min-height:70px;
+  margin:0 clamp(20px,6vw,96px) clamp(70px,8vw,120px)!important;
+  padding:22px 34px!important;
   display:flex!important;
   align-items:center;
-  justify-content:flex-start;
+  color:var(--cp-sheet)!important;
+  background:var(--cp-red)!important;
+  border:0!important;
+  border-radius:0!important;
+  clip-path:polygon(0 0,calc(100% - 28px) 0,100% 50%,calc(100% - 28px) 100%,0 100%);
+  box-shadow:none!important;
+  font-size:clamp(20px,2vw,28px)!important;
+  font-weight:800!important;
+}
+.conceptPage.motion-ready [data-reveal]{opacity:1;transform:none}
+.conceptPage.motion-ready :where(.conceptHero,.peopleCta)[data-reveal].is-visible{animation:conceptReveal .4s cubic-bezier(.2,.75,.25,1) both}
+@keyframes conceptReveal{from{opacity:.001;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(hover:hover) and (pointer:fine){
+  .conceptPage .top nav a{transition:color .22s ease,background-color .22s ease}
+  .conceptPage .conceptFeatureCopy p{transition:transform .3s ease,box-shadow .3s ease}
+  .conceptPage .conceptFeatureCopy p:hover{transform:translateY(-2px);box-shadow:0 3px 3px rgba(0,0,0,.16),0 13px 25px rgba(0,0,0,.23)!important}
+  .conceptPage .peopleCta{transition:transform .28s ease}
+  .conceptPage .peopleCta:hover{transform:translateX(7px)}
 }
 @media(max-width:980px){
-  .conceptPage .conceptFeature{
-    grid-template-columns:minmax(220px,.75fr) minmax(0,1.25fr)!important;
-    column-gap:40px!important;
-  }
-  .conceptPage .conceptFeatureCopy h2{font-size:clamp(42px,5.2vw,60px)!important}
+  .conceptPage .top{grid-template-columns:minmax(180px,1fr) auto}
+  .conceptPage .languagePicker{grid-column:1 / -1}
+  .conceptPage .conceptFeature{grid-template-columns:minmax(220px,.75fr) minmax(0,1.25fr)!important;column-gap:40px!important}
 }
 @media(max-width:800px){
-  .conceptPage{overflow-x:clip}
-  .conceptPage .conceptHero{padding-left:20px!important;padding-right:20px!important}
-  .conceptPage .conceptLabelBlock{
-    max-width:calc(100vw - 18px)!important;
-    overflow-wrap:anywhere;
+  .publicPage .top{
+    position:relative!important;
+    min-height:0!important;
+    padding:10px 14px 12px!important;
+    grid-template-columns:auto minmax(0,1fr) auto!important;
+    grid-template-areas:"mark mark mark" "back spacer language" "nav nav nav"!important;
+    gap:7px 10px!important;
+    background:#f1ece3!important;
+    border-bottom:1px solid rgba(23,23,21,.18)!important;
+    box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
   }
-  .conceptPage .conceptMetrics{grid-template-columns:1fr!important}
+  .publicPage .top .mark{grid-area:mark;min-height:26px;font-size:12px!important;line-height:1.25!important;box-shadow:none!important}
+  .publicPage .top .publicBack{grid-area:back;min-height:44px;padding:10px 12px!important;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(23,23,21,.18)!important;border-radius:0!important;background:#faf7f0!important;box-shadow:none!important}
+  .publicPage .top nav{grid-area:nav;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;min-width:0!important;gap:6px!important;overflow:visible!important}
+  .publicPage .top nav a{min-width:0!important;min-height:44px!important;padding:10px 8px!important;justify-content:center;white-space:normal!important;text-align:center;font-size:clamp(12px,3.5vw,15px)!important;line-height:1.2!important;box-shadow:none!important}
+  .publicPage .languagePicker{grid-area:language;min-width:0!important;width:min(142px,44vw)!important;min-height:44px;padding:0 8px!important;display:grid!important;grid-template-columns:auto minmax(50px,1fr)!important;align-items:center;gap:5px!important;border:1px solid rgba(23,23,21,.18)!important;border-radius:0!important;background:#faf7f0!important;box-shadow:none!important}
+  .publicPage .languagePicker span{font-size:11px!important;white-space:nowrap}
+  .publicPage .languagePicker select{width:100%!important;min-width:0!important;min-height:42px!important;padding:0 4px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+  .conceptPage .conceptHero{min-height:auto;padding:56px 20px 0!important;overflow:hidden}
+  .conceptPage .conceptLabelBlock{
+    width:calc(100% + 8px)!important;
+    max-width:calc(100% + 8px)!important;
+    min-height:112px;
+    margin:0 0 54px -8px!important;
+    padding:16px 30px 18px 24px!important;
+    grid-template-columns:auto auto minmax(0,1fr);
+    grid-template-rows:auto auto;
+    column-gap:10px!important;
+    row-gap:9px!important;
+    clip-path:polygon(0 10%,88% 2%,100% 43%,93% 100%,5% 92%,0 98%,2% 54%);
+  }
+  .conceptPage .conceptWord{line-height:.98!important;letter-spacing:-.02em!important}
+  .conceptPage .conceptWordWhat{font-size:clamp(16px,5vw,23px)!important}
+  .conceptPage .conceptWordHundred{font-size:clamp(48px,14vw,68px)!important;transform:scaleY(1.02) skewX(-2deg)}
+  .conceptPage .conceptWordPeople{font-size:clamp(23px,7.2vw,35px)!important}
+  .conceptPage .conceptWordConnector{font-size:clamp(12px,3.5vw,17px)!important}
+  .conceptPage .conceptWordGame{font-size:clamp(35px,10.7vw,52px)!important;transform:scaleY(1.01) skewX(-1.5deg)}
+  .conceptPage .conceptWordYear{
+    grid-column:1;grid-row:2;justify-self:end;align-self:end;
+    font-size:12px!important;writing-mode:horizontal-tb;transform:none;
+  }
+  .conceptPage .conceptHero h1{font-size:clamp(48px,13.2vw,68px)!important;line-height:1.16!important;letter-spacing:-.045em!important}
+  .conceptPage .conceptHeadlineLine+.conceptHeadlineLine{margin-top:.24em!important}
+  .conceptPage .conceptSubtitle{padding-left:16px!important;border-left-width:5px!important;font-size:17px!important;line-height:1.75!important}
+  .conceptPage .conceptMetrics{margin-top:62px!important;grid-template-columns:1fr!important;gap:6px!important}
+  .conceptPage .conceptMetrics>span{min-height:96px;padding:20px 22px!important}
   .conceptPage .conceptFeature{
+    padding:72px 20px!important;
     grid-template-columns:1fr!important;
-    padding-left:20px!important;
-    padding-right:20px!important;
     row-gap:54px!important;
   }
   .conceptPage .conceptFeature>*{width:100%;max-width:100%}
+  .conceptPage .projectPoster{max-width:480px}
+  .conceptPage .conceptFeatureCopy h2{font-size:clamp(40px,10.5vw,54px)!important;line-height:1.18!important}
   .conceptPage .conceptFeatureCopy p{
     width:calc(100% - 4px);
-    margin-left:2px!important;
-    margin-right:2px!important;
+    margin-left:2px!important;margin-right:2px!important;
+    padding:24px 64px 52px 24px!important;
+    font-size:16px!important;line-height:1.85!important;
   }
+  .conceptPage .conceptFeatureCopy p::before{width:60px;height:48px;transform:skewX(-7deg) rotate(-1deg)}
+  .conceptPage .conceptFeatureCopy p::after{right:3px;bottom:-11px;width:76px;height:24px}
   .conceptPage .conceptManifesto{grid-template-columns:1fr!important}
-  .conceptPage .conceptQuestions,
-  .conceptPage .conceptRecruitment{
-    padding-left:20px!important;
-    padding-right:20px!important;
-  }
-  .conceptPage .conceptRecruitment{row-gap:34px!important}
+  .conceptPage .conceptManifesto article,.conceptPage .conceptManifesto article:nth-child(n){min-height:0;padding:58px 24px 64px!important}
+  .conceptPage .conceptManifesto article>span{margin-bottom:30px!important}
+  .conceptPage .conceptManifesto h2{font-size:38px!important;line-height:1.2!important}
+  .conceptPage .conceptManifesto p{font-size:16px!important;line-height:1.86!important}
+  .conceptPage .conceptQuestions,.conceptPage .conceptRecruitment{padding-left:20px!important;padding-right:20px!important}
+  .conceptPage .conceptQuestions p{font-size:clamp(36px,10vw,54px)!important;line-height:1.2!important}
+  .conceptPage .conceptRecruitment{grid-template-columns:1fr!important;row-gap:30px!important}
+  .conceptPage .conceptRecruitment>span{grid-column:1}
+  .conceptPage .conceptRecruitment h2{font-size:clamp(52px,14vw,72px)!important;line-height:1.14!important}
   .conceptPage .peopleCta{
     width:calc(100% - 40px)!important;
     max-width:calc(100% - 40px)!important;
-    margin-left:20px!important;
-    margin-right:20px!important;
+    margin-left:20px!important;margin-right:20px!important;
   }
+  .conceptPage.motion-ready [data-reveal]{opacity:1;transform:none}
+  .conceptPage.motion-ready :where(.conceptHero,.peopleCta)[data-reveal].is-visible{animation-duration:.36s}
 }
+
 @media(max-width:420px){
+  .publicPage .top{padding-left:10px!important;padding-right:10px!important}
+  .publicPage .top .mark{white-space:normal!important;overflow-wrap:anywhere}
+  .publicPage .languagePicker{width:min(132px,46vw)!important}
+  .conceptPage .conceptHeadlineLine{white-space:normal!important;overflow-wrap:anywhere!important}
+  .conceptPage .conceptHero h1{font-size:clamp(42px,12.4vw,58px)!important;letter-spacing:-.035em!important}
   .conceptPage .conceptHero{padding-left:16px!important;padding-right:16px!important}
   .conceptPage .conceptLabelBlock{
-    width:calc(100vw - 12px)!important;
-    max-width:calc(100vw - 12px)!important;
-    margin-left:-10px;
-    padding-left:22px!important;
-    padding-right:30px!important;
+    width:calc(100% + 6px)!important;
+    max-width:calc(100% + 6px)!important;
+    min-height:104px;
+    margin-left:-6px!important;
+    padding-left:18px!important;padding-right:22px!important;
+    column-gap:7px!important;
   }
-  .conceptPage .conceptFeature,
-  .conceptPage .conceptQuestions,
-  .conceptPage .conceptRecruitment{
-    padding-left:16px!important;
-    padding-right:16px!important;
-  }
-  .conceptPage .conceptManifesto article,
-  .conceptPage .conceptManifesto article:nth-child(n){
-    padding-left:20px!important;
-    padding-right:20px!important;
-  }
-  .conceptPage .conceptFeatureCopy p{
-    width:100%;
-    margin-left:0!important;
-    margin-right:0!important;
-  }
-  .conceptPage .peopleCta{
-    width:calc(100% - 32px)!important;
-    max-width:calc(100% - 32px)!important;
-    margin-left:16px!important;
-    margin-right:16px!important;
-  }
+  .conceptPage .conceptWordHundred{font-size:clamp(44px,13.2vw,58px)!important}
+  .conceptPage .conceptWordGame{font-size:clamp(32px,10vw,46px)!important}
+  .conceptPage .conceptFeature,.conceptPage .conceptQuestions,.conceptPage .conceptRecruitment{padding-left:16px!important;padding-right:16px!important}
+  .conceptPage .conceptFeatureCopy p{width:100%;margin-left:0!important;margin-right:0!important;padding-right:56px!important;padding-bottom:48px!important}
+  .conceptPage .conceptFeatureCopy p::before{width:52px;height:42px}
+  .conceptPage .conceptFeatureCopy p::after{width:66px;height:21px}
+  .conceptPage .conceptManifesto article,.conceptPage .conceptManifesto article:nth-child(n){padding-left:20px!important;padding-right:20px!important}
+  .conceptPage .peopleCta{width:calc(100% - 32px)!important;max-width:calc(100% - 32px)!important;margin-left:16px!important;margin-right:16px!important}
+}
+@supports not (clip-path:polygon(0 0)){
+  .conceptPage .conceptLabelBlock,.conceptPage .conceptMetrics>span,.conceptPage .peopleCta{clip-path:none!important}
 }
 @media(prefers-reduced-motion:reduce){
-  .conceptPage *,
-  .conceptPage *::before,
-  .conceptPage *::after{
+  .conceptPage *,.conceptPage *::before,.conceptPage *::after{
     scroll-behavior:auto!important;
     animation-duration:.01ms!important;
     animation-iteration-count:1!important;
     transition-duration:.01ms!important;
   }
-}
-
-
-/* === Public concept showcase: narrow-screen overflow fix === */
-@media(max-width:800px){
-  .conceptPage .conceptLabelBlock{
-    width:calc(100% + 8px)!important;
-    max-width:calc(100% + 8px)!important;
-    margin-left:-8px!important;
-    margin-right:0!important;
-  }
-}
-@media(max-width:420px){
-  .conceptPage .conceptLabelBlock{
-    width:calc(100% + 6px)!important;
-    max-width:calc(100% + 6px)!important;
-    margin-left:-6px!important;
-    padding-left:20px!important;
-    padding-right:24px!important;
-  }
-}
-
-
-/* === Public concept feature copy: curved lifted paper corner === */
-.conceptPage .conceptFeatureCopy p{
-  padding-right:clamp(74px,8vw,118px)!important;
-  padding-bottom:clamp(52px,6vw,78px)!important;
-}
-.conceptPage .conceptFeatureCopy p::before{
-  content:"";
-  position:absolute;
-  z-index:2;
-  right:-2px;
-  bottom:-2px;
-  width:clamp(72px,8vw,108px);
-  height:clamp(58px,6.5vw,86px);
-  pointer-events:none;
-  border-radius:100% 0 1px 0 / 100% 0 1px 0;
-  clip-path:none!important;
-  background:
-    radial-gradient(ellipse at 18% 12%,rgba(255,255,255,.98) 0 16%,rgba(255,255,255,.36) 36%,transparent 58%),
-    linear-gradient(145deg,#fffdf8 0%,#f7f2e9 26%,#d9cfc0 52%,#b9ad9d 61%,#eee7dc 76%,#fffdf8 100%)!important;
-  box-shadow:
-    -7px -5px 9px rgba(54,43,31,.15),
-    -2px -1px 2px rgba(255,255,255,.72) inset,
-    9px 12px 13px rgba(0,0,0,.18)!important;
-  filter:none!important;
-  transform-origin:100% 100%;
-  transform:skewX(-9deg) rotate(-1.5deg);
-}
-.conceptPage .conceptFeatureCopy p::after{
-  content:"";
-  position:absolute;
-  z-index:1;
-  right:5px;
-  bottom:-15px;
-  width:clamp(88px,10vw,138px);
-  height:clamp(25px,3.2vw,42px);
-  pointer-events:none;
-  border-radius:50%;
-  background:radial-gradient(ellipse at center,rgba(0,0,0,.38) 0%,rgba(0,0,0,.19) 38%,rgba(0,0,0,.06) 60%,transparent 76%)!important;
-  transform:rotate(-8deg);
-  filter:blur(3.5px)!important;
-  opacity:.78;
-}
-@media(hover:hover){
-  .conceptPage .conceptFeatureCopy p::before{
-    transition:width .38s cubic-bezier(.2,.75,.25,1),height .38s cubic-bezier(.2,.75,.25,1),transform .38s cubic-bezier(.2,.75,.25,1);
-  }
-  .conceptPage .conceptFeatureCopy p:hover::before{
-    width:clamp(78px,8.6vw,116px);
-    height:clamp(63px,7vw,92px);
-    transform:skewX(-11deg) rotate(-2.5deg);
-  }
-}
-@media(max-width:800px){
-  .conceptPage .conceptFeatureCopy p{
-    padding-right:64px!important;
-    padding-bottom:52px!important;
-  }
-  .conceptPage .conceptFeatureCopy p::before{
-    width:62px;
-    height:50px;
-    border-radius:100% 0 1px 0 / 100% 0 1px 0;
-    transform:skewX(-8deg) rotate(-1deg);
-  }
-  .conceptPage .conceptFeatureCopy p::after{
-    right:3px;
-    bottom:-11px;
-    width:78px;
-    height:25px;
-    filter:blur(2.5px)!important;
-  }
-}
-@media(max-width:420px){
-  .conceptPage .conceptFeatureCopy p{
-    padding-right:56px!important;
-    padding-bottom:48px!important;
-  }
-  .conceptPage .conceptFeatureCopy p::before{width:54px;height:44px}
-  .conceptPage .conceptFeatureCopy p::after{width:68px;height:22px}
-}
-@media(prefers-reduced-motion:reduce){
-  .conceptPage .conceptFeatureCopy p::before{transition:none!important}
-}
-
-
-/* === Public concept wordmark: typographic hierarchy and controlled distortion === */
-.conceptPage .conceptLabelBlock{
-  display:grid!important;
-  grid-template-columns:auto auto minmax(0,1fr) auto;
-  grid-template-rows:minmax(0,1fr) minmax(0,.82fr);
-  align-items:center;
-  column-gap:clamp(12px,2.2vw,34px);
-  row-gap:0;
-  padding-top:clamp(18px,2vw,28px)!important;
-  padding-bottom:clamp(20px,2.2vw,32px)!important;
-  line-height:.78!important;
-}
-.conceptPage .conceptWord{
-  display:block;
-  min-width:0;
-  color:inherit;
-  font-family:Impact,"Arial Black","Helvetica Neue",sans-serif;
-  font-weight:900;
-  line-height:.78;
-  letter-spacing:-.055em;
-  white-space:nowrap;
-  transform-origin:center;
-}
-.conceptPage .conceptWordWhat{
-  grid-column:1;
-  grid-row:1;
-  align-self:end;
-  font-size:clamp(22px,2.8vw,43px);
-  letter-spacing:-.025em;
-  transform:rotate(-2deg) skewX(-4deg);
-}
-.conceptPage .conceptWordHundred{
-  grid-column:2;
-  grid-row:1 / span 2;
-  font-size:clamp(66px,8.8vw,136px);
-  letter-spacing:-.09em;
-  transform:scaleY(1.12) skewX(-7deg) rotate(.5deg);
-}
-.conceptPage .conceptWordPeople{
-  grid-column:3;
-  grid-row:1;
-  align-self:end;
-  font-size:clamp(34px,4.7vw,72px);
-  transform:scaleX(.94) skewX(-3deg);
-}
-.conceptPage .conceptWordConnector{
-  grid-column:1;
-  grid-row:2;
-  align-self:start;
-  font-size:clamp(17px,2vw,30px);
-  letter-spacing:.01em;
-  transform:translateX(7%) rotate(1.5deg);
-}
-.conceptPage .conceptWordGame{
-  grid-column:3;
-  grid-row:2;
-  align-self:start;
-  font-size:clamp(52px,7.2vw,112px);
-  letter-spacing:-.08em;
-  transform:translateY(-2%) scaleX(1.04) scaleY(1.08) skewX(-6deg);
-}
-.conceptPage .conceptWordYear{
-  grid-column:4;
-  grid-row:1 / span 2;
-  align-self:center;
-  font-size:clamp(17px,2.1vw,32px);
-  letter-spacing:.02em;
-  writing-mode:vertical-rl;
-  transform:rotate(180deg);
-  opacity:.9;
-}
-@media(max-width:800px){
-  .conceptPage .conceptLabelBlock{
-    grid-template-columns:auto auto minmax(0,1fr);
-    grid-template-rows:auto auto;
-    column-gap:10px;
-    min-height:112px;
-    padding-top:16px!important;
-    padding-bottom:18px!important;
-  }
-  .conceptPage .conceptWordWhat{font-size:clamp(16px,5vw,23px)}
-  .conceptPage .conceptWordHundred{font-size:clamp(51px,15vw,74px)}
-  .conceptPage .conceptWordPeople{font-size:clamp(24px,7.5vw,37px)}
-  .conceptPage .conceptWordConnector{font-size:clamp(12px,3.6vw,18px)}
-  .conceptPage .conceptWordGame{font-size:clamp(38px,11.8vw,58px)}
-  .conceptPage .conceptWordYear{
-    grid-column:1;
-    grid-row:2;
-    justify-self:end;
-    align-self:end;
-    font-size:12px;
-    writing-mode:horizontal-tb;
-    transform:translateY(2px) rotate(0);
-  }
-}
-@media(max-width:420px){
-  .conceptPage .conceptLabelBlock{column-gap:7px;min-height:104px}
-  .conceptPage .conceptWordHundred{font-size:clamp(46px,14.2vw,62px)}
-  .conceptPage .conceptWordGame{font-size:clamp(34px,10.8vw,49px)}
-}
-
-
-/* === Public concept showcase: explicit no-overlap typography rules === */
-.conceptPage .conceptLabelBlock{
-  grid-auto-flow:row;
-  row-gap:clamp(10px,1.2vw,18px)!important;
-  column-gap:clamp(16px,2.4vw,38px)!important;
-}
-.conceptPage .conceptWord{
-  line-height:.94!important;
-  letter-spacing:-.03em!important;
-  margin:0!important;
-  padding:0!important;
-}
-.conceptPage .conceptWordWhat{transform:rotate(-1.2deg) skewX(-2deg)!important}
-.conceptPage .conceptWordHundred{
-  letter-spacing:-.055em!important;
-  transform:scaleY(1.04) skewX(-4deg) rotate(.3deg)!important;
-}
-.conceptPage .conceptWordPeople{transform:scaleX(.97) skewX(-2deg)!important}
-.conceptPage .conceptWordConnector{transform:translateX(4%) rotate(.8deg)!important}
-.conceptPage .conceptWordGame{
-  letter-spacing:-.045em!important;
-  transform:scaleX(1.01) scaleY(1.03) skewX(-3deg)!important;
-}
-.conceptPage :where(.conceptHeadlineLine,.conceptFeatureCopy h2,.conceptManifesto h2,.conceptQuestions p,.conceptRecruitment h2){
-  line-height:1.14!important;
-}
-.conceptPage .conceptHeadlineLine+.conceptHeadlineLine{margin-top:.24em!important}
-.conceptPage .conceptQuestions p+p{margin-top:.34em!important}
-@media(max-width:800px){
-  .conceptPage .conceptLabelBlock{
-    row-gap:9px!important;
-    column-gap:10px!important;
-  }
-  .conceptPage .conceptWord{line-height:.98!important;letter-spacing:-.02em!important}
-  .conceptPage .conceptWordHundred{letter-spacing:-.035em!important;transform:scaleY(1.02) skewX(-2.5deg)!important}
-  .conceptPage .conceptWordGame{letter-spacing:-.025em!important;transform:scaleY(1.01) skewX(-2deg)!important}
-  .conceptPage :where(.conceptHeadlineLine,.conceptFeatureCopy h2,.conceptManifesto h2,.conceptQuestions p,.conceptRecruitment h2){
-    line-height:1.18!important;
-  }
+  .conceptPage.motion-ready [data-reveal],.conceptPage.motion-ready [data-reveal].is-visible{opacity:1!important;transform:none!important;animation:none!important}
 }
