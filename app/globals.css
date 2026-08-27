@@ -4154,3 +4154,34 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 
 /* Use one restrained paper-curl treatment; remove the older animated duplicate. */
 .publicPage.conceptPage .conceptFeatureCopy p::after{display:none!important}
+
+/* Final wordmark spacing audit: preserve scale hierarchy without glyph collisions. */
+@media(min-width:821px){
+  .publicPage.conceptPage .conceptLabelBlock{
+    grid-template-columns:90px 178px minmax(0,1fr) 30px!important;
+    column-gap:26px!important;
+  }
+  .publicPage.conceptPage .conceptLabelBlock .conceptWord{overflow:visible!important}
+}
+@media(min-width:341px) and (max-width:820px){
+  .publicPage.conceptPage .conceptLabelBlock{
+    grid-template-columns:42px 82px minmax(0,1fr) 18px!important;
+    column-gap:10px!important;
+  }
+  .publicPage.conceptPage .conceptWordHundred{font-size:clamp(38px,11.5vw,44px)!important}
+  .publicPage.conceptPage .conceptWordPeople{font-size:clamp(18px,5.8vw,24px)!important}
+  .publicPage.conceptPage .conceptWordGame{font-size:clamp(28px,8.2vw,36px)!important}
+  .publicPage.conceptPage .conceptWordYear{overflow:visible!important}
+}
+@media(max-width:340px){
+  .publicPage.conceptPage .conceptLabelBlock{
+    grid-template-columns:48px 82px minmax(0,1fr) 12px!important;
+    column-gap:4px!important;
+  }
+  .publicPage.conceptPage .conceptWordWhat{font-size:15px!important}
+  .publicPage.conceptPage .conceptWordConnector{font-size:9px!important}
+  .publicPage.conceptPage .conceptWordHundred{font-size:40px!important}
+  .publicPage.conceptPage .conceptWordPeople{font-size:18px!important}
+  .publicPage.conceptPage .conceptWordGame{font-size:27px!important}
+  .publicPage.conceptPage .conceptWordYear{font-size:9px!important;overflow:visible!important}
+}
