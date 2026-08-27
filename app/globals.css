@@ -2657,3 +2657,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage .top > .mark{min-height:44px!important;display:flex!important;align-items:center}
   .publicPage .top > .languagePicker select{min-height:44px!important}
 }
+
+@media(min-width:601px) and (max-width:800px){
+  .publicPage .top{grid-template-areas:"back mark language" "nav nav nav"!important;grid-template-columns:auto minmax(0,1fr) auto!important;padding-top:9px!important;padding-bottom:9px!important}
+}
