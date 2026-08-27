@@ -3223,3 +3223,122 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   }
   .publicPage.conceptPage .conceptFeatureCopy p::after{transform:skewX(-14deg)!important}
 }
+
+
+/* === CONCEPT WORDMARK CLARITY / 2026-08-27 === */
+.publicPage.conceptPage .conceptLabelBlock{
+  grid-template-columns:68px 104px minmax(0,1fr) 22px!important;
+  grid-template-rows:minmax(34px,auto) minmax(48px,auto)!important;
+  column-gap:22px!important;
+  row-gap:12px!important;
+  padding:20px 46px 22px!important;
+  align-items:center!important;
+}
+.publicPage.conceptPage .conceptLabelBlock .conceptWord{
+  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif!important;
+  font-style:normal!important;
+  font-stretch:normal!important;
+  font-weight:900!important;
+  line-height:.92!important;
+  letter-spacing:-.02em!important;
+  text-shadow:none!important;
+  filter:none!important;
+  transform:none!important;
+  text-rendering:geometricPrecision;
+  -webkit-font-smoothing:antialiased;
+  justify-self:start!important;
+  align-self:center!important;
+  white-space:nowrap!important;
+}
+.publicPage.conceptPage .conceptWordWhat{
+  grid-column:1!important;
+  grid-row:1!important;
+  align-self:end!important;
+  font-size:clamp(20px,2.15vw,26px)!important;
+}
+.publicPage.conceptPage .conceptWordConnector{
+  grid-column:1!important;
+  grid-row:2!important;
+  align-self:start!important;
+  font-size:clamp(14px,1.5vw,18px)!important;
+  letter-spacing:.01em!important;
+}
+.publicPage.conceptPage .conceptWordHundred{
+  grid-column:2!important;
+  grid-row:1 / span 2!important;
+  align-self:center!important;
+  font-size:clamp(62px,7.2vw,86px)!important;
+  letter-spacing:-.045em!important;
+}
+.publicPage.conceptPage .conceptWordPeople{
+  grid-column:3!important;
+  grid-row:1!important;
+  align-self:end!important;
+  font-size:clamp(34px,4vw,48px)!important;
+}
+.publicPage.conceptPage .conceptWordGame{
+  grid-column:3!important;
+  grid-row:2!important;
+  align-self:start!important;
+  font-size:clamp(52px,5.8vw,70px)!important;
+  letter-spacing:-.035em!important;
+}
+.publicPage.conceptPage .conceptWordYear{
+  grid-column:4!important;
+  grid-row:1 / span 2!important;
+  align-self:center!important;
+  justify-self:center!important;
+  writing-mode:vertical-rl!important;
+  text-orientation:mixed!important;
+  font-size:clamp(13px,1.4vw,17px)!important;
+  letter-spacing:.08em!important;
+}
+@keyframes cpWordCrispEnter{
+  from{opacity:.01;transform:translate3d(0,8px,0)}
+  to{opacity:1;transform:none}
+}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWord{
+  animation:cpWordCrispEnter .36s cubic-bezier(.2,.76,.24,1) both!important;
+}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWordHundred{animation-delay:.04s!important}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWordPeople{animation-delay:.08s!important}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWordConnector{animation-delay:.11s!important}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWordGame{animation-delay:.14s!important}
+.publicPage.conceptPage .conceptHero.is-visible .conceptWordYear{animation-delay:.17s!important}
+
+@media(max-width:700px){
+  .publicPage.conceptPage .conceptLabelBlock{
+    grid-template-columns:42px 72px minmax(0,1fr) 18px!important;
+    grid-template-rows:minmax(26px,auto) minmax(35px,auto)!important;
+    column-gap:8px!important;
+    row-gap:8px!important;
+    padding:12px 18px 13px!important;
+  }
+  .publicPage.conceptPage .conceptWordWhat{font-size:clamp(16px,4.8vw,19px)!important}
+  .publicPage.conceptPage .conceptWordConnector{font-size:clamp(10px,3.2vw,13px)!important}
+  .publicPage.conceptPage .conceptWordHundred{font-size:clamp(42px,13vw,54px)!important}
+  .publicPage.conceptPage .conceptWordPeople{font-size:clamp(20px,6.7vw,27px)!important}
+  .publicPage.conceptPage .conceptWordGame{font-size:clamp(32px,10vw,40px)!important}
+  .publicPage.conceptPage .conceptWordYear{font-size:11px!important}
+}
+@media(max-width:340px){
+  .publicPage.conceptPage .conceptLabelBlock{
+    grid-template-columns:36px 62px minmax(0,1fr) 14px!important;
+    column-gap:6px!important;
+    padding-left:14px!important;
+    padding-right:14px!important;
+  }
+  .publicPage.conceptPage .conceptWordWhat{font-size:15px!important}
+  .publicPage.conceptPage .conceptWordConnector{font-size:9px!important}
+  .publicPage.conceptPage .conceptWordHundred{font-size:40px!important}
+  .publicPage.conceptPage .conceptWordPeople{font-size:19px!important}
+  .publicPage.conceptPage .conceptWordGame{font-size:30px!important}
+  .publicPage.conceptPage .conceptWordYear{font-size:9px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage .conceptHero.is-visible .conceptWord{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
