@@ -2117,7 +2117,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   min-height:84px;
   padding:14px clamp(20px,4vw,64px)!important;
   display:grid!important;
-  grid-template-columns:minmax(220px,1fr) auto auto;
+  grid-template-columns:auto minmax(220px,1fr) auto auto!important;
   align-items:center;
   gap:22px;
   color:var(--cp-ink)!important;
@@ -2127,7 +2127,8 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
 }
-.conceptPage .top .mark{font-weight:800!important;letter-spacing:-.025em}
+.conceptPage .publicBack{min-height:44px;padding:10px 14px!important;display:inline-flex;align-items:center;justify-content:center;color:var(--cp-ink)!important;background:var(--cp-sheet)!important;border:1px solid var(--cp-line)!important;border-radius:0!important;box-shadow:none!important}
+.conceptPage .top .mark{font-weight:800!important;letter-spacing:-.025em;box-shadow:none!important}
 .conceptPage .top nav{display:flex!important;align-items:center;gap:8px}
 .conceptPage .top nav a{
   min-height:44px;
@@ -2140,8 +2141,9 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   background:transparent!important;
   box-shadow:none!important;
 }
-.conceptPage .top nav a.active{color:var(--cp-sheet)!important;background:var(--cp-ink)!important}
-.conceptPage .languagePicker{min-width:148px}
+.conceptPage .top nav a.active{color:var(--cp-sheet)!important;background:var(--cp-ink)!important;box-shadow:none!important}
+.conceptPage .languagePicker{min-width:148px;min-height:44px;padding:0 10px!important;display:grid!important;grid-template-columns:auto minmax(58px,1fr)!important;align-items:center;gap:7px!important;color:var(--cp-ink)!important;background:var(--cp-sheet)!important;border:1px solid var(--cp-line)!important;border-radius:0!important;box-shadow:none!important}
+.conceptPage .languagePicker select{min-height:42px!important;padding:0 4px!important;color:var(--cp-ink)!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
 .conceptPage .conceptStandalone{overflow:visible}
 .conceptPage .conceptHero{
   min-height:calc(100svh - 84px);
