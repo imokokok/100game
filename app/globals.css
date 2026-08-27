@@ -4325,3 +4325,78 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage.conceptPage .conceptMetrics b{font-size:32px!important}
   .publicPage.conceptPage .conceptMetrics small{font-size:8px!important}
 }
+
+/* Public concept motion: visible, purposeful and inexpensive on mobile. */
+@keyframes publicMetricCopyIn{
+  from{opacity:0;transform:translate3d(0,12px,0)}
+  to{opacity:1;transform:none}
+}
+@keyframes publicPosterIn{
+  from{opacity:0;transform:translate3d(-16px,0,0) scale(.988)}
+  to{opacity:1;transform:none}
+}
+@keyframes publicCopyIn{
+  from{opacity:0;transform:translate3d(16px,0,0)}
+  to{opacity:1;transform:none}
+}
+.publicPage.conceptPage.motion-ready [data-reveal]{
+  opacity:0!important;
+  transform:translate3d(0,22px,0)!important;
+  transition-property:opacity,transform!important;
+  transition-duration:.5s!important;
+  transition-delay:0s!important;
+  transition-timing-function:cubic-bezier(.2,.76,.24,1)!important;
+}
+.publicPage.conceptPage.motion-ready [data-reveal].is-visible{
+  opacity:1!important;
+  transform:none!important;
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptMetrics>span :where(b,small){
+  animation:publicMetricCopyIn .46s cubic-bezier(.2,.76,.24,1) .3s both!important;
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptMetrics>span:nth-child(2) :where(b,small){animation-delay:.38s!important}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptMetrics>span:nth-child(3) :where(b,small){animation-delay:.46s!important}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .projectPoster{
+  animation:publicPosterIn .54s cubic-bezier(.2,.76,.24,1) .08s both!important;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy{
+  animation:publicCopyIn .54s cubic-bezier(.2,.76,.24,1) .14s both!important;
+}
+.publicPage.conceptPage .projectPoster img{
+  transition:transform .28s cubic-bezier(.2,.76,.24,1)!important;
+}
+.publicPage.conceptPage :where(.publicBack,.top nav a,.languagePicker,.peopleCta,.manifestoToggle){
+  transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease,color .18s ease!important;
+}
+.publicPage.conceptPage :where(.publicBack,.top nav a,.peopleCta,.manifestoToggle):active{
+  transform:translateY(1px) scale(.985)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  .publicPage.conceptPage .projectPoster a:hover img{transform:translateY(-3px) scale(1.008)!important}
+  .publicPage.conceptPage :where(.publicBack,.top nav a,.peopleCta):hover{transform:translateY(-2px)!important}
+}
+@media(max-width:860px),(hover:none) and (pointer:coarse){
+  .publicPage.conceptPage.motion-ready [data-reveal]{
+    transition-duration:.38s!important;
+    transform:translate3d(0,14px,0)!important;
+  }
+  .publicPage.conceptPage.motion-ready [data-reveal].is-visible{transform:none!important}
+  .publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptMetrics>span :where(b,small){
+    animation-duration:.34s!important;
+  }
+  .publicPage.conceptPage.motion-ready .conceptFeature.is-visible .projectPoster,
+  .publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy{
+    animation-duration:.4s!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage.motion-ready [data-reveal],
+  .publicPage.conceptPage.motion-ready [data-reveal].is-visible,
+  .publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptMetrics>span :where(b,small),
+  .publicPage.conceptPage.motion-ready .conceptFeature.is-visible :where(.projectPoster,.conceptFeatureCopy){
+    opacity:1!important;
+    transform:none!important;
+    animation:none!important;
+    transition:none!important;
+  }
+}
