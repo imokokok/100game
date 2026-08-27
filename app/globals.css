@@ -4400,3 +4400,100 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     transition:none!important;
   }
 }
+
+/* Large lifted-paper curl, based on the supplied editorial poster references. */
+@keyframes publicPaperCurlIn{
+  from{opacity:0;transform:translate3d(18px,14px,0) rotate(3deg) scale(.82)}
+  to{opacity:1;transform:skewX(-7deg) rotate(-.6deg)}
+}
+.publicPage.conceptPage .conceptFeatureCopy p{
+  --paper-curl-w:clamp(112px,11vw,168px);
+  --paper-curl-h:clamp(82px,8.5vw,126px);
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:visible!important;
+  padding:clamp(26px,3vw,38px) clamp(34px,4vw,54px) calc(var(--paper-curl-h) * .66 + 24px)!important;
+  border-radius:5px 5px 24px 5px!important;
+  background:
+    radial-gradient(circle at 21% 28%,rgba(92,66,39,.025) 0 .7px,transparent .9px),
+    repeating-linear-gradient(4deg,rgba(84,64,41,.018) 0 1px,transparent 1px 6px),
+    linear-gradient(112deg,#fbf7ef 0%,#f7f1e7 64%,#eee5d8 100%)!important;
+  background-size:15px 13px,100% 100%,100% 100%!important;
+  box-shadow:0 2px 0 rgba(255,255,255,.2) inset,0 3px 0 rgba(0,0,0,.16),0 15px 28px rgba(0,0,0,.22)!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy p>span{
+  position:relative!important;
+  z-index:3!important;
+  display:block!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy p::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:0!important;
+  right:4px!important;
+  bottom:-18px!important;
+  width:calc(var(--paper-curl-w) * .94)!important;
+  height:calc(var(--paper-curl-h) * .42)!important;
+  pointer-events:none!important;
+  border-radius:50%!important;
+  background:radial-gradient(ellipse at 52% 35%,rgba(0,0,0,.38) 0%,rgba(0,0,0,.20) 35%,rgba(0,0,0,.07) 57%,transparent 75%)!important;
+  box-shadow:none!important;
+  opacity:.82!important;
+  transform:skewX(-13deg) rotate(-2deg)!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy p::after{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  z-index:2!important;
+  right:-1px!important;
+  bottom:-1px!important;
+  width:var(--paper-curl-w)!important;
+  height:var(--paper-curl-h)!important;
+  pointer-events:none!important;
+  border-radius:100% 0 22px 0 / 86% 0 22px 0!important;
+  background:
+    linear-gradient(154deg,rgba(255,255,255,.98) 0 17%,rgba(246,242,235,.98) 30%,rgba(196,190,181,.96) 48%,rgba(126,122,116,.92) 57%,rgba(230,226,218,.98) 70%,rgba(255,253,248,.98) 84%,rgba(213,207,198,.96) 100%)!important;
+  box-shadow:-10px -7px 16px rgba(54,43,31,.16),7px 9px 13px rgba(0,0,0,.25),inset 2px 1px 2px rgba(255,255,255,.74),inset -2px -1px 3px rgba(74,66,58,.12)!important;
+  opacity:1!important;
+  transform:skewX(-7deg) rotate(-.6deg)!important;
+  transform-origin:100% 100%!important;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy p::after{
+  animation:publicPaperCurlIn .66s cubic-bezier(.18,.78,.2,1) .32s both!important;
+}
+@media(hover:hover) and (pointer:fine){
+  .publicPage.conceptPage .conceptFeatureCopy p::after{
+    transition:transform .28s cubic-bezier(.2,.76,.24,1),box-shadow .28s ease!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy p:hover::after{
+    transform:translate3d(-4px,-4px,0) skewX(-9deg) rotate(-1.2deg)!important;
+    box-shadow:-13px -10px 18px rgba(54,43,31,.18),10px 13px 16px rgba(0,0,0,.26),inset 2px 1px 2px rgba(255,255,255,.74)!important;
+  }
+}
+@media(max-width:820px){
+  .publicPage.conceptPage .conceptFeatureCopy p{
+    --paper-curl-w:76px;
+    --paper-curl-h:58px;
+    padding:22px 22px 66px!important;
+    border-radius:4px 4px 16px 4px!important;
+    box-shadow:0 2px 0 rgba(255,255,255,.18) inset,0 3px 0 rgba(0,0,0,.15),0 10px 18px rgba(0,0,0,.2)!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy p::before{bottom:-12px!important}
+  .publicPage.conceptPage .conceptFeatureCopy p::after{
+    border-radius:100% 0 15px 0 / 86% 0 15px 0!important;
+    box-shadow:-7px -5px 10px rgba(54,43,31,.15),5px 7px 9px rgba(0,0,0,.22),inset 1px 1px 1px rgba(255,255,255,.72)!important;
+  }
+  .publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy p::after{
+    animation-duration:.46s!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy p::after{
+    animation:none!important;
+    opacity:1!important;
+    transform:skewX(-7deg) rotate(-.6deg)!important;
+    transition:none!important;
+  }
+}
