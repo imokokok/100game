@@ -28,5 +28,13 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3"
   },
-  "type": "module"
+  "type": "module",
+  "browserslist": [
+    "Chrome >= 79",
+    "Android >= 8",
+    "iOS >= 13",
+    "Safari >= 13",
+    "Edge >= 79",
+    "Firefox >= 78"
+  ]
 }
