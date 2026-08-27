@@ -2650,3 +2650,10 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .conceptPage .conceptHero{padding-top:28px!important}
   .conceptPage .conceptLabelBlock{min-height:92px;margin-bottom:34px!important}
 }
+
+/* Final header specificity guard */
+.publicPage.conceptPage .top > .publicBack{min-height:44px!important;padding:10px 14px!important;color:var(--cp-ink)!important;background:var(--cp-sheet)!important;border:1px solid var(--cp-line)!important;border-radius:0!important;box-shadow:none!important}
+@media(max-width:800px){
+  .publicPage .top > .mark{min-height:44px!important;display:flex!important;align-items:center}
+  .publicPage .top > .languagePicker select{min-height:44px!important}
+}
