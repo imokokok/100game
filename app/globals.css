@@ -3013,3 +3013,45 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .conceptPage .conceptWordHundred{font-size:clamp(46px,14.2vw,62px)}
   .conceptPage .conceptWordGame{font-size:clamp(34px,10.8vw,49px)}
 }
+
+
+/* === Public concept showcase: explicit no-overlap typography rules === */
+.conceptPage .conceptLabelBlock{
+  grid-auto-flow:row;
+  row-gap:clamp(10px,1.2vw,18px)!important;
+  column-gap:clamp(16px,2.4vw,38px)!important;
+}
+.conceptPage .conceptWord{
+  line-height:.94!important;
+  letter-spacing:-.03em!important;
+  margin:0!important;
+  padding:0!important;
+}
+.conceptPage .conceptWordWhat{transform:rotate(-1.2deg) skewX(-2deg)!important}
+.conceptPage .conceptWordHundred{
+  letter-spacing:-.055em!important;
+  transform:scaleY(1.04) skewX(-4deg) rotate(.3deg)!important;
+}
+.conceptPage .conceptWordPeople{transform:scaleX(.97) skewX(-2deg)!important}
+.conceptPage .conceptWordConnector{transform:translateX(4%) rotate(.8deg)!important}
+.conceptPage .conceptWordGame{
+  letter-spacing:-.045em!important;
+  transform:scaleX(1.01) scaleY(1.03) skewX(-3deg)!important;
+}
+.conceptPage :where(.conceptHeadlineLine,.conceptFeatureCopy h2,.conceptManifesto h2,.conceptQuestions p,.conceptRecruitment h2){
+  line-height:1.14!important;
+}
+.conceptPage .conceptHeadlineLine+.conceptHeadlineLine{margin-top:.24em!important}
+.conceptPage .conceptQuestions p+p{margin-top:.34em!important}
+@media(max-width:800px){
+  .conceptPage .conceptLabelBlock{
+    row-gap:9px!important;
+    column-gap:10px!important;
+  }
+  .conceptPage .conceptWord{line-height:.98!important;letter-spacing:-.02em!important}
+  .conceptPage .conceptWordHundred{letter-spacing:-.035em!important;transform:scaleY(1.02) skewX(-2.5deg)!important}
+  .conceptPage .conceptWordGame{letter-spacing:-.025em!important;transform:scaleY(1.01) skewX(-2deg)!important}
+  .conceptPage :where(.conceptHeadlineLine,.conceptFeatureCopy h2,.conceptManifesto h2,.conceptQuestions p,.conceptRecruitment h2){
+    line-height:1.18!important;
+  }
+}
