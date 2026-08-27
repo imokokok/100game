@@ -2105,8 +2105,9 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   --cp-line:rgba(23,23,21,.18);
   color:var(--cp-ink);
   background:var(--cp-paper);
-  overflow-x:clip;
+  overflow-x:hidden;
 }
+@supports(overflow:clip){.conceptPage{overflow-x:clip}}
 .conceptPage,.conceptPage *{box-sizing:border-box}
 .conceptPage :where(h1,h2,h3,p,span,small,strong,b,a){min-width:0}
 .conceptPage :where(h1,h2,h3,p){overflow-wrap:break-word;word-break:normal}
@@ -2146,6 +2147,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .conceptPage .languagePicker select{min-height:42px!important;padding:0 4px!important;color:var(--cp-ink)!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}
 .conceptPage .conceptStandalone{overflow:visible}
 .conceptPage .conceptHero{
+  min-height:calc(100vh - 84px);
   min-height:calc(100svh - 84px);
   padding:clamp(64px,8vw,118px) clamp(20px,5.2vw,84px) 0!important;
   display:block;
@@ -2637,4 +2639,14 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage .languagePicker{width:min(116px,43vw)!important;grid-template-columns:20px minmax(0,1fr)!important}
   .publicPage .languagePicker > span{font-size:0!important}
   .publicPage .languagePicker > span b{font-size:15px!important}
+}
+
+@media(pointer:coarse){
+  .publicPage .languagePicker,.publicPage .languagePicker select{min-height:44px!important}
+}
+@media(max-width:800px) and (max-height:500px) and (orientation:landscape){
+  .publicPage .top{grid-template-areas:"back mark language" "nav nav nav"!important;grid-template-columns:auto minmax(0,1fr) auto!important;padding-top:8px!important;padding-bottom:8px!important;gap:6px 10px!important}
+  .publicPage .top .mark{min-height:44px;display:flex;align-items:center;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis}
+  .conceptPage .conceptHero{padding-top:28px!important}
+  .conceptPage .conceptLabelBlock{min-height:92px;margin-bottom:34px!important}
 }
