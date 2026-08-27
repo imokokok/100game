@@ -2992,3 +2992,234 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage.conceptPage .manifestoToggle i::after,
   .publicPage.conceptPage :where(a,button,img,select){transition:none!important}
 }
+
+
+/* === CONCEPT UX ROUND 2 / stable mobile layout + purposeful motion === */
+@media(max-width:900px){
+  @supports(content-visibility:auto){
+    .publicPage.conceptPage .conceptFeature,
+    .publicPage.conceptPage .conceptQuestions,
+    .publicPage.conceptPage .conceptRecruitment{
+      content-visibility:visible!important;
+      contain-intrinsic-size:none!important;
+    }
+  }
+}
+.publicPage.conceptPage .conceptFeatureCopy p::after{
+  border-radius:100% 0 0 0 / 78% 0 0 0!important;
+  background:
+    linear-gradient(156deg,rgba(255,255,255,.98) 0 16%,#f3ede4 31%,#d3c8b8 48%,#fffdf7 67%,#ddd2c3 84%,#f7f2e9 100%)!important;
+  transform:skewX(-14deg)!important;
+  transform-origin:100% 100%!important;
+  box-shadow:-7px -4px 9px rgba(35,28,22,.16),-1px 1px 0 rgba(255,255,255,.72) inset!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy p::before{
+  right:4px!important;
+  bottom:-4px!important;
+  width:calc(var(--curl-w) * .88)!important;
+  height:9px!important;
+  background:rgba(35,28,22,.13)!important;
+  filter:none!important;
+  transform:skewX(-18deg)!important;
+  box-shadow:-4px 3px 5px rgba(35,28,22,.12)!important;
+}
+
+@keyframes cpLabelSettle{
+  from{opacity:.01;transform:translate3d(-16px,0,0) rotate(-.7deg)}
+  to{opacity:1;transform:none}
+}
+@keyframes cpHeadlineRise{
+  from{opacity:.01;transform:translate3d(0,16px,0)}
+  to{opacity:1;transform:none}
+}
+@keyframes cpCopyRise{
+  from{opacity:.01;transform:translate3d(0,12px,0)}
+  to{opacity:1;transform:none}
+}
+@keyframes cpCurlSettle{
+  from{opacity:.01;transform:skewX(-14deg) translate3d(12px,12px,0) scale(.78)}
+  to{opacity:1;transform:skewX(-14deg)}
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptLabelBlock{
+  animation:cpLabelSettle .52s cubic-bezier(.2,.76,.24,1) both!important;
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptHeadlineLine{
+  animation:cpHeadlineRise .48s cubic-bezier(.2,.76,.24,1) .12s both;
+}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptHeadlineLine:nth-child(2){animation-delay:.2s}
+.publicPage.conceptPage.motion-ready .conceptHero.is-visible .conceptSubtitle{
+  animation:cpCopyRise .46s cubic-bezier(.2,.76,.24,1) .26s both;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .projectPoster{
+  animation:cpCopyRise .48s cubic-bezier(.2,.76,.24,1) both;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy>span{
+  animation:cpCopyRise .42s cubic-bezier(.2,.76,.24,1) .08s both;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy>h2{
+  animation:cpCopyRise .48s cubic-bezier(.2,.76,.24,1) .14s both;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy>p{
+  animation:cpCopyRise .5s cubic-bezier(.2,.76,.24,1) .2s both;
+}
+.publicPage.conceptPage.motion-ready .conceptFeature.is-visible .conceptFeatureCopy>p::after{
+  animation:cpCurlSettle .66s cubic-bezier(.18,.78,.2,1) .34s both;
+}
+.publicPage.conceptPage.motion-ready .conceptQuestions.is-visible p{
+  animation:cpHeadlineRise .46s cubic-bezier(.2,.76,.24,1) both;
+}
+.publicPage.conceptPage.motion-ready .conceptQuestions.is-visible p:nth-of-type(2){animation-delay:.07s}
+.publicPage.conceptPage.motion-ready .conceptQuestions.is-visible p:nth-of-type(3){animation-delay:.14s}
+.publicPage.conceptPage.motion-ready .conceptRecruitment.is-visible>*{
+  animation:cpCopyRise .44s cubic-bezier(.2,.76,.24,1) both;
+}
+.publicPage.conceptPage.motion-ready .conceptRecruitment.is-visible>*:nth-child(2){animation-delay:.07s}
+.publicPage.conceptPage.motion-ready .conceptRecruitment.is-visible>*:nth-child(3){animation-delay:.14s}
+
+@media(max-width:700px){
+  .publicPage.conceptPage>.conceptStandalone{padding:40px 14px 52px!important}
+  .publicPage.conceptPage .conceptHero{padding:32px 14px 0!important}
+  .publicPage.conceptPage .conceptLabelBlock{
+    min-height:0!important;
+    padding:10px 18px 10px 16px!important;
+    margin-bottom:34px!important;
+  }
+  .publicPage.conceptPage .conceptHero h1{margin-bottom:26px!important}
+  .publicPage.conceptPage .conceptSubtitle{
+    font-size:16px!important;
+    line-height:1.7!important;
+  }
+  .publicPage.conceptPage .conceptMetrics{margin-top:30px!important}
+  .publicPage.conceptPage .conceptMetrics>span{
+    min-height:80px!important;
+    padding:12px 8px!important;
+  }
+
+  .publicPage.conceptPage .conceptFeature{
+    padding:42px 16px!important;
+    row-gap:30px!important;
+  }
+  .publicPage.conceptPage .projectPoster{
+    width:min(100%,260px)!important;
+    justify-self:center!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy{padding-top:4px!important}
+  .publicPage.conceptPage .conceptFeatureCopy>span{margin-bottom:18px!important}
+  .publicPage.conceptPage .conceptFeatureCopy>h2{
+    margin-bottom:26px!important;
+    font-size:clamp(38px,10.4vw,46px)!important;
+    line-height:1.04!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy p{
+    --curl-w:78px;
+    --curl-h:46px;
+    padding:22px!important;
+    padding-bottom:calc(var(--curl-h) + 16px)!important;
+    margin-bottom:22px!important;
+    font-size:15px!important;
+    line-height:1.75!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy strong{margin-top:8px!important}
+
+  .publicPage.conceptPage .conceptManifesto{
+    padding:7px!important;
+    gap:7px!important;
+  }
+  .publicPage.conceptPage .manifestoToggle{
+    min-height:104px!important;
+    padding:15px 52px 15px 16px!important;
+  }
+  .publicPage.conceptPage .manifestoCode{
+    margin-bottom:7px!important;
+    font-size:10px!important;
+  }
+  .publicPage.conceptPage .manifestoToggle h2{
+    font-size:clamp(24px,6.8vw,29px)!important;
+    line-height:1.08!important;
+    letter-spacing:-.02em!important;
+  }
+  .publicPage.conceptPage.manifesto-ready .manifestoToggle i{
+    right:7px!important;
+    width:40px!important;
+    height:40px!important;
+  }
+  .publicPage.conceptPage .manifestoToggle i::before,
+  .publicPage.conceptPage .manifestoToggle i::after{
+    left:11px!important;
+    top:19px!important;
+    width:16px!important;
+  }
+  .publicPage.conceptPage.manifesto-ready .manifestoBody{
+    transition:grid-template-rows .28s cubic-bezier(.2,.72,.25,1),opacity .2s ease!important;
+  }
+  .publicPage.conceptPage .manifestoBody p{
+    padding:0 16px 22px!important;
+    font-size:15.5px!important;
+    line-height:1.68!important;
+  }
+
+  .publicPage.conceptPage .conceptQuestions{
+    margin:42px 0!important;
+    padding:40px 18px!important;
+  }
+  .publicPage.conceptPage .conceptQuestions>span{margin-bottom:18px!important}
+  .publicPage.conceptPage .conceptQuestions p{
+    font-size:clamp(30px,8.4vw,42px)!important;
+    line-height:1.1!important;
+  }
+  .publicPage.conceptPage .conceptRecruitment{
+    padding:42px 18px!important;
+    row-gap:18px!important;
+    margin-bottom:28px!important;
+  }
+  .publicPage.conceptPage .conceptRecruitment h2{
+    font-size:clamp(42px,11vw,56px)!important;
+    line-height:.98!important;
+  }
+  .publicPage.conceptPage .peopleCta{
+    min-height:58px!important;
+    margin-top:34px!important;
+    margin-bottom:40px!important;
+    padding-top:15px!important;
+    padding-bottom:15px!important;
+  }
+}
+@media(max-width:420px){
+  .publicPage.conceptPage .fullPublicMark{display:none!important}
+  .publicPage.conceptPage .compactPublicMark{
+    display:inline!important;
+    font-weight:800;
+    letter-spacing:-.02em;
+    white-space:nowrap;
+  }
+  .publicPage.conceptPage .top>.mark{font-size:11px!important}
+  .publicPage.conceptPage .top>.languagePicker{
+    width:110px!important;
+    min-width:110px!important;
+  }
+  .publicPage.conceptPage .languagePicker>span{display:none!important}
+  .publicPage.conceptPage .languagePicker{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(hover:hover) and (pointer:fine){
+  .publicPage.conceptPage .conceptFeatureCopy p:hover::after{
+    transform:skewX(-14deg) translate3d(-2px,-2px,0) rotate(-1deg)!important;
+  }
+}
+@supports(text-wrap:balance){
+  .publicPage.conceptPage :where(.conceptHero h1,.conceptFeatureCopy h2,.manifestoToggle h2,.conceptQuestions p,.conceptRecruitment h2){text-wrap:balance}
+}
+@media(prefers-reduced-motion:reduce){
+  .publicPage.conceptPage .conceptLabelBlock,
+  .publicPage.conceptPage .conceptHeadlineLine,
+  .publicPage.conceptPage .conceptSubtitle,
+  .publicPage.conceptPage .projectPoster,
+  .publicPage.conceptPage .conceptFeatureCopy>*,
+  .publicPage.conceptPage .conceptQuestions p,
+  .publicPage.conceptPage .conceptRecruitment>*,
+  .publicPage.conceptPage .conceptFeatureCopy p::after{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+  .publicPage.conceptPage .conceptFeatureCopy p::after{transform:skewX(-14deg)!important}
+}
