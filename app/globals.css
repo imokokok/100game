@@ -2840,7 +2840,18 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     min-width:106px!important;
   }
   .publicPage.conceptPage .conceptHero{padding-top:46px!important}
-  .publicPage.conceptPage .conceptMetrics{margin-top:48px!important}
+  .publicPage.conceptPage .conceptMetrics{
+    margin-top:44px!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:4px!important;
+  }
+  .publicPage.conceptPage .conceptMetrics>span{
+    min-width:0!important;
+    min-height:86px!important;
+    padding:14px 10px!important;
+  }
+  .publicPage.conceptPage .conceptMetrics>span b{font-size:clamp(30px,9vw,42px)!important;line-height:1!important}
+  .publicPage.conceptPage .conceptMetrics>span small{font-size:10px!important;line-height:1.25!important;overflow-wrap:anywhere}
   .publicPage.conceptPage .conceptFeature{padding:54px 20px!important;row-gap:42px!important}
   .publicPage.conceptPage .projectPoster{max-width:none!important}
   .publicPage.conceptPage .projectPoster a{aspect-ratio:4 / 5;overflow:hidden;background:#111}
@@ -2964,6 +2975,8 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage.conceptPage .manifestoToggle i{right:8px}
   .publicPage.conceptPage .manifestoBody p{padding-left:16px!important;padding-right:16px!important}
   .publicPage.conceptPage .conceptFeatureCopy p{--curl-w:46px;--curl-h:32px}
+  .publicPage.conceptPage .conceptMetrics>span{padding-left:7px!important;padding-right:7px!important}
+  .publicPage.conceptPage .conceptMetrics>span small{font-size:9px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
