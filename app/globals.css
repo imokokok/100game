@@ -2083,3 +2083,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 @media(max-width:800px){.trafficPanel>header{align-items:flex-start;flex-direction:column}.trafficPanel>div{grid-template-columns:1fr 1fr}.trafficPanel article b{font-size:24px}}
 .rankingSection{margin-top:38px}.rankingSection>header{display:flex;justify-content:space-between;align-items:end;gap:18px}.rankingSection h2{margin:6px 0 0;font-size:30px}.rankingSection>header small{color:#666d76}.contributionTable .tr{grid-template-columns:minmax(190px,1.7fr) .65fr .75fr .75fr minmax(160px,1.2fr);align-items:center}.contributionTable .tr>span{min-width:0}.rankingName{display:flex;align-items:center;gap:14px}.rankingName>b{font:700 11px monospace;color:#9f211a}.contributionTable strong{font-size:20px}.scorePanel input[type="number"]{max-width:130px}
 @media(max-width:800px){.rankingSection>header{align-items:flex-start;flex-direction:column}.contributionTable .tr{grid-template-columns:minmax(140px,1.5fr) .6fr .7fr}.contributionTable .tr>span:nth-child(3){display:block}.contributionTable .tr>span:nth-child(4),.contributionTable .tr>span:nth-child(5){display:none}.rankingName{gap:9px}}
+
+
+/* Mobile stability: reduce GPU-heavy effects and keep touch targets responsive in older WebViews. */
+@media (max-width:860px), (hover:none) and (pointer:coarse){
+ html{scroll-behavior:auto!important;-webkit-text-size-adjust:100%}
+ body{min-height:100%;overflow-x:hidden!important;overscroll-behavior-y:auto}
+ *,*::before,*::after{animation:none!important;transition-duration:.01ms!important;transition-delay:0ms!important}
+ .interactionLayer,.portfolioPointer{display:none!important}
+ .surveyHub>header,.survey-shell .survey-head,.surveyCatalogue>a,.survey-shell .survey-intro,.survey-shell .question-list,.survey-shell .review-panel,.survey-shell .survey-footer,.publicPage .top,.worktop,.gateInvite>section,.entryGate>section{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;filter:none!important}
+ a,button,input,textarea,select,label,summary{touch-action:manipulation}
+ .landing,.entryGate,.publicPage,.surveyHub,.survey-shell,.workspace{min-height:100vh!important;min-height:100svh!important;min-height:100dvh!important}
+}
