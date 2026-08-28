@@ -5837,3 +5837,31 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     inset -4px -4px 9px rgba(255,255,255,.12),
     inset 0 0 0 1px rgba(255,255,255,.08)!important;
 }
+
+/* The back control belongs to the same tactile header system on every
+   public route; older editorial overrides must not restore a square border. */
+.publicPage.conceptPage .top>.publicBack,
+.publicPage.peoplePage .top>.publicBack{
+  min-height:44px!important;
+  padding:10px 14px!important;
+  border:0!important;
+  border-radius:var(--ui-radius-control)!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-raised-soft)!important;
+  transform:none!important;
+}
+.publicPage.conceptPage .top>.publicBack:hover,
+.publicPage.peoplePage .top>.publicBack:hover,
+.publicPage.conceptPage .top>.publicBack:focus-visible,
+.publicPage.peoplePage .top>.publicBack:focus-visible{
+  color:var(--public-red)!important;
+  box-shadow:0 5px 12px rgba(70,54,36,.12)!important;
+  transform:none!important;
+}
+.publicPage.conceptPage .top>.publicBack:active,
+.publicPage.peoplePage .top>.publicBack:active{
+  color:var(--public-red)!important;
+  box-shadow:var(--press-paper)!important;
+  transform:translate(1px,1px) scale(.992)!important;
+}
