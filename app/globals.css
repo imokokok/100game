@@ -5015,13 +5015,38 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   transform:none!important;
   transition:box-shadow .18s ease,transform .18s ease,filter .18s ease!important;
 }
-.publicPage.conceptPage .conceptMetrics>button:nth-child(1){color:var(--ed-ink)!important;background:var(--public-glass)!important;box-shadow:var(--public-glass-inset)!important}
-.publicPage.conceptPage .conceptMetrics>button:nth-child(2){color:var(--ed-sheet)!important;background:var(--ed-ink)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)!important}
-.publicPage.conceptPage .conceptMetrics>button:nth-child(3){color:var(--ed-sheet)!important;background:var(--ed-red)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.10)!important}
-.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(1){box-shadow:inset 5px 5px 12px rgba(70,58,45,.20),inset -5px -5px 12px rgba(255,255,255,.78)!important}
-.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(2){box-shadow:inset 6px 6px 14px rgba(0,0,0,.58),inset -5px -5px 12px rgba(255,255,255,.08)!important}
-.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(3){box-shadow:inset 6px 6px 14px rgba(107,16,12,.46),inset -5px -5px 12px rgba(255,255,255,.14)!important}
-.publicPage.conceptPage .conceptMetrics>button.is-active{transform:translateY(1px) scale(.992)!important}
+.publicPage.conceptPage .conceptMetrics>button:nth-child(1){
+  color:var(--ed-ink)!important;
+  background:var(--public-glass)!important;
+  box-shadow:7px 7px 15px rgba(117,101,82,.23),-7px -7px 15px rgba(255,255,255,.82),inset 0 0 0 1px rgba(255,255,255,.50)!important
+}
+.publicPage.conceptPage .conceptMetrics>button:nth-child(2){
+  color:var(--ed-sheet)!important;
+  background:var(--ed-ink)!important;
+  box-shadow:7px 7px 15px rgba(117,101,82,.25),-7px -7px 15px rgba(255,255,255,.70),inset 0 0 0 1px rgba(255,255,255,.08)!important
+}
+.publicPage.conceptPage .conceptMetrics>button:nth-child(3){
+  color:var(--ed-sheet)!important;
+  background:var(--ed-red)!important;
+  box-shadow:7px 7px 15px rgba(117,101,82,.25),-7px -7px 15px rgba(255,255,255,.70),inset 0 0 0 1px rgba(255,255,255,.10)!important
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(1),
+.publicPage.conceptPage .conceptMetrics>button:nth-child(1):active{
+  box-shadow:inset 10px 10px 20px rgba(89,73,56,.28),inset -9px -9px 19px rgba(255,255,255,.88),inset 0 0 0 1px rgba(112,91,68,.12)!important
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(2),
+.publicPage.conceptPage .conceptMetrics>button:nth-child(2):active{
+  box-shadow:inset 11px 11px 22px rgba(0,0,0,.72),inset -9px -9px 19px rgba(255,255,255,.11),inset 0 0 0 1px rgba(255,255,255,.08)!important
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(3),
+.publicPage.conceptPage .conceptMetrics>button:nth-child(3):active{
+  box-shadow:inset 11px 11px 22px rgba(99,12,8,.60),inset -9px -9px 19px rgba(255,255,255,.20),inset 0 0 0 1px rgba(255,255,255,.10)!important
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active,
+.publicPage.conceptPage .conceptMetrics>button:active{
+  transform:translate(2px,2px) scale(.982)!important;
+  filter:saturate(.96) brightness(.96)!important
+}
 .publicPage.conceptPage .conceptMetrics>button b{font-size:clamp(58px,6.4vw,94px)!important;line-height:.88!important}
 .publicPage.conceptPage .conceptMetrics>button small{margin-top:14px!important;font-size:10px!important;line-height:1.35!important;letter-spacing:.08em!important}
 .publicPage.conceptPage .conceptMetrics>button>span{margin-top:7px;font:700 9px/1.35 Arial,"Noto Sans SC",sans-serif;letter-spacing:.06em;opacity:.68}
