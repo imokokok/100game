@@ -5787,3 +5787,24 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   }
   .entryGate:not(.inviteGate) .publicBrandTitle img{max-height:none}
 }
+
+/* Keep the public collaborator CTA crisp: the former white neumorphic
+   highlight produced a triangular flare at its rounded corner. */
+.publicPage.conceptPage .peopleCta{
+  isolation:isolate;
+  overflow:hidden!important;
+  box-shadow:0 7px 16px rgba(70,54,36,.13)!important;
+}
+.publicPage.conceptPage .peopleCta::before,
+.publicPage.conceptPage .peopleCta::after{
+  content:none!important;
+  display:none!important;
+}
+.publicPage.conceptPage .peopleCta:hover,
+.publicPage.conceptPage .peopleCta:focus-visible{
+  box-shadow:0 9px 20px rgba(70,54,36,.16)!important;
+}
+.publicPage.conceptPage .peopleCta:active{
+  box-shadow:var(--press-paper)!important;
+  transform:translate(1px,1px) scale(.992)!important;
+}
