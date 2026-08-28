@@ -6009,3 +6009,191 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     transition:none!important;
   }
 }
+
+/* Full-screen project opening. The existing title artwork is never redrawn:
+   five clipped copies assemble it, then the original raster takes over. */
+.entryGate.introChecking{opacity:1}
+.openingSequence{
+  position:fixed;
+  inset:0;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index:1200;
+  min-height:100vh;
+  min-height:100svh;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+  padding:clamp(24px,5vw,72px);
+  background:#eee7dc;
+  color:#333;
+  isolation:isolate;
+  touch-action:manipulation;
+}
+.openingPaper{
+  position:absolute;
+  inset:0;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  z-index:-3;
+  background:
+    repeating-linear-gradient(0deg,rgba(55,47,39,.018) 0 1px,transparent 1px 5px),
+    linear-gradient(145deg,#f3ede3 0%,#e9e1d5 100%);
+}
+.openingPaper::before,.openingPaper::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  opacity:0;
+  will-change:transform,opacity;
+}
+.openingPaper::before{
+  width:min(72vw,920px);
+  height:min(25vw,260px);
+  left:-13vw;
+  top:8vh;
+  background:#c72d24;
+  clip-path:polygon(2% 13%,94% 0,100% 58%,88% 100%,0 87%);
+  animation:openingPaperRed .68s cubic-bezier(.2,.8,.2,1) .05s both!important;
+}
+.openingPaper::after{
+  width:min(64vw,820px);
+  height:18px;
+  right:-9vw;
+  bottom:13vh;
+  background:#171715;
+  transform:rotate(-4deg);
+  animation:openingPaperBlack .64s cubic-bezier(.2,.8,.2,1) .18s both!important;
+}
+.openingArtwork{
+  position:relative;
+  width:92vw;
+  max-width:1120px;
+  width:min(92vw,calc(80vh * 1.5),1120px);
+  width:min(92vw,calc(80svh * 1.5),1120px);
+  margin:auto;
+  transform-origin:50% 52%;
+  animation:openingArtworkSettle .32s cubic-bezier(.2,.8,.2,1) 1.08s both!important;
+}
+.openingArtworkBase{
+  display:block;
+  width:100%;
+  height:auto;
+  opacity:0;
+  animation:openingOriginalIn .1s linear 1.04s forwards!important;
+}
+.openingArtworkBase img{display:block;width:100%;height:auto}
+.openingFragment{
+  display:none;
+  position:absolute;
+  inset:0;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  opacity:0;
+  transform:translate3d(var(--opening-x,0),var(--opening-y,0),0) rotate(var(--opening-rotate,0deg)) scale(1.045);
+  transform-origin:50% 50%;
+  will-change:transform,opacity,clip-path;
+  animation:openingPaste .28s cubic-bezier(.16,.84,.28,1.2) var(--opening-delay,0s) both!important;
+}
+@supports ((clip-path:polygon(0 0,100% 0,100% 100%,0 100%)) or (-webkit-clip-path:polygon(0 0,100% 0,100% 100%,0 100%))){
+  .openingFragment{display:block}
+}
+.openingFragment picture,.openingFragment img{display:block;width:100%;height:auto}
+.openingFragment-what{
+  --opening-delay:.06s;
+  --opening-x:-4.5%;
+  --opening-y:-3%;
+  --opening-rotate:-2.2deg;
+  animation:openingRevealWhat .34s steps(4,end) .06s both!important;
+}
+.openingFragment-hundred{
+  --opening-delay:.32s;
+  --opening-x:-2.5%;
+  --opening-y:5%;
+  --opening-rotate:1.4deg;
+  -webkit-clip-path:polygon(7% 21%,55% 21%,55% 69%,7% 69%);
+  clip-path:polygon(7% 21%,55% 21%,55% 69%,7% 69%);
+}
+.openingFragment-people{
+  --opening-x:5%;
+  --opening-y:-1%;
+  --opening-rotate:1.6deg;
+  animation:openingRevealPeople .4s steps(6,end) .49s both!important;
+}
+.openingFragment-do{
+  --opening-delay:.72s;
+  --opening-x:-4%;
+  --opening-y:4%;
+  --opening-rotate:-2deg;
+  -webkit-clip-path:polygon(3% 60%,48% 60%,48% 91%,3% 91%);
+  clip-path:polygon(3% 60%,48% 60%,48% 91%,3% 91%);
+}
+.openingFragment-game{
+  --opening-delay:.88s;
+  --opening-x:5%;
+  --opening-y:5%;
+  --opening-rotate:1.8deg;
+  -webkit-clip-path:polygon(41% 54%,100% 54%,100% 100%,41% 100%);
+  clip-path:polygon(41% 54%,100% 54%,100% 100%,41% 100%);
+}
+.openingSkip{
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  right:max(18px,env(safe-area-inset-right));
+  bottom:max(18px,env(safe-area-inset-bottom));
+  min-height:44px;
+  padding:9px 16px;
+  border:0;
+  border-radius:999px;
+  background:#eee7dc;
+  color:#4e4942;
+  font:600 12px/1 "Avenir Next","PingFang SC","Microsoft YaHei",sans-serif;
+  letter-spacing:.035em;
+  box-shadow:4px 4px 9px rgba(123,108,88,.22),-4px -4px 9px rgba(255,255,255,.78);
+  cursor:pointer;
+  transition:box-shadow .14s ease,transform .14s ease;
+}
+.openingSkip:active{box-shadow:inset 3px 3px 6px rgba(123,108,88,.24),inset -3px -3px 6px rgba(255,255,255,.72);transform:translateY(1px)}
+.openingSequence.isLeaving{
+  pointer-events:none;
+  animation:openingExit .52s cubic-bezier(.76,0,.24,1) forwards!important;
+}
+@keyframes openingPaste{
+  0%{opacity:0;transform:translate3d(var(--opening-x,0),var(--opening-y,0),0) rotate(var(--opening-rotate,0deg)) scale(1.045)}
+  62%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(.985)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
+}
+@keyframes openingRevealWhat{
+  0%{opacity:0;-webkit-clip-path:polygon(4% 1%,4% 1%,4% 36%,4% 36%);clip-path:polygon(4% 1%,4% 1%,4% 36%,4% 36%);transform:translate3d(-4.5%,-3%,0) rotate(-2.2deg) scale(1.045)}
+  100%{opacity:1;-webkit-clip-path:polygon(4% 1%,50% 1%,50% 36%,4% 36%);clip-path:polygon(4% 1%,50% 1%,50% 36%,4% 36%);transform:none}
+}
+@keyframes openingRevealPeople{
+  0%{opacity:0;-webkit-clip-path:polygon(50% 22%,50% 22%,50% 64%,50% 64%);clip-path:polygon(50% 22%,50% 22%,50% 64%,50% 64%);transform:translate3d(5%,-1%,0) rotate(1.6deg) scale(1.045)}
+  100%{opacity:1;-webkit-clip-path:polygon(50% 22%,99% 22%,99% 64%,50% 64%);clip-path:polygon(50% 22%,99% 22%,99% 64%,50% 64%);transform:none}
+}
+@keyframes openingOriginalIn{to{opacity:1}}
+@keyframes openingArtworkSettle{0%{transform:scale(.992)}52%{transform:scale(1.008)}100%{transform:scale(1)}}
+@keyframes openingPaperRed{0%{opacity:0;transform:translate3d(-22%,0,0) rotate(-2deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-2deg)}}
+@keyframes openingPaperBlack{0%{opacity:0;transform:translate3d(24%,0,0) rotate(-4deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-4deg)}}
+@keyframes openingExit{0%{opacity:1;-webkit-clip-path:inset(0 0 0 0);clip-path:inset(0 0 0 0);transform:translate3d(0,0,0)}100%{opacity:0;-webkit-clip-path:inset(0 0 100% 0);clip-path:inset(0 0 100% 0);transform:translate3d(0,-2vh,0)}}
+
+@media(max-width:700px){
+  .openingSequence{padding:20px 12px 64px}
+  .openingArtwork{width:min(96vw,720px)}
+  .openingPaper::before{top:14vh;width:88vw;height:34vw;left:-23vw}
+  .openingPaper::after{bottom:18vh;width:78vw;right:-18vw;height:12px}
+  .openingSkip{font-size:11px;min-height:44px;padding-inline:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  .openingPaper::before,.openingPaper::after,.openingFragment{animation:none!important;opacity:0!important}
+  .openingArtwork{animation:none!important;opacity:1!important}
+  .openingArtworkBase{animation:none!important;opacity:1!important}
+  .openingSequence.isLeaving{animation:none!important;opacity:0!important}
+}
