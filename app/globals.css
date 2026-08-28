@@ -5004,3 +5004,199 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .publicPage.conceptPage .conceptMetrics>button>span{font-size:7px}
 }
 @media(prefers-reduced-motion:reduce){.publicPage.conceptPage .metricDetail{animation:none}}
+
+/* Unified tactile interaction system.
+   Every real control follows the same raised -> recessed language as the
+   invitation gate, while retaining its own paper, red, or black surface. */
+:root{
+  --press-paper:inset 4px 4px 8px #c4bdb3,inset -4px -4px 8px rgba(255,255,255,.96);
+  --press-paper-soft:inset 2px 2px 4px #c4bdb3,inset -2px -2px 4px rgba(255,255,255,.96);
+  --press-red:inset 5px 5px 10px rgba(92,13,9,.58),inset -4px -4px 9px rgba(255,255,255,.17);
+  --press-dark:inset 5px 5px 10px rgba(0,0,0,.74),inset -4px -4px 9px rgba(255,255,255,.10);
+  --press-speed:140ms;
+}
+
+/* Keep click feedback quick and identical on mouse, keyboard and touch. */
+:where(
+  .entryChoices .entryChoice,
+  .entryGate .entryTop>a,
+  .entryGate .entryTop>button,
+  .gateInvite .primary,
+  .publicPage .publicBack,
+  .publicPage .top nav a,
+  .publicPage .languagePicker,
+  .publicPage .peopleCta,
+  .publicPage .manifestoToggle,
+  .publicPage .metricDetail>a,
+  .publicPage .projectPoster a,
+  .surveyHub>header>button,
+  .surveyHub .surveyCatalogue>a,
+  .surveyHub>footer a,
+  .survey-shell .survey-title,
+  .survey-shell .lang-switch,
+  .survey-shell .section-progress button,
+  .survey-shell .option,
+  .survey-shell .button,
+  .survey-shell .survey-footer a,
+  .app .brand,
+  .app aside nav button,
+  .app .workspaceHomeButton,
+  .app .languagePicker,
+  .app .driveFolder,
+  .app .driveRecent>button,
+  .app .weekFolder,
+  .app .weekNoticeCard,
+  .app .categoryFolder,
+  .app .libraryBack,
+  .app .libraryBreadcrumb button,
+  .app .workspaceCategory,
+  .app .photoJournalLink,
+  .app .creatorTaskAction .primary,
+  .app .groupTabs button,
+  .app .journalFilters button,
+  .app .primary,
+  .app .dark,
+  .app .owner,
+  .app .tokenReveal button,
+  .app .miniList button,
+  .app .announcementBoard summary,
+  .lead-login button,
+  .lead-login>a,
+  .lead-shell button,
+  .lead-shell .response-card
+){
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transition:box-shadow var(--press-speed) ease,transform var(--press-speed) ease,filter var(--press-speed) ease,color var(--press-speed) ease!important;
+}
+
+/* Light / warm surfaces use the invitation form's exact inset recipe. */
+:where(
+  .entryGate .entryTop>a,
+  .entryGate .entryTop>button,
+  .publicPage .publicBack,
+  .publicPage .top nav a,
+  .publicPage .languagePicker,
+  .publicPage .peopleCta,
+  .publicPage .manifestoToggle,
+  .publicPage .metricDetail>a,
+  .publicPage .projectPoster a,
+  .surveyHub>header>button,
+  .surveyHub .surveyCatalogue>a,
+  .surveyHub>footer a,
+  .survey-shell .survey-title,
+  .survey-shell .lang-switch,
+  .survey-shell .section-progress button,
+  .survey-shell .option,
+  .survey-shell .button,
+  .survey-shell .survey-footer a,
+  .app .workspaceHomeButton,
+  .app .languagePicker,
+  .app .driveFolder,
+  .app .driveRecent>button,
+  .app .weekFolder,
+  .app .weekNoticeCard,
+  .app .categoryFolder,
+  .app .libraryBack,
+  .app .libraryBreadcrumb button,
+  .app .workspaceCategory,
+  .app .photoJournalLink,
+  .app .creatorTaskAction .primary,
+  .app .groupTabs button,
+  .app .journalFilters button,
+  .app .owner,
+  .app .tokenReveal button,
+  .app .miniList button,
+  .app .announcementBoard summary,
+  .lead-login>a,
+  .lead-shell .response-card
+):active{
+  box-shadow:var(--press-paper)!important;
+  transform:translate(1px,1px) scale(.992)!important;
+  filter:none!important;
+}
+
+/* The two entrance cards keep their palette and gain the same depth. */
+.entryChoices .entryChoice:first-child:active,
+.gateInvite .primary:active,
+.app .primary:active,
+.lead-login .primary:active{
+  box-shadow:var(--press-red)!important;
+  transform:translate(1px,1px) scale(.992)!important;
+  filter:none!important;
+}
+.entryChoices .entryChoice:nth-child(2):active,
+.app .dark:active,
+.lead-shell .dark:active,
+.lead-shell .owner:active{
+  box-shadow:var(--press-dark)!important;
+  transform:translate(1px,1px) scale(.992)!important;
+  filter:none!important;
+}
+
+/* Sidebar controls sit on black; their recess must read as black, not beige. */
+.app .brand:active,
+.app aside nav button:active{
+  box-shadow:var(--press-dark)!important;
+  transform:translate(1px,1px) scale(.992)!important;
+}
+
+/* Selected/open states remain recessed, so state never relies on colour alone. */
+.app aside nav button.active,
+.app .groupTabs button.active,
+.app .journalFilters button.active,
+.survey-shell .section-progress button.active,
+.survey-shell .option.selected,
+.survey-shell .option[aria-pressed="true"],
+.publicPage .top nav a.active,
+.publicPage .conceptManifesto article.is-open .manifestoToggle,
+.app .announcementBoard details[open]>summary{
+  box-shadow:var(--press-paper)!important;
+  transform:none!important;
+}
+.app aside nav button.active{box-shadow:var(--press-dark)!important}
+
+/* Text fields use the invitation gate's shallow inset when engaged. */
+:where(
+  .gateInvite input,
+  .app input,
+  .app textarea,
+  .app select,
+  .survey-shell input,
+  .survey-shell textarea,
+  .survey-shell select,
+  .lead-login input,
+  .lead-shell input,
+  .lead-shell textarea,
+  .lead-shell select
+):focus{
+  box-shadow:var(--press-paper-soft)!important;
+  outline:2px solid rgba(199,45,36,.36)!important;
+  outline-offset:2px!important;
+}
+
+/* Keyboard users receive the same clear affordance without a permanent glow. */
+:where(
+  .entryGate,
+  .publicPage,
+  .surveyHub,
+  .survey-shell,
+  .app,
+  .lead-login,
+  .lead-shell
+) :where(button,a[href],summary,select,input,textarea):focus-visible{
+  outline:2px solid #c72d24!important;
+  outline-offset:3px!important;
+}
+
+@media(max-width:700px){
+  :root{
+    --press-paper:inset 3px 3px 6px #c4bdb3,inset -3px -3px 6px rgba(255,255,255,.96);
+    --press-red:inset 4px 4px 8px rgba(92,13,9,.58),inset -3px -3px 7px rgba(255,255,255,.17);
+    --press-dark:inset 4px 4px 8px rgba(0,0,0,.72),inset -3px -3px 7px rgba(255,255,255,.10);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  :where(.entryGate,.publicPage,.surveyHub,.survey-shell,.app,.lead-login,.lead-shell) :where(button,a[href],summary){transition:none!important}
+}
