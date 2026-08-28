@@ -5719,3 +5719,31 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
     --ui-radius-panel:18px;
   }
 }
+/* Public title artwork: one consistent project-level title across public pages. */
+.publicBrandTitle{
+  width:min(100%,980px)!important;
+  max-width:none!important;
+  margin:clamp(18px,3vw,34px) 0 clamp(34px,5vw,64px)!important;
+  padding:0!important;
+  font-size:0!important;
+  line-height:0!important;
+}
+.publicBrandTitle img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:min(68vh,680px);
+  object-fit:contain;
+  object-position:left center;
+}
+.entryGate:not(.inviteGate) .publicBrandTitle{width:min(100%,920px)!important;margin-bottom:clamp(34px,5vw,58px)!important}
+.conceptPage .conceptHero>.publicBrandTitle{width:min(100%,1080px)!important;margin-top:0!important}
+.peoplePage .creditsHead .publicBrandTitle{width:min(100%,760px)!important;margin-bottom:30px!important}
+@media(max-width:700px){
+  .publicBrandTitle,.entryGate:not(.inviteGate) .publicBrandTitle,.conceptPage .conceptHero>.publicBrandTitle,.peoplePage .creditsHead .publicBrandTitle{
+    width:100%!important;
+    margin-top:14px!important;
+    margin-bottom:30px!important;
+  }
+  .publicBrandTitle img{max-height:48vh;object-position:center}
+}
