@@ -5200,3 +5200,421 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 @media(prefers-reduced-motion:reduce){
   :where(.entryGate,.publicPage,.surveyHub,.survey-shell,.app,.lead-login,.lead-shell) :where(button,a[href],summary){transition:none!important}
 }
+
+/* Public-access visual system — the invitation gate is the single source of
+   truth for material, lighting, radii and depth. Editorial red/black remain
+   accents; all reading surfaces belong to the same warm tactile interface. */
+.publicPage{
+  --public-surface:#e8e2d8;
+  --public-soft:#f5f1ea;
+  --public-shadow-dark:#c4bdb3;
+  --public-shadow-light:#ffffff;
+  --public-red:#c72d24;
+  --public-ink:#333333;
+  --public-muted:#626975;
+  --public-raised:8px 8px 16px var(--public-shadow-dark),-8px -8px 16px var(--public-shadow-light);
+  --public-raised-soft:4px 4px 8px var(--public-shadow-dark),-4px -4px 8px var(--public-shadow-light);
+  --public-inset:inset 6px 6px 12px var(--public-shadow-dark),inset -6px -6px 12px var(--public-shadow-light);
+  --public-inset-soft:inset 3px 3px 6px var(--public-shadow-dark),inset -3px -3px 6px var(--public-shadow-light);
+  min-height:100vh;
+  overflow-x:clip;
+  background:var(--public-surface)!important;
+  background-image:none!important;
+  color:var(--public-ink)!important;
+}
+.publicPage,.publicPage button,.publicPage input,.publicPage select,.publicPage textarea{
+  font-family:"Avenir Next","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif!important;
+}
+
+/* One calm header on both public routes. */
+.publicPage .top{
+  position:sticky!important;
+  top:0!important;
+  z-index:20!important;
+  min-height:84px!important;
+  height:auto!important;
+  padding:16px clamp(18px,4vw,58px)!important;
+  border:0!important;
+  background:rgba(232,226,216,.96)!important;
+  box-shadow:4px 4px 8px var(--public-shadow-dark),-4px -4px 8px var(--public-shadow-light)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  backdrop-filter:blur(12px)!important;
+}
+.publicPage .top>.publicBack,
+.publicPage .top>nav a,
+.publicPage .languagePicker{
+  border:0!important;
+  border-radius:14px!important;
+  background:var(--public-surface)!important;
+  color:#4e5560!important;
+  box-shadow:var(--public-raised-soft)!important;
+}
+.publicPage .top>.publicBack{padding:12px 15px!important}
+.publicPage .top>nav{display:flex!important;gap:10px!important}
+.publicPage .top>nav a{min-height:44px!important;padding:10px 17px!important}
+.publicPage .top>nav a.active{
+  color:#9f211a!important;
+  box-shadow:var(--public-inset-soft)!important;
+}
+.publicPage .languagePicker select{
+  border:0!important;
+  background:transparent!important;
+  color:#454b55!important;
+}
+.publicPage .mark,.publicPage .mark .wordmark{color:var(--public-red)!important}
+
+/* Concept route: generous rhythm and tactile reading planes. */
+.publicPage.conceptPage .conceptStandalone{
+  width:100%!important;
+  max-width:none!important;
+  padding:clamp(58px,7vw,104px) clamp(18px,6vw,92px) clamp(82px,10vw,144px)!important;
+  background:var(--public-surface)!important;
+  background-image:none!important;
+}
+.publicPage.conceptPage .conceptHero,
+.publicPage.conceptPage .conceptManifesto,
+.publicPage.conceptPage .conceptRecruitment,
+.publicPage.conceptPage .peopleCta,
+.publicPage.conceptPage .projectPosterBottom{
+  width:min(1180px,100%)!important;
+  max-width:1180px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.publicPage.conceptPage .conceptHero{display:block!important}
+.publicPage.conceptPage .conceptLabelBlock{
+  width:min(760px,100%)!important;
+  min-height:0!important;
+  margin:0 0 clamp(34px,5vw,64px)!important;
+  padding:clamp(18px,2.4vw,28px)!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:18px!important;
+  clip-path:none!important;
+  background:var(--public-surface)!important;
+  box-shadow:var(--public-inset-soft)!important;
+  filter:none!important;
+}
+.publicPage.conceptPage .conceptLabelBlock::before,
+.publicPage.conceptPage .conceptLabelBlock::after{content:none!important;display:none!important}
+.publicPage.conceptPage .conceptWordInk{
+  color:var(--public-red)!important;
+  text-shadow:none!important;
+  -webkit-text-stroke:0!important;
+}
+.publicPage.conceptPage .conceptHero h1{
+  max-width:920px!important;
+  margin:0!important;
+  color:var(--public-ink)!important;
+}
+.publicPage.conceptPage .conceptHeadlineLine.accent{color:var(--public-red)!important}
+.publicPage.conceptPage .conceptSubtitle{
+  max-width:760px!important;
+  margin:clamp(24px,3vw,38px) 0 0!important;
+  color:var(--public-muted)!important;
+  line-height:1.75!important;
+}
+.publicPage.conceptPage .conceptQuestions{
+  width:min(980px,100%)!important;
+  max-width:980px!important;
+  margin:clamp(46px,7vw,82px) 0!important;
+  padding:clamp(28px,4vw,48px)!important;
+  border:0!important;
+  border-radius:20px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-inset-soft)!important;
+}
+.publicPage.conceptPage .conceptQuestions>span{color:var(--public-red)!important}
+.publicPage.conceptPage .conceptQuestions p,
+.publicPage.conceptPage .conceptQuestions p:nth-of-type(n){
+  width:auto!important;
+  max-width:20ch!important;
+  margin-left:0!important;
+  color:var(--public-ink)!important;
+  transform:none!important;
+}
+
+/* The three project figures keep their identity colours but share depth. */
+.publicPage.conceptPage .conceptMetrics{
+  width:min(980px,100%)!important;
+  margin:0!important;
+  gap:14px!important;
+}
+.publicPage.conceptPage .conceptMetrics>button{
+  min-height:148px!important;
+  border-radius:18px!important;
+}
+.publicPage.conceptPage .conceptMetrics>button:nth-child(1){
+  color:var(--public-ink)!important;
+  background:var(--public-soft)!important;
+  box-shadow:var(--public-raised)!important;
+}
+.publicPage.conceptPage .conceptMetrics>button:nth-child(2){
+  color:var(--public-soft)!important;
+  background:#171715!important;
+  box-shadow:8px 8px 16px rgba(96,83,68,.28),-8px -8px 16px var(--public-shadow-light)!important;
+}
+.publicPage.conceptPage .conceptMetrics>button:nth-child(3){
+  color:#fff!important;
+  background:var(--public-red)!important;
+  box-shadow:8px 8px 16px rgba(159,33,26,.28),-8px -8px 16px var(--public-shadow-light)!important;
+}
+.publicPage.conceptPage .metricDetail{
+  width:min(980px,100%)!important;
+  margin:18px 0 0!important;
+  border:0!important;
+  border-radius:18px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-inset-soft)!important;
+}
+
+/* Remove the separate black poster section; retain hierarchy through depth. */
+.publicPage.conceptPage .conceptFeature{
+  width:min(1180px,100%)!important;
+  max-width:1180px!important;
+  margin:clamp(58px,8vw,106px) auto 0!important;
+  padding:clamp(34px,5vw,64px)!important;
+  border:0!important;
+  border-radius:26px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-raised)!important;
+  clip-path:none!important;
+}
+.publicPage.conceptPage .conceptFeature::before,
+.publicPage.conceptPage .conceptFeature::after{content:none!important;display:none!important}
+.publicPage.conceptPage .conceptFeature .conceptFeatureCopy{
+  width:100%!important;
+  max-width:920px!important;
+  margin:0!important;
+  padding:0!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy>span{color:var(--public-red)!important}
+.publicPage.conceptPage .conceptFeatureCopy h2{color:var(--public-ink)!important}
+.publicPage.conceptPage .conceptFeatureCopy p{
+  position:relative!important;
+  overflow:visible!important;
+  margin:clamp(26px,4vw,42px) 0!important;
+  padding:clamp(24px,3vw,34px)!important;
+  border:0!important;
+  border-radius:18px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-muted)!important;
+  box-shadow:var(--public-inset-soft)!important;
+}
+.publicPage.conceptPage .conceptFeatureCopy p::before,
+.publicPage.conceptPage .conceptFeatureCopy p::after{content:none!important;display:none!important}
+.publicPage.conceptPage .conceptFeatureCopy strong{
+  display:inline-flex!important;
+  padding:14px 18px!important;
+  border:0!important;
+  border-radius:14px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-red)!important;
+  box-shadow:var(--public-raised-soft)!important;
+}
+
+/* Manifesto and recruitment become one consistent family of surfaces. */
+.publicPage.conceptPage .conceptManifesto{
+  display:grid!important;
+  gap:20px!important;
+  margin-top:clamp(54px,8vw,104px)!important;
+}
+.publicPage.conceptPage .conceptManifesto article,
+.publicPage.conceptPage .conceptManifesto article:nth-child(n){
+  width:100%!important;
+  margin:0!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:20px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-raised)!important;
+}
+.publicPage.conceptPage .manifestoToggle{
+  min-height:118px!important;
+  padding:clamp(24px,4vw,42px)!important;
+  border:0!important;
+  background:transparent!important;
+  color:var(--public-ink)!important;
+}
+.publicPage.conceptPage .manifestoCode{color:var(--public-red)!important}
+.publicPage.conceptPage .manifestoBody p{
+  padding:0 clamp(24px,4vw,42px) clamp(26px,4vw,42px)!important;
+  color:var(--public-muted)!important;
+}
+.publicPage.conceptPage .conceptManifesto article.is-open{
+  box-shadow:var(--public-inset-soft)!important;
+}
+.publicPage.conceptPage .conceptRecruitment{
+  margin-top:clamp(54px,8vw,96px)!important;
+  padding:clamp(30px,5vw,58px)!important;
+  border:0!important;
+  border-radius:22px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-raised)!important;
+}
+.publicPage.conceptPage .conceptRecruitment :where(h2,p){color:var(--public-ink)!important}
+.publicPage.conceptPage .conceptRecruitment :where(.kicker,strong,b){color:var(--public-red)!important}
+.publicPage.conceptPage .peopleCta{
+  display:flex!important;
+  width:max-content!important;
+  margin-top:34px!important;
+  padding:15px 20px!important;
+  border:0!important;
+  border-radius:14px!important;
+  background:var(--public-surface)!important;
+  color:#9f211a!important;
+  box-shadow:var(--public-raised-soft)!important;
+}
+.publicPage.conceptPage .projectPosterBottom{
+  width:min(520px,100%)!important;
+  margin-top:clamp(68px,9vw,118px)!important;
+  padding:18px!important;
+  border:0!important;
+  border-radius:20px!important;
+  background:var(--public-surface)!important;
+  box-shadow:var(--public-raised)!important;
+}
+.publicPage.conceptPage .projectPosterBottom a{
+  border:0!important;
+  border-radius:12px!important;
+  background:#171715!important;
+  box-shadow:var(--public-inset-soft)!important;
+}
+.publicPage.conceptPage .projectPosterBottom figcaption{color:var(--public-muted)!important}
+
+/* Collaborator route shares the exact same shell and surface rules. */
+.publicPage.peoplePage .publicCredits,
+.publicPage.peoplePage .publicCreditsPending{
+  width:100%!important;
+  min-height:calc(100vh - 84px)!important;
+  padding:clamp(54px,7vw,96px) clamp(18px,6vw,92px)!important;
+  background:var(--public-surface)!important;
+  background-image:none!important;
+  color:var(--public-ink)!important;
+}
+.peoplePage .creditsHead,
+.peoplePage .disciplineTabs,
+.peoplePage .featuredProfileCard,
+.peoplePage .designerGrid,
+.peoplePage .collaboratorPending{
+  width:min(1180px,100%)!important;
+  max-width:1180px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+.peoplePage .creditsHead{border:0!important}
+.peoplePage .creditsHead .kicker,
+.peoplePage .disciplineTabs button{
+  border:0!important;
+  border-radius:14px!important;
+  background:var(--public-surface)!important;
+  color:#59616c!important;
+  box-shadow:var(--public-raised-soft)!important;
+}
+.peoplePage .disciplineTabs{gap:12px!important;border:0!important}
+.peoplePage .disciplineTabs button.active{
+  color:#9f211a!important;
+  box-shadow:var(--public-inset-soft)!important;
+}
+.peoplePage .featuredProfileCard,
+.peoplePage .designerGrid>article,
+.peoplePage .collaboratorPending{
+  border:0!important;
+  border-radius:20px!important;
+  background:var(--public-surface)!important;
+  color:var(--public-ink)!important;
+  box-shadow:var(--public-raised)!important;
+}
+.peoplePage .designerGrid{gap:18px!important;border:0!important}
+.peoplePage .designerGrid>article{margin:0!important}
+.peoplePage .profileIdentity,
+.peoplePage .profileDetails,
+.peoplePage .miniBio{border-color:transparent!important}
+.peoplePage .profileIdentity{background:var(--public-surface)!important;box-shadow:var(--public-inset-soft)!important}
+.peoplePage .profileDetails p,
+.peoplePage .designerGrid small,
+.peoplePage .profileMiniCard p{color:var(--public-muted)!important}
+.peoplePage .divisionTags span,
+.peoplePage .profileMonogram,
+.peoplePage .miniMonogram{
+  border:0!important;
+  background:var(--public-surface)!important;
+  color:#9f211a!important;
+  box-shadow:var(--public-raised-soft)!important;
+}
+.peoplePage .collaboratorPending{padding:clamp(28px,4vw,48px)!important}
+
+.publicPage>.copyright{
+  border:0!important;
+  background:var(--public-soft)!important;
+  color:#5d6470!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7)!important;
+}
+.publicPage>.copyright::before{content:none!important;display:none!important}
+
+@media(max-width:820px){
+  .publicPage .top{min-height:68px!important;padding:11px 12px!important;gap:9px!important}
+  .publicPage .top>.publicBack{padding:10px 11px!important}
+  .publicPage .top>nav{gap:6px!important}
+  .publicPage .top>nav a{min-height:40px!important;padding:8px 11px!important}
+  .publicPage .languagePicker{padding:2px 4px!important}
+  .publicPage.conceptPage .conceptStandalone{padding:38px 16px 86px!important}
+  .publicPage.conceptPage .conceptLabelBlock{padding:16px!important;border-radius:15px!important}
+  .publicPage.conceptPage .conceptQuestions{
+    width:100%!important;
+    margin:36px 0!important;
+    padding:24px 20px!important;
+    border-radius:16px!important;
+  }
+  .publicPage.conceptPage .conceptQuestions p,
+  .publicPage.conceptPage .conceptQuestions p:nth-of-type(n){max-width:15ch!important;margin-top:18px!important}
+  .publicPage.conceptPage .conceptMetrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+  .publicPage.conceptPage .conceptMetrics>button{min-height:108px!important;padding:14px 12px!important;border-radius:14px!important}
+  .publicPage.conceptPage .conceptFeature{margin-top:50px!important;padding:28px 20px!important;border-radius:20px!important}
+  .publicPage.conceptPage .conceptFeatureCopy p{padding:22px!important;border-radius:15px!important}
+  .publicPage.conceptPage .conceptManifesto{
+    width:100%!important;
+    margin:48px auto 0!important;
+    gap:14px!important;
+  }
+  .publicPage.conceptPage .conceptManifesto article,
+  .publicPage.conceptPage .conceptManifesto article:nth-child(n){border-radius:16px!important}
+  .publicPage.conceptPage .manifestoToggle{min-height:92px!important;padding:22px 20px!important}
+  .publicPage.conceptPage .manifestoBody p{padding:0 20px 24px!important}
+  .publicPage.conceptPage .conceptRecruitment{margin-top:48px!important;padding:26px 22px!important;border-radius:18px!important}
+  .publicPage.conceptPage .projectPosterBottom{width:min(78vw,360px)!important;padding:12px!important;border-radius:16px!important}
+  .publicPage.peoplePage .publicCredits,
+  .publicPage.peoplePage .publicCreditsPending{padding:42px 16px 78px!important}
+  .peoplePage .disciplineTabs{gap:8px!important}
+  .peoplePage .featuredProfileCard,
+  .peoplePage .designerGrid>article,
+  .peoplePage .collaboratorPending{border-radius:16px!important}
+}
+
+@media(max-width:560px){
+  .publicPage .top .fullPublicMark{display:none!important}
+  .publicPage .top .compactPublicMark{display:inline!important}
+  .publicPage .top>nav a{font-size:11px!important}
+  .publicPage .languagePicker{max-width:94px!important}
+  .publicPage.conceptPage .conceptQuestions p,
+  .publicPage.conceptPage .conceptQuestions p:nth-of-type(n){font-size:clamp(25px,8vw,36px)!important;line-height:1.2!important}
+}
+
+@media(max-width:360px){
+  .publicPage .top{gap:6px!important}
+  .publicPage .top>.publicBack{padding-inline:8px!important;font-size:12px!important}
+  .publicPage .top>nav a{padding-inline:9px!important}
+  .publicPage .languagePicker{max-width:82px!important}
+  .publicPage.conceptPage .conceptStandalone{padding-left:12px!important;padding-right:12px!important}
+  .publicPage.conceptPage .conceptMetrics{gap:6px!important}
+  .publicPage.conceptPage .conceptMetrics>button{padding:12px 9px!important}
+}
+
+@media(prefers-reduced-transparency:reduce){
+  .publicPage .top{background:var(--public-surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
