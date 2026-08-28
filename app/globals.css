@@ -5747,3 +5747,43 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   }
   .publicBrandTitle img{max-height:48vh;object-position:center}
 }
+
+/* Homepage title stage: quieter scale, warmer material and a restrained red/black echo. */
+.entryGate:not(.inviteGate)>section{
+  align-content:start;
+  padding-top:clamp(42px,7vh,78px);
+  padding-bottom:clamp(64px,8vh,96px);
+}
+.entryGate:not(.inviteGate) .publicBrandTitle{
+  position:relative;
+  isolation:isolate;
+  width:min(100%,760px)!important;
+  margin:0 0 clamp(30px,4vw,46px)!important;
+  padding:clamp(16px,2.6vw,28px)!important;
+  overflow:hidden;
+  border:1px solid rgba(90,75,62,.09);
+  border-radius:var(--ui-radius-panel)!important;
+  background:
+    linear-gradient(90deg,rgba(199,45,36,.065) 0 18%,transparent 18% 82%,rgba(23,23,21,.045) 82%),
+    linear-gradient(145deg,#f7f2e9 0%,#eee7dc 100%);
+  box-shadow:
+    inset 7px 7px 16px rgba(137,119,96,.11),
+    inset -7px -7px 16px rgba(255,255,255,.9);
+}
+.entryGate:not(.inviteGate) .publicBrandTitle img{
+  max-height:none;
+  filter:none;
+}
+@media(max-width:700px){
+  .entryGate:not(.inviteGate)>section{
+    padding-top:30px;
+    padding-bottom:58px;
+  }
+  .entryGate:not(.inviteGate) .publicBrandTitle{
+    width:min(100%,520px)!important;
+    margin:0 auto 28px!important;
+    padding:12px!important;
+    border-radius:18px!important;
+  }
+  .entryGate:not(.inviteGate) .publicBrandTitle img{max-height:none}
+}
