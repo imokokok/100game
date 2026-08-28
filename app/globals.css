@@ -5808,3 +5808,32 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   box-shadow:var(--press-paper)!important;
   transform:translate(1px,1px) scale(.992)!important;
 }
+
+/* Project metrics: a cleaner, shallower press with enough contrast on black. */
+.publicPage.conceptPage .conceptMetrics>button.is-active,
+.publicPage.conceptPage .conceptMetrics>button:active{
+  transform:translate(1px,1px) scale(.995)!important;
+  filter:none!important;
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(1),
+.publicPage.conceptPage .conceptMetrics>button:nth-child(1):active{
+  box-shadow:
+    inset 4px 4px 8px rgba(91,75,57,.14),
+    inset -3px -3px 7px rgba(255,255,255,.64),
+    inset 0 0 0 1px rgba(100,82,62,.08)!important;
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(2),
+.publicPage.conceptPage .conceptMetrics>button:nth-child(2):active{
+  background:linear-gradient(145deg,#0c0c0b 0%,#1f1f1c 100%)!important;
+  box-shadow:
+    inset 5px 5px 10px rgba(0,0,0,.88),
+    inset -4px -4px 9px rgba(255,255,255,.17),
+    inset 0 0 0 1px rgba(255,255,255,.10)!important;
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(3),
+.publicPage.conceptPage .conceptMetrics>button:nth-child(3):active{
+  box-shadow:
+    inset 5px 5px 10px rgba(91,15,10,.30),
+    inset -4px -4px 9px rgba(255,255,255,.12),
+    inset 0 0 0 1px rgba(255,255,255,.08)!important;
+}
