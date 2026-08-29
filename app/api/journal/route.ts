@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isLead, isOwner, participantId, getBlob, putBlob, deleteBlob } from "../_shared";
+import { d1, isLead, participantId, getBlob, putBlob, deleteBlob } from "../_shared";
 
 const imageTypes=new Set(["image/jpeg","image/png","image/webp","image/heic","image/heif"]);
 const stages=new Set(["week-0","week-1","week-2","week-3","week-4"]);
 
-async function canEdit(req:NextRequest){return isOwner(req)||await isLead(req)}
+async function canEdit(req:NextRequest){return isLead(req)}
 function clean(value:FormDataEntryValue|null,max:number){return String(value??"").replace(/[\u0000-\u001F\u007F]/g,"").trim().slice(0,max)}
 function cleanStage(value:FormDataEntryValue|null){const stage=String(value??"");return stages.has(stage)?stage:"week-0"}
 function cleanOccurredAt(value:FormDataEntryValue|null){const parsed=Date.parse(String(value??""));return Number.isFinite(parsed)?parsed:Date.now()}
@@ -35,8 +35,13 @@ export async function POST(req:NextRequest){
   const stage=cleanStage(form.get("stage")),tags=clean(form.get("tags"),300),occurredAt=cleanOccurredAt(form.get("occurredAt"));
   if(!titleZh)return NextResponse.json({error:"Title required"},{status:400});
   const id=crypto.randomUUID(),safe=file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-120)||"image",key=`journal/${id}-${safe}`;
-  await putBlob(key,file,file.type);
-  await d1().prepare("INSERT INTO journal_entries (id, title_zh, title_en, body_zh, body_en, stage, tags, file_key, participant_id, content_type, file_name, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'owner', ?, ?, ?)").bind(id,titleZh,titleEn,bodyZh,bodyEn,stage,tags,key,file.type,file.name.slice(0,240),occurredAt).run();
+  const fileUrl=await putBlob(key,file,file.type);
+  try{
+    await d1().prepare("INSERT INTO journal_entries (id, title_zh, title_en, body_zh, body_en, stage, tags, file_key, participant_id, content_type, file_name, occurred_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'owner', ?, ?, ?)").bind(id,titleZh,titleEn,bodyZh,bodyEn,stage,tags,fileUrl,file.type,file.name.slice(0,240),occurredAt).run();
+  }catch(error){
+    await deleteBlob(fileUrl).catch(()=>undefined);
+    throw error;
+  }
   return NextResponse.json({ok:true,id},{status:201});
 }
 

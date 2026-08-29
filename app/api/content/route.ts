@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isOwner } from "../_shared";
+import { d1, isLead } from "../_shared";
 
 const localeList = ["zh", "en", "ja", "es", "fr", "ar", "hi", "bn", "sw", "ha", "id", "pt"];
 const locales = new Set(localeList);
@@ -33,7 +33,7 @@ export async function GET() {
 }
 
 export async function PUT(req: NextRequest) {
-  if (!isOwner(req)) return NextResponse.json({ error: "Only the Owner can edit public content" }, { status: 403 });
+  if (!(await isLead(req))) return NextResponse.json({ error: "Only the Lead Designer can edit public content" }, { status: 403 });
   const body = (await req.json().catch(() => null)) as { locale?: unknown; values?: unknown } | null;
   const locale = typeof body?.locale === "string" ? body.locale : "";
   if (!locales.has(locale) || !body?.values || typeof body.values !== "object" || Array.isArray(body.values)) {
@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Content cannot be empty or longer than 1200 characters" }, { status: 400 });
   }
   const now = Date.now();
-  const editor = req.headers.get("oai-authenticated-user-id") ?? "owner";
+  const editor = "lead:Hera";
   const statements = entries.map(([key, value]) => d1().prepare(`
     INSERT INTO content_overrides (locale, content_key, value, updated_at, updated_by)
     VALUES (?, ?, ?, ?, ?)

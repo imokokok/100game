@@ -4401,6 +4401,82 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   }
 }
 
+/* Final specificity guard: older page-specific experiments must not change
+   component geometry or material after navigation/press. */
+.publicPage.conceptPage .top,
+.publicPage.peoplePage .top{
+  position:sticky!important;
+  top:0!important;
+  overflow:visible!important;
+  background:var(--release-paper)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.publicPage.conceptPage .top>.publicBack,
+.publicPage.conceptPage .top nav a,
+.publicPage.conceptPage .top>.languagePicker,
+.publicPage.peoplePage .top>.publicBack,
+.publicPage.peoplePage .top nav a,
+.publicPage.peoplePage .top>.languagePicker{
+  border:1px solid rgba(74,65,54,.06)!important;
+  border-radius:var(--release-radius)!important;
+  background:var(--release-surface)!important;
+  color:var(--release-ink)!important;
+  box-shadow:var(--release-raised-small)!important;
+  transform:none!important;
+}
+.publicPage.conceptPage .top nav a[aria-current="page"],
+.publicPage.peoplePage .top nav a[aria-current="page"]{
+  color:#a7251e!important;
+  background:var(--release-surface)!important;
+  box-shadow:var(--release-inset)!important;
+  transform:none!important;
+}
+.entryGate .entryChoices .entryChoice:active,
+.publicPage.conceptPage :where(.top a,.peopleCta,.manifestoToggle):active,
+.publicPage .conceptMetrics>button:active{
+  transform:translateY(1px)!important;
+}
+.publicPage.conceptPage .conceptMetrics>button.is-active,
+.publicPage.conceptPage .conceptMetrics>button[aria-expanded="true"]{
+  transform:none!important;
+}
+.publicPage #public-view-title:focus{outline:none!important}
+
+/* Keep expanded statistic controls at exactly the same dimensions. */
+.publicPage.conceptPage .conceptMetrics>button.is-active,
+.publicPage.conceptPage .conceptMetrics>button[aria-expanded="true"]{
+  transform:none!important;
+}
+
+@media(max-width:700px){
+  .publicPage.conceptPage .top>.mark,
+  .publicPage.peoplePage .top>.mark{display:none!important}
+  .publicPage.conceptPage .conceptManifesto .manifestoBody{
+    grid-template-rows:0fr!important;
+    opacity:0!important;
+  }
+  .publicPage.conceptPage .conceptManifesto article.is-open .manifestoBody{
+    grid-template-rows:1fr!important;
+    opacity:1!important;
+  }
+}
+
+.surveyResponseList{display:grid;gap:8px;margin-top:10px}
+.surveyResponseList details{border-top:1px solid rgba(48,44,38,.16);padding-top:8px}
+.surveyResponseList summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;cursor:pointer;font-size:13px;font-weight:700}
+.surveyResponseList summary b{display:grid;place-items:center;min-width:28px;height:28px;border-radius:999px;background:#f7f3eb;font-size:11px}
+.surveyResponseList details>p{margin:8px 0;color:#777;font-size:12px}
+.surveyResponseList .miniList{max-height:320px!important}
+.surveyResponseList .miniList>div{align-items:flex-start}
+.surveyResponseList .miniList em{display:block;margin-top:6px;white-space:pre-wrap;font-size:12px;font-style:normal;font-weight:400;line-height:1.55;color:#3b3934}
+
+/* Expanded statistic controls keep a fixed footprint on every device. */
+.publicPage.conceptPage .conceptMetrics>button.is-active,
+.publicPage.conceptPage .conceptMetrics>button[aria-expanded="true"]{
+  transform:none!important;
+}
+
 /* Large lifted-paper curl, based on the supplied editorial poster references. */
 @keyframes publicPaperCurlIn{
   from{opacity:0;transform:translate3d(18px,14px,0) rotate(3deg) scale(.82)}
@@ -5812,7 +5888,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 /* Project metrics: a cleaner, shallower press with enough contrast on black. */
 .publicPage.conceptPage .conceptMetrics>button.is-active,
 .publicPage.conceptPage .conceptMetrics>button:active{
-  transform:translate(1px,1px) scale(.995)!important;
+  transform:none!important;
   filter:none!important;
 }
 .publicPage.conceptPage .conceptMetrics>button.is-active:nth-child(1),
@@ -6292,4 +6368,483 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .entryGate.introPending.introRevealing>section .publicBrandTitle,
   .entryGate.introPending.introRevealing>section .entryChoice,
   .entryGate.introPending.introRevealing>.copyright{animation:none!important;opacity:1!important;transform:none!important}
+}
+
+/* Release specificity guard — keep public navigation, panels and pressed
+   states identical after route changes and across responsive breakpoints. */
+.publicPage.conceptPage .top,
+.publicPage.peoplePage .top{
+  position:sticky!important;
+  top:0!important;
+  overflow:visible!important;
+  background:var(--release-paper)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.publicPage.conceptPage .top>.publicBack,
+.publicPage.conceptPage .top nav a,
+.publicPage.conceptPage .top>.languagePicker,
+.publicPage.peoplePage .top>.publicBack,
+.publicPage.peoplePage .top nav a,
+.publicPage.peoplePage .top>.languagePicker{
+  border:1px solid rgba(74,65,54,.06)!important;
+  border-radius:var(--release-radius)!important;
+  background:var(--release-surface)!important;
+  color:var(--release-ink)!important;
+  box-shadow:var(--release-raised-small)!important;
+  transform:none!important;
+}
+.publicPage.conceptPage .top nav a[aria-current="page"],
+.publicPage.peoplePage .top nav a[aria-current="page"]{
+  color:#a7251e!important;
+  background:var(--release-surface)!important;
+  box-shadow:var(--release-inset)!important;
+  transform:none!important;
+}
+.entryGate .entryChoices .entryChoice:active,
+.publicPage.conceptPage :where(.top a,.peopleCta,.manifestoToggle):active,
+.publicPage .conceptMetrics>button:active{transform:translateY(1px)!important}
+.publicPage.conceptPage .conceptMetrics>button.is-active,
+.publicPage.conceptPage .conceptMetrics>button[aria-expanded="true"]{
+  transform:none!important;
+}
+.publicPage #public-view-title:focus{outline:none!important}
+
+@media(max-width:700px){
+  .publicPage.conceptPage .top>.mark,
+  .publicPage.peoplePage .top>.mark{display:none!important}
+  .publicPage.conceptPage .conceptManifesto .manifestoBody{
+    grid-template-rows:0fr!important;
+    opacity:0!important;
+  }
+  .publicPage.conceptPage .conceptManifesto article.is-open .manifestoBody{
+    grid-template-rows:1fr!important;
+    opacity:1!important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Release system — one warm, restrained interface across public and private
+   areas. This final layer intentionally replaces the older experimental
+   shadows and the wrapper animation that altered the supplied opening film.
+   -------------------------------------------------------------------------- */
+:root{
+  --release-paper:#e8e2d8;
+  --release-surface:#ece6dc;
+  --release-ink:#302f2c;
+  --release-muted:#68645d;
+  --release-red:#c92d25;
+  --release-radius:18px;
+  --release-raised:4px 4px 10px rgba(92,77,58,.13),-4px -4px 10px rgba(255,255,255,.68);
+  --release-raised-small:2px 2px 6px rgba(92,77,58,.12),-2px -2px 6px rgba(255,255,255,.62);
+  --release-inset:inset 4px 4px 9px rgba(92,77,58,.18),inset -4px -4px 9px rgba(255,255,255,.58);
+}
+
+html,body{overflow-x:hidden}
+body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.workspace,.survey-shell,.surveyHub,.lead-shell,.lead-login{
+  background-color:var(--release-paper)!important;
+  color:var(--release-ink);
+}
+
+/* The supplied film is the animation. The site only frames it and performs
+   a quiet cross-fade after the real media `ended` event. */
+.openingSequence{
+  padding:0!important;
+  background:var(--release-paper)!important;
+  contain:strict;
+}
+.openingSequence.isChecking,
+.openingSequence.isLoading,
+.openingSequence.isPlaying{
+  animation:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+.entryGate.introPending{
+  height:100vh!important;
+  height:100svh!important;
+  min-height:100vh!important;
+  min-height:100svh!important;
+  max-height:100svh!important;
+  overflow:hidden!important;
+}
+.openingPaper{
+  background:var(--release-paper)!important;
+  background-image:none!important;
+}
+.openingPaper::before,.openingPaper::after{display:none!important}
+.openingVideo,
+.openingSequence.isPlaying .openingVideo,
+.openingSequence.isLoading .openingVideo{
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  aspect-ratio:16/9;
+  object-fit:contain!important;
+  object-position:50% 50%;
+  border:0!important;
+  border-radius:0!important;
+  background:var(--release-paper)!important;
+  opacity:1!important;
+  transform:none!important;
+  animation:none!important;
+  will-change:auto!important;
+}
+.openingSequence.isLoading::after{
+  content:"";
+  position:absolute;
+  z-index:4;
+  left:0;
+  bottom:0;
+  width:100%;
+  height:3px;
+  background:var(--release-red);
+  transform:scaleX(.08);
+  transform-origin:0 50%;
+  animation:releaseLoading 1.2s cubic-bezier(.2,.72,.2,1) infinite alternate;
+}
+.openingControls{
+  position:absolute;
+  z-index:6;
+  left:16px;
+  right:16px;
+  bottom:16px;
+  left:max(16px,env(safe-area-inset-left));
+  right:max(16px,env(safe-area-inset-right));
+  bottom:max(16px,env(safe-area-inset-bottom));
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  pointer-events:none;
+}
+.openingStart{
+  position:absolute;
+  z-index:7;
+  left:50%;
+  top:50%;
+  min-height:48px;
+  padding:12px 20px;
+  border:1px solid rgba(74,65,54,.08);
+  border-radius:999px;
+  background:rgba(236,230,220,.96);
+  color:#45423d;
+  box-shadow:var(--release-raised-small);
+  transform:translate(-50%,-50%);
+  cursor:pointer;
+}
+.openingStart:active{box-shadow:var(--release-inset);transform:translate(-50%,calc(-50% + 1px))}
+.openingControls .openingSound,.openingControls .openingSkip{
+  position:static!important;
+  inset:auto!important;
+  min-height:44px;
+  margin:0!important;
+  padding:10px 15px!important;
+  border:1px solid rgba(74,65,54,.08)!important;
+  border-radius:999px!important;
+  background:rgba(236,230,220,.94)!important;
+  color:#45423d!important;
+  box-shadow:var(--release-raised-small)!important;
+  pointer-events:auto;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.openingControls .openingSound:focus-visible,.openingControls .openingSkip:focus-visible{
+  outline:3px solid rgba(201,45,37,.42)!important;
+  outline-offset:3px;
+}
+.openingControls .openingSound:active,.openingControls .openingSkip:active,
+.openingControls .openingSound.isOn{
+  transform:translateY(1px)!important;
+  color:#a7251e!important;
+  box-shadow:var(--release-inset)!important;
+}
+.openingSequence.isLeaving{
+  pointer-events:none;
+  animation:releaseOpeningExit .74s cubic-bezier(.22,.61,.36,1) both!important;
+}
+.openingSequence.isLeaving .openingVideo{
+  animation:releaseMediaExit .74s cubic-bezier(.22,.61,.36,1) both!important;
+  transform-origin:50% 50%;
+}
+.openingSequence.isLeaving .openingPaper{
+  animation:releasePaperExit .74s cubic-bezier(.22,.61,.36,1) both!important;
+}
+.openingSequence.isLeaving .openingControls{animation:releaseControlsExit .22s ease both!important}
+.openingSequence.isLeaving .openingControls .openingSound,
+.openingSequence.isLeaving .openingControls .openingSkip{animation:none!important}
+@keyframes releaseLoading{to{transform:scaleX(.86)}}
+@keyframes releaseOpeningExit{0%,18%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes releaseMediaExit{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.992)}}
+@keyframes releasePaperExit{to{opacity:0}}
+@keyframes releaseControlsExit{to{opacity:0;transform:translateY(6px)}}
+
+/* The destination resolves during the same 740 ms hand-off. */
+.entryGate.introPending>.entryTop,
+.entryGate.introPending>section .publicBrandTitle,
+.entryGate.introPending>section .entryChoice,
+.entryGate.introPending>.copyright{opacity:0;will-change:opacity,transform}
+.entryGate.introPending.introRevealing>.entryTop{animation:releaseEntryIn .42s cubic-bezier(.22,.61,.36,1) .05s both!important}
+.entryGate.introPending.introRevealing>section .publicBrandTitle{animation:releaseEntryIn .48s cubic-bezier(.16,.8,.28,1) .08s both!important}
+.entryGate.introPending.introRevealing>section .entryChoice:first-child{animation:releaseEntryIn .44s cubic-bezier(.16,.8,.28,1) .13s both!important}
+.entryGate.introPending.introRevealing>section .entryChoice:nth-child(2){animation:releaseEntryIn .44s cubic-bezier(.16,.8,.28,1) .19s both!important}
+.entryGate.introPending.introRevealing>.copyright{animation:releaseEntryIn .36s ease-out .22s both!important}
+@keyframes releaseEntryIn{to{opacity:1;transform:none}}
+
+/* Shared raised / pressed language for navigation and controls. */
+.entryGate .entryTop,
+.publicPage .top,
+.worktop,
+.survey-shell .survey-head,
+.surveyHub>header{
+  background:var(--release-paper)!important;
+  border:0!important;
+  box-shadow:0 1px 0 rgba(55,48,39,.07)!important;
+}
+.entryGate .entryChoice,
+.entryGate .primary,
+.inviteGate .entryTop>a,
+.publicPage .publicBack,
+.publicPage .top nav a,
+.languagePicker,
+.peopleCta,
+.metricDetail>a,
+.surveyCatalogue>a,
+.surveyCta,
+.button,
+.workspace button:not(.brand),
+.workspace a[href]:not(.workspaceHomeButton){
+  border-radius:var(--release-radius)!important;
+  transition:box-shadow .16s ease,transform .14s ease,background-color .16s ease,color .16s ease!important;
+}
+.publicPage .publicBack,
+.publicPage .top nav a,
+.publicPage .languagePicker,
+.entryGate .entryTop .languagePicker,
+.inviteGate .entryTop>a{
+  border:1px solid rgba(74,65,54,.06)!important;
+  background:var(--release-surface)!important;
+  color:var(--release-ink)!important;
+  box-shadow:var(--release-raised-small)!important;
+}
+.publicPage .top nav a.active,
+.publicPage .top nav a[aria-current="page"]{
+  color:#a7251e!important;
+  background:var(--release-surface)!important;
+  box-shadow:var(--release-inset)!important;
+}
+.publicPage .publicBack:active,
+.publicPage .top nav a:active,
+.entryGate .entryChoice:active,
+.entryGate .primary:active,
+.inviteGate .entryTop>a:active,
+.peopleCta:active,
+.surveyCatalogue>a:active,
+.surveyCta:active,
+.button:active,
+.workspace button:not(.brand):active{
+  transform:translateY(1px)!important;
+  box-shadow:var(--release-inset)!important;
+}
+.publicPage :is(a,button,select):focus-visible,
+.entryGate :is(a,button,select,input):focus-visible,
+.workspace :is(a,button,select,input,textarea):focus-visible,
+.survey-shell :is(a,button,select,input,textarea):focus-visible{
+  outline:3px solid rgba(201,45,37,.40)!important;
+  outline-offset:3px!important;
+}
+
+/* Public pages: editorial hierarchy without sharp panels or dirty halos. */
+.publicPage .top{
+  position:sticky!important;
+  top:0!important;
+  z-index:50!important;
+  overflow:visible!important;
+}
+.publicPage .compactPublicMark{display:none!important}
+.publicPage .fullPublicMark{display:inline-flex!important}
+.publicBrandTitle picture,.publicBrandTitle img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.publicBrandTitle{
+  max-width:min(100%,920px)!important;
+  margin-inline:auto!important;
+}
+.conceptQuestions,
+.conceptFeature,
+.conceptManifesto>article,
+.conceptRecruitment,
+.metricDetail,
+.collaboratorPending,
+.projectPoster img{
+  border-radius:clamp(16px,2vw,24px)!important;
+}
+.conceptQuestions{
+  overflow:hidden;
+  padding:clamp(28px,5vw,64px)!important;
+  background:var(--release-red)!important;
+  box-shadow:none!important;
+}
+.conceptQuestions p{
+  max-width:22ch!important;
+  margin:0 0 clamp(22px,3vw,38px)!important;
+  font-size:clamp(30px,5.2vw,72px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.045em!important;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+}
+.conceptQuestions p:last-child{margin-bottom:0!important}
+.conceptMetrics{
+  gap:clamp(10px,1.8vw,20px)!important;
+}
+.conceptMetrics>button{
+  min-width:0;
+  border:1px solid rgba(74,65,54,.07)!important;
+  border-radius:var(--release-radius)!important;
+  overflow:hidden;
+  box-shadow:var(--release-raised)!important;
+}
+.conceptMetrics>button.is-active{
+  transform:translateY(1px)!important;
+  box-shadow:var(--release-inset)!important;
+}
+.conceptMetrics>button:nth-child(2).is-active{
+  box-shadow:inset 5px 5px 10px rgba(0,0,0,.44),inset -4px -4px 9px rgba(255,255,255,.10)!important;
+}
+.conceptMetrics>button:nth-child(3).is-active{
+  box-shadow:inset 5px 5px 10px rgba(87,10,7,.34),inset -4px -4px 9px rgba(255,255,255,.12)!important;
+}
+.conceptMetrics>button span{
+  opacity:1!important;
+  font-size:max(12px,.72rem)!important;
+  line-height:1.35!important;
+}
+.metricDetail,
+.conceptManifesto>article,
+.conceptRecruitment,
+.collaboratorPending{
+  overflow:hidden;
+  box-shadow:none!important;
+}
+.manifestoToggle{border-radius:inherit!important}
+.conceptFeatureCopy h2,.conceptRecruitment h2,.manifestoToggle h2{
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+}
+.peopleCta{
+  border:1px solid rgba(74,65,54,.06)!important;
+  background:var(--release-surface)!important;
+  color:#a7251e!important;
+  box-shadow:var(--release-raised-small)!important;
+}
+.projectPoster,.projectPoster img{filter:none!important}
+
+/* Private workspace and forms use the same clean material, without broad
+   white/black glow. */
+.driveFolder,.driveRecent,.weekFolder,.categoryFolder,.workspaceCategory,.photoJournalLink,.announcementBoard,.weekNoticeCard,.taskOwnerPending,.journalEmpty,.journalEditor,.opsCard,.contentManager,.ownerOperations,.libraryCategoryDetail,
+.surveyCatalogue>a,.survey-shell .question,.survey-shell .review-panel,.creatorWelcome,.creatorTaskNote{
+  border-radius:var(--release-radius)!important;
+  box-shadow:var(--release-raised-small)!important;
+}
+.workspace input:not([type="file"]),.workspace textarea,.workspace select,
+.survey-shell input:not([type="file"]),.survey-shell textarea,.survey-shell select,
+.lead-shell input,.lead-shell textarea,.lead-shell select,.lead-login input{
+  border-radius:14px!important;
+  box-shadow:inset 3px 3px 7px rgba(92,77,58,.14),inset -3px -3px 7px rgba(255,255,255,.50)!important;
+}
+
+@media(max-width:700px){
+  .openingControls{left:12px;right:12px;bottom:12px;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom))}
+  .openingControls .openingSound,.openingControls .openingSkip{min-height:42px;padding:9px 12px!important;font-size:10px!important}
+  .openingControls .openingSound span{display:none}
+  .publicPage .top{
+    position:sticky!important;
+    top:0!important;
+    overflow:visible!important;
+  }
+  .publicPage,.conceptStandalone{max-width:100%;overflow-x:hidden}
+  .conceptStandalone{padding-inline:clamp(14px,4vw,22px)!important}
+  .publicBrandTitle{max-width:min(92vw,620px)!important}
+  .conceptQuestions{padding:28px 22px!important}
+  .conceptQuestions p{max-width:100%!important;font-size:clamp(30px,9.7vw,46px)!important;line-height:1.1!important;margin-bottom:26px!important}
+  .conceptMetrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important}
+  .conceptMetrics>button{min-height:136px!important;padding:16px 13px!important}
+  .conceptMetrics>button b{font-size:clamp(42px,14vw,64px)!important;line-height:.92!important}
+  .conceptMetrics>button small,.conceptMetrics>button span{font-size:11px!important}
+  .conceptManifesto>article,.conceptFeature,.conceptRecruitment,.metricDetail{border-radius:18px!important}
+  .manifestoToggle h2{font-size:clamp(27px,8vw,38px)!important;line-height:1.12!important}
+}
+
+@media(max-width:600px){
+  .publicPage .fullPublicMark{display:none!important}
+  .publicPage .compactPublicMark{display:none!important}
+  .publicPage .top>.mark{display:none!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .openingSequence.isLoading::after{animation:none!important;transform:scaleX(.45)}
+  .openingSequence.isLeaving,.openingSequence.isLeaving .openingVideo,.openingSequence.isLeaving .openingPaper,.openingSequence.isLeaving .openingControls{animation:none!important;opacity:0!important}
+  .entryGate.introPending.introRevealing>.entryTop,
+  .entryGate.introPending.introRevealing>section .publicBrandTitle,
+  .entryGate.introPending.introRevealing>section .entryChoice,
+  .entryGate.introPending.introRevealing>.copyright{animation:none!important;opacity:1!important;transform:none!important}
+}
+
+/* Release specificity guard — keep public navigation, panels and pressed
+   states identical after route changes and across responsive breakpoints. */
+.publicPage.conceptPage .top,
+.publicPage.peoplePage .top{
+  position:sticky!important;
+  top:0!important;
+  overflow:visible!important;
+  background:var(--release-paper)!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.publicPage.conceptPage .top>.publicBack,
+.publicPage.conceptPage .top nav a,
+.publicPage.conceptPage .top>.languagePicker,
+.publicPage.peoplePage .top>.publicBack,
+.publicPage.peoplePage .top nav a,
+.publicPage.peoplePage .top>.languagePicker{
+  border:1px solid rgba(74,65,54,.06)!important;
+  border-radius:var(--release-radius)!important;
+  background:var(--release-surface)!important;
+  color:var(--release-ink)!important;
+  box-shadow:var(--release-raised-small)!important;
+  transform:none!important;
+}
+.publicPage.conceptPage .top nav a[aria-current="page"],
+.publicPage.peoplePage .top nav a[aria-current="page"]{
+  color:#a7251e!important;
+  background:var(--release-surface)!important;
+  box-shadow:var(--release-inset)!important;
+  transform:none!important;
+}
+.entryGate .entryChoices .entryChoice:active,
+.publicPage.conceptPage :where(.top a,.peopleCta,.manifestoToggle):active,
+.publicPage .conceptMetrics>button:active{transform:translateY(1px)!important}
+.publicPage .conceptMetrics>button.is-active{transform:none!important}
+.publicPage #public-view-title:focus{outline:none!important}
+
+@media(max-width:700px){
+  .publicPage.conceptPage .top>.mark,
+  .publicPage.peoplePage .top>.mark{display:none!important}
+  .publicPage.conceptPage .conceptManifesto .manifestoBody{
+    grid-template-rows:0fr!important;
+    opacity:0!important;
+  }
+  .publicPage.conceptPage .conceptManifesto article.is-open .manifestoBody{
+    grid-template-rows:1fr!important;
+    opacity:1!important;
+  }
 }

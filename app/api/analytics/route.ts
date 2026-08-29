@@ -1,5 +1,5 @@
 import {NextRequest,NextResponse} from "next/server";
-import {d1,isLead,isOwner} from "../_shared";
+import {d1,isLead} from "../_shared";
 
 function beijingDay(timestamp=Date.now()){
  return new Date(timestamp+8*60*60*1000).toISOString().slice(0,10);
@@ -18,7 +18,7 @@ export async function POST(){
 }
 
 export async function GET(req:NextRequest){
- if(!(isOwner(req)||await isLead(req)))return NextResponse.json({error:"Lead access required"},{status:401});
+ if(!(await isLead(req)))return NextResponse.json({error:"Lead access required"},{status:401});
  const now=Date.now();
  const today=beijingDay(now);
  const weekStart=beijingDay(now-6*24*60*60*1000);

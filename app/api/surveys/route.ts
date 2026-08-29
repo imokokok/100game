@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isOwner, participantId } from "../_shared";
+import { d1, isLead, participantId } from "../_shared";
 
 export async function GET(req: NextRequest) {
-  if (isOwner(req) && req.nextUrl.searchParams.get("manage") === "1") {
+  const manage = req.nextUrl.searchParams.get("manage") === "1";
+  const lead = manage ? await isLead(req) : false;
+  if (manage && !lead) return NextResponse.json({ error: "Lead access required" }, { status: 403 });
+  if (manage) {
     const rows = await d1().prepare("SELECT id, title_zh, title_en, question_zh, question_en, status, created_at FROM survey_forms ORDER BY created_at DESC").all();
-    return NextResponse.json({ forms: rows.results });
+    const responseRows = await d1().prepare(`
+      SELECT r.id, r.survey_id, r.participant_id, COALESCE(p.display_code, r.participant_id) AS participant_name, r.payload, r.updated_at
+      FROM survey_responses r
+      LEFT JOIN participants p ON p.id = r.participant_id
+      ORDER BY r.updated_at DESC
+      LIMIT 2000
+    `).all<{id:string;survey_id:string;participant_id:string;participant_name:string;payload:string;updated_at:number}>();
+    const responses = responseRows.results.map(({payload,...response})=>{
+      let answers:Record<string,unknown>={};
+      try { const parsed=JSON.parse(payload) as unknown;if(parsed&&typeof parsed==="object"&&!Array.isArray(parsed))answers=parsed as Record<string,unknown>; }
+      catch { answers={response:payload}; }
+      return {...response,answers};
+    });
+    return NextResponse.json({ forms: rows.results, responses }, { headers: { "cache-control": "private, no-store", "x-content-type-options": "nosniff" } });
   }
   const participant = await participantId(req);
   if (!participant) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
@@ -12,7 +28,12 @@ export async function GET(req: NextRequest) {
   if (!form) return NextResponse.json({ form: null, response: null });
   const surveyId = form.id;
   const row = await d1().prepare("SELECT payload, updated_at FROM survey_responses WHERE participant_id = ? AND survey_id = ?").bind(participant, surveyId).first<{ payload: string; updated_at: number }>();
-  return NextResponse.json({ form, response: row ? { ...JSON.parse(row.payload), updatedAt: row.updated_at } : null });
+  let response = null;
+  if (row) {
+    try { response = { ...JSON.parse(row.payload), updatedAt: row.updated_at }; }
+    catch { response = { updatedAt: row.updated_at }; }
+  }
+  return NextResponse.json({ form, response });
 }
 
 export async function POST(req: NextRequest) {
@@ -36,7 +57,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  if (!isOwner(req)) return NextResponse.json({ error: "Only the Owner can create surveys" }, { status: 403 });
+  if (!(await isLead(req))) return NextResponse.json({ error: "Only the Lead Designer can create surveys" }, { status: 403 });
   const body = await req.json().catch(() => ({}));
   const titleZh = String(body.titleZh ?? "").trim().slice(0, 160);
   const titleEn = String(body.titleEn ?? titleZh).trim().slice(0, 160);

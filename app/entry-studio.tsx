@@ -1,88 +1,364 @@
 "use client";
 
-import {useEffect,useRef,useState,type FormEvent,type MouseEvent,type Ref,type SyntheticEvent} from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type MouseEvent,
+  type Ref,
+  type RefObject,
+  type SyntheticEvent,
+} from "react";
+import {preload} from "react-dom";
 import {parseQuery,storageGet,storageSet} from "./client-compat";
 
 type Lang="zh"|"en";
 type IntroPhase="checking"|"loading"|"playing"|"leaving"|"done";
+
 const copy={
- zh:{language:"语言",publicVisit:"普通访问",publicDescription:"阅读项目理念与共同创作者页面",inviteEntry:"邀请码进入",inviteDescription:"创作者协作区",back:"返回",privateAccess:"私密访问",enterCode:"填写邀请码",intro:"参与者填写微信群聊名和邀请码；主策划直接输入主策划验证码。",welcome:"创作区用于记录项目中的实际工作。",welcomeDetail:"不要求游戏制作经验。草图、文字、参考资料和未完成文件都可提交。",name:"微信群聊名（参与者）",namePlaceholder:"填写微信群聊名",code:"邀请码",verify:"验证并进入",entering:"正在进入…",required:"参与者请填写自己的微信群聊名。",error:"邀请码验证成功后才能进入协作区域。",networkError:"网络异常，请检查网络后重试。",copyright:"© 2026 HuieChen. 版权所有。"},
- en:{language:"Language",publicVisit:"Public visit",publicDescription:"Read the project concept and contributors",inviteEntry:"Invitation access",inviteDescription:"Creator Workspace",back:"Back",privateAccess:"Private access",enterCode:"Enter invitation",intro:"Participants enter their WeChat group name and invitation code. The Lead Designer enters the lead access code.",welcome:"The workspace records active project work.",welcomeDetail:"Game-making experience is not required. Sketches, text, references, and unfinished files may be submitted.",name:"WeChat group name (participants)",namePlaceholder:"WeChat group name",code:"Invitation code",verify:"Verify and enter",entering:"Opening…",required:"Participants must enter their WeChat group name.",error:"The collaboration area opens after the invitation is verified.",networkError:"Network error. Please check your connection and try again.",copyright:"© 2026 HuieChen. All rights reserved."}
+  zh:{language:"语言",publicVisit:"普通访问",publicDescription:"阅读项目理念与共同创作者页面",inviteEntry:"邀请码进入",inviteDescription:"创作者协作区",back:"返回",privateAccess:"私密访问",enterCode:"填写邀请码",intro:"参与者填写微信群聊名和邀请码；主策划直接输入主策划验证码。",welcome:"创作区用于记录项目中的实际工作。",welcomeDetail:"不要求游戏制作经验。草图、文字、参考资料和未完成文件都可提交。",name:"微信群聊名（参与者）",namePlaceholder:"填写微信群聊名",code:"邀请码",verify:"验证并进入",entering:"正在进入…",required:"参与者请填写自己的微信群聊名。",error:"邀请码验证成功后才能进入协作区域。",networkError:"网络异常，请检查网络后重试。",copyright:"© 2026 HuieChen. 版权所有。"},
+  en:{language:"Language",publicVisit:"Public visit",publicDescription:"Read the project concept and contributors",inviteEntry:"Invitation access",inviteDescription:"Creator Workspace",back:"Back",privateAccess:"Private access",enterCode:"Enter invitation",intro:"Participants enter their WeChat group name and invitation code. The Lead Designer enters the lead access code.",welcome:"The workspace records active project work.",welcomeDetail:"Game-making experience is not required. Sketches, text, references, and unfinished files may be submitted.",name:"WeChat group name (participants)",namePlaceholder:"WeChat group name",code:"Invitation code",verify:"Verify and enter",entering:"Opening…",required:"Participants must enter their WeChat group name.",error:"The collaboration area opens after the invitation is verified.",networkError:"Network error. Please check your connection and try again.",copyright:"© 2026 HuieChen. All rights reserved."},
 };
 
 function TitlePicture({className,alt="",priority=false,onLoad,onError,imageRef}:{className?:string;alt?:string;priority?:boolean;onLoad?:(event:SyntheticEvent<HTMLImageElement>)=>void;onError?:()=>void;imageRef?:Ref<HTMLImageElement>}){
- return <picture className={className}>
-  <source media="(max-width: 860px)" srcSet="/what-100-people-title-600.webp" type="image/webp"/>
-  <source srcSet="/what-100-people-title.webp" type="image/webp"/>
-  <source srcSet="/what-100-people-title-600.png" type="image/png"/>
-  <img ref={imageRef} src="/what-100-people-title-600.png" alt={alt} width="1200" height="800" fetchPriority={priority?"high":undefined} onLoad={onLoad} onError={onError}/>
- </picture>;
+  return <picture className={className}>
+    <source media="(max-width: 860px)" srcSet="/what-100-people-title-600.webp" type="image/webp"/>
+    <source srcSet="/what-100-people-title.webp" type="image/webp"/>
+    <source srcSet="/what-100-people-title-600.png" type="image/png"/>
+    <img ref={imageRef} src="/what-100-people-title-600.png" alt={alt} width="1200" height="800" fetchPriority={priority?"high":undefined} onLoad={onLoad} onError={onError}/>
+  </picture>;
 }
 
-function OpeningSequence({phase,onReady,onPlaybackEnd,onPlaybackError,onFinish,onSoundRequest,onSoundToggle,soundOn,mediaRef}:{phase:IntroPhase;onReady:()=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;onSoundRequest:()=>void;onSoundToggle:()=>void;soundOn:boolean;mediaRef:Ref<HTMLVideoElement>}){
- const ready=useRef(false),playbackError=useRef(onPlaybackError);
- playbackError.current=onPlaybackError;
- useEffect(()=>{
-  if(phase!=="playing"||typeof mediaRef!=="object"||!mediaRef?.current)return;
-  const media=mediaRef.current;
-  let cancelled=false;
-  const start=()=>{
-   if(cancelled)return;
-   try{media.currentTime=0}catch{}
-   void media.play().catch(()=>{if(!cancelled)playbackError.current()});
-  };
-  if(media.readyState>=2)start();
-  else media.addEventListener("canplay",start,{once:true});
-  return()=>{cancelled=true;media.removeEventListener("canplay",start)};
- },[phase,mediaRef]);
- function mediaReady(){
-  if(ready.current)return;
-  ready.current=true;
-  onReady();
- }
- return <div className={`openingSequence${phase==="loading"?" isLoading":" isPlaying"}${phase==="leaving"?" isLeaving":""}`} onPointerDown={onSoundRequest} aria-label="WHAT 100 PEOPLE DO TO A GAME opening title">
-  <div className="openingPaper" aria-hidden="true"/>
-  <video ref={mediaRef} className="openingVideo" poster="/what-100-people-title-600.webp" playsInline preload="auto" muted={!soundOn} onCanPlay={mediaReady} onLoadedData={mediaReady} onEnded={onPlaybackEnd} onError={onPlaybackError} disablePictureInPicture aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening">
-   <source src="/video/opening-title.mp4" type="video/mp4"/>
-  </video>
-  <button className={`openingSound${soundOn?" isOn":""}`} type="button" aria-pressed={soundOn} onPointerDown={event=>event.stopPropagation()} onClick={onSoundToggle}>
-   <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path className="soundWave" d="M16 9.3c1.4 1.5 1.4 3.9 0 5.4M18.8 6.5c3 3 3 8 0 11"/></svg>
-   <span>{soundOn?"声音已开 / Sound on":"开启声音 / Sound"}</span>
-  </button>
-  <button className="openingSkip" type="button" onPointerDown={event=>event.stopPropagation()} onClick={onFinish}>跳过片头 / Skip</button>
- </div>;
+function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,onSkip,onSoundToggle,soundOn,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;onSkip:()=>void;onSoundToggle:()=>void;soundOn:boolean;mediaRef:RefObject<HTMLVideoElement|null>}){
+  const [needsPlayGesture,setNeedsPlayGesture]=useState(false);
+  const playbackErrorRef=useRef(onPlaybackError);
+  playbackErrorRef.current=onPlaybackError;
+
+  function reportBlocked(blocked:boolean){
+    setNeedsPlayGesture(blocked);
+    onPlaybackBlocked(blocked);
+  }
+
+  function requestPlayback(){
+    const media=mediaRef.current;
+    if(!media)return;
+    media.muted=true;
+    try{
+      const playback=media.play();
+      if(playback&&typeof playback.then==="function"){
+        void playback.then(()=>reportBlocked(false),()=>reportBlocked(true));
+      }
+    }catch{
+      reportBlocked(true);
+    }
+  }
+
+  useEffect(()=>{
+    if(phase!=="loading")return;
+    const media=mediaRef.current;
+    if(!media)return;
+    let cancelled=false;
+    setNeedsPlayGesture(false);
+    onPlaybackBlocked(false);
+    media.volume=1;
+    media.muted=true;
+    try{media.currentTime=0}catch{}
+    const attempt=()=>{
+      if(cancelled)return;
+      try{
+        const playback=media.play();
+        if(playback&&typeof playback.then==="function"){
+          void playback.then(()=>{
+            if(cancelled)return;
+            setNeedsPlayGesture(false);
+            onPlaybackBlocked(false);
+          },()=>{
+            if(cancelled)return;
+            // Autoplay rejection is not a broken media file. Keep the opening
+            // visible and offer a direct gesture instead of skipping it.
+            setNeedsPlayGesture(true);
+            onPlaybackBlocked(true);
+          });
+        }
+      }catch{
+        if(!cancelled){
+          setNeedsPlayGesture(true);
+          onPlaybackBlocked(true);
+        }
+      }
+    };
+    const retry=()=>{if(media.paused&&!media.error)attempt()};
+    media.addEventListener("loadeddata",retry);
+    media.addEventListener("canplay",retry);
+    try{media.load();attempt()}catch{
+      if(!cancelled)playbackErrorRef.current();
+    }
+    return()=>{
+      cancelled=true;
+      media.removeEventListener("loadeddata",retry);
+      media.removeEventListener("canplay",retry);
+    };
+  },[mediaRef,onPlaybackBlocked,phase]);
+
+  return <div
+    className={`openingSequence is${phase[0].toUpperCase()}${phase.slice(1)}`}
+    role="dialog"
+    aria-modal="true"
+    aria-label="WHAT 100 PEOPLE DO TO A GAME opening title"
+    onAnimationEnd={event=>{
+      if(event.currentTarget===event.target&&phase==="leaving")onFinish();
+    }}
+  >
+    <div className="openingPaper" aria-hidden="true"/>
+    <video
+      ref={mediaRef}
+      className="openingVideo"
+      width="1280"
+      height="720"
+      poster="/video/opening-title-poster.webp"
+      playsInline
+      preload="auto"
+      muted={!soundOn}
+      onPlaying={onPlaying}
+      onEnded={onPlaybackEnd}
+      onError={onPlaybackError}
+      disablePictureInPicture
+      aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
+    >
+      <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
+    </video>
+    {needsPlayGesture&&<button className="openingStart" type="button" onClick={requestPlayback}>播放片头 / Play opening</button>}
+    <div className="openingControls">
+      <button className={`openingSound${soundOn?" isOn":""}`} type="button" aria-label={soundOn?"关闭片头声音 / Mute opening":"开启片头声音 / Play opening sound"} aria-pressed={soundOn} onClick={onSoundToggle}>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path className="soundWave" d="M16 9.3c1.4 1.5 1.4 3.9 0 5.4M18.8 6.5c3 3 3 8 0 11"/></svg>
+        <span>{soundOn?"声音已开 / Sound on":"开启声音 / Sound"}</span>
+      </button>
+      <button className="openingSkip" type="button" onClick={onSkip}>跳过片头 / Skip</button>
+    </div>
+  </div>;
 }
 
-export function EntryStudio(){
- const [lang,setLang]=useState<Lang>("zh"),[invite,setInvite]=useState(false),[name,setName]=useState(""),[code,setCode]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false),[introPhase,setIntroPhase]=useState<IntroPhase>("playing"),[introSoundOn,setIntroSoundOn]=useState(false);const introMedia=useRef<HTMLVideoElement>(null);const c=copy[lang];
- useEffect(()=>{const saved=storageGet("hundred-language");const next:Lang=saved==="en"||(!saved&&navigator.language.toLowerCase().startsWith("en"))?"en":"zh";setLang(next);const sync=()=>{const params=parseQuery(location.search);const nextInvite=params.access==="invite"||"invite" in params;setInvite(nextInvite);setIntroPhase(nextInvite?"done":"playing");const token=params.invite;if(token)setCode(token)};const restore=(event:PageTransitionEvent)=>{if(event.persisted)sync()};sync();window.addEventListener("popstate",sync);window.addEventListener("pageshow",restore);return()=>{window.removeEventListener("popstate",sync);window.removeEventListener("pageshow",restore)}},[]);
- useEffect(()=>{storageSet("hundred-language",lang);document.documentElement.lang=lang==="zh"?"zh-CN":"en"},[lang]);
- useEffect(()=>{
-  if(introPhase==="loading"){
-   const fallback=window.setTimeout(()=>setIntroPhase("leaving"),1800);
-   return()=>window.clearTimeout(fallback);
+export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
+  if(!initialInvite){
+    preload("/video/opening-title-poster.webp",{as:"image",type:"image/webp",fetchPriority:"high"});
+    preload("/video/opening-title-6a63d7e7.mp4",{as:"video",type:"video/mp4"});
   }
-  if(introPhase!=="playing"&&introPhase!=="leaving")return;
-  const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const compact=typeof matchMedia==="function"&&matchMedia("(max-width: 700px), (hover: none) and (pointer: coarse)").matches;
-  if(introPhase==="playing"){
-   const timer=window.setTimeout(()=>setIntroPhase("leaving"),reduced?1000:compact?2800:3200);
-   const audioTimer=reduced?0:window.setTimeout(()=>playIntroSound(),70);
-   return()=>{window.clearTimeout(timer);if(audioTimer)window.clearTimeout(audioTimer)};
+  const [lang,setLang]=useState<Lang>("zh");
+  const [invite,setInvite]=useState(initialInvite);
+  const [name,setName]=useState("");
+  const [code,setCode]=useState(initialCode);
+  const [notice,setNotice]=useState("");
+  const [busy,setBusy]=useState(false);
+  const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"checking");
+  const [introSoundOn,setIntroSoundOn]=useState(false);
+  const [introWaitingForGesture,setIntroWaitingForGesture]=useState(false);
+  const introMedia=useRef<HTMLVideoElement>(null);
+  const inviteRef=useRef(initialInvite);
+  const c=copy[lang];
+
+  useEffect(()=>{
+    const saved=storageGet("hundred-language");
+    const next:Lang=saved==="en"||(!saved&&navigator.language.toLowerCase().startsWith("en"))?"en":"zh";
+    setLang(next);
+    const sync=()=>{
+      const params=parseQuery(location.search);
+      const nextInvite=params.access==="invite"||"invite" in params;
+      const wasInvite=inviteRef.current;
+      inviteRef.current=nextInvite;
+      setInvite(nextInvite);
+      if(nextInvite){
+        setIntroWaitingForGesture(false);
+        setIntroPhase("done");
+      }else if(wasInvite){
+        setIntroPhase("checking");
+      }
+      const token=params.invite;
+      if(token)setCode(token);
+    };
+    const restore=(event:PageTransitionEvent)=>{
+      if(!event.persisted)return;
+      sync();
+      const params=parseQuery(location.search);
+      if(params.access==="invite"||"invite" in params)return;
+      const media=introMedia.current;
+      if(media){
+        try{media.pause();media.currentTime=0}catch{}
+      }
+      setIntroSoundOn(false);
+      setIntroWaitingForGesture(false);
+      setIntroPhase("checking");
+    };
+    sync();
+    window.addEventListener("popstate",sync);
+    window.addEventListener("pageshow",restore);
+    return()=>{
+      window.removeEventListener("popstate",sync);
+      window.removeEventListener("pageshow",restore);
+    };
+  },[]);
+
+  useEffect(()=>{
+    storageSet("hundred-language",lang);
+    document.documentElement.lang=lang==="zh"?"zh-CN":"en";
+  },[lang]);
+
+  useEffect(()=>{
+    if(invite||introPhase!=="checking")return;
+    // The supplied opening film is the project title itself, not decorative
+    // scroll motion. Keep it present on every fresh entry (including devices
+    // that request reduced UI motion); the Skip control remains immediately
+    // available and the surrounding transition is reduced in CSS.
+    setIntroPhase("loading");
+  },[introPhase,invite]);
+
+  useEffect(()=>{
+    if(introPhase==="loading"&&!introWaitingForGesture){
+      const fallback=window.setTimeout(()=>beginIntroExit(),8000);
+      return()=>window.clearTimeout(fallback);
+    }
+    if(introPhase==="playing"){
+      const fallback=window.setTimeout(()=>beginIntroExit(),5500);
+      return()=>window.clearTimeout(fallback);
+    }
+    if(introPhase==="leaving"){
+      const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const fallback=window.setTimeout(()=>finishIntro(),reduced?40:1100);
+      return()=>window.clearTimeout(fallback);
+    }
+  },[introPhase,introWaitingForGesture]);
+
+  function beginIntroExit(){
+    setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
   }
-  const timer=window.setTimeout(()=>finishIntro(),reduced?140:compact?500:620);
-  return()=>window.clearTimeout(timer);
- },[introPhase]);
- function playIntroSound(){if(introPhase!=="playing")return;const media=introMedia.current;if(!media)return;try{media.volume=1;media.muted=false;const playback=media.play();if(playback&&typeof playback.then==="function")playback.then(()=>setIntroSoundOn(true),()=>{media.muted=true;setIntroSoundOn(false);void media.play().catch(()=>{})});else setIntroSoundOn(true)}catch{media.muted=true;setIntroSoundOn(false);void media.play().catch(()=>{})}}
- function requestIntroSound(){if(introPhase==="playing"&&!introSoundOn)playIntroSound()}
- function toggleIntroSound(){const media=introMedia.current;if(!media)return;if(introSoundOn){media.muted=true;setIntroSoundOn(false);return}playIntroSound()}
- function finishIntro(){setIntroPhase("done");setIntroSoundOn(false);const media=introMedia.current;if(media){try{media.pause();media.currentTime=0}catch{}}}
- function openInvite(event:MouseEvent<HTMLAnchorElement>){event.preventDefault();history.pushState({},"","/?access=invite");setNotice("");setIntroPhase("done");setInvite(true)}
- function closeInvite(event:MouseEvent<HTMLAnchorElement>){event.preventDefault();history.pushState({},"","/");setNotice("");setIntroPhase("playing");setInvite(false)}
- async function submit(event:FormEvent){event.preventDefault();if(busy)return;setBusy(true);setNotice("");try{const response=await fetch("/api/access",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({code,name})});if(!response.ok){const data=await response.json().catch(()=>({})) as {error?:string};setNotice(data.error==="Participant name is required"?c.required:c.error);return}const data=await response.json() as {role:"lead"|"participant";session?:string};go(data.role==="lead"?"/workspace?view=journal":data.session?`/workspace?k=${encodeURIComponent(data.session)}`:"/workspace");return}catch{setNotice(c.networkError)}finally{setBusy(false)}}
- function go(url:string){try{location.href=url}catch{location.replace(url)}setTimeout(()=>{if(!location.href.includes(url))location.href=url},600)}
- const wordmark=<span className="wordmark wordmarkInline"><span>WHAT </span><strong>100 PEOPLE</strong><span> DO TO A </span><strong>GAME</strong></span>;
- const language=<label className="languagePicker"><span><b aria-hidden="true">LANG</b>{c.language}</span><select aria-label={c.language} value={lang} onChange={e=>setLang(e.target.value as Lang)}><option value="zh">中文</option><option value="en">English</option></select></label>;
- if(!invite){const introActive=introPhase!=="checking"&&introPhase!=="done";return <main className={`entryGate${introPhase==="checking"?" introChecking":""}${introActive?" introPending":""}${introPhase==="leaving"?" introRevealing":""}`}>{introActive&&<OpeningSequence phase={introPhase} onReady={()=>setIntroPhase(current=>current==="loading"?"playing":current)} onPlaybackEnd={()=>setIntroPhase(current=>current==="playing"?"leaving":current)} onPlaybackError={()=>setIntroPhase(current=>current==="done"?current:"leaving")} onFinish={finishIntro} onSoundRequest={requestIntroSound} onSoundToggle={toggleIntroSound} soundOn={introSoundOn} mediaRef={introMedia}/>}<div className="entryTop">{wordmark}{language}</div><section><h1 className="publicBrandTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority/></h1><div className="entryChoices"><a className="entryChoice" href="/concept"><b>{c.publicVisit}</b><span>{c.publicDescription}</span></a><a className="entryChoice" href="/?access=invite" onClick={openInvite}><b>{c.inviteEntry}</b><span>{c.inviteDescription}</span></a></div></section><footer className="copyright">{c.copyright}</footer></main>}
- return <main className="entryGate inviteGate"><div className="entryTop"><a href="/" onClick={closeInvite}>← {c.back}</a>{language}</div><section><span className="kicker">{c.privateAccess}</span><h1>{c.enterCode}</h1><p>{c.intro}</p><aside className="creatorWelcome"><strong>{c.welcome}</strong><span>{c.welcomeDetail}</span></aside><form className="gateInvite" onSubmit={submit} aria-busy={busy}><label><span>{c.name}</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" maxLength={40} placeholder={c.namePlaceholder}/></label><label><span>{c.code}</span><input value={code} onChange={e=>setCode(e.target.value)} autoComplete="one-time-code" inputMode="numeric" placeholder={c.code}/></label><button className="primary" type="submit" disabled={busy}>{busy?c.entering:c.verify}</button></form>{notice&&<p className="gateError" role="alert">{notice}</p>}</section><footer className="copyright">{c.copyright}</footer></main>;
+
+  function toggleIntroSound(){
+    const media=introMedia.current;
+    if(!media)return;
+    if(introSoundOn){
+      media.muted=true;
+      setIntroSoundOn(false);
+      return;
+    }
+    media.volume=1;
+    media.muted=false;
+    try{
+      const playback=media.play();
+      if(playback&&typeof playback.then==="function"){
+        void playback.then(()=>setIntroSoundOn(true),()=>{
+          media.muted=true;
+          setIntroSoundOn(false);
+          try{
+            const mutedPlayback=media.play();
+            if(mutedPlayback&&typeof mutedPlayback.catch==="function")void mutedPlayback.catch(()=>{});
+          }catch{}
+        });
+      }else setIntroSoundOn(true);
+    }catch{
+      media.muted=true;
+      setIntroSoundOn(false);
+    }
+  }
+
+  function finishIntro(){
+    setIntroPhase("done");
+    setIntroSoundOn(false);
+    setIntroWaitingForGesture(false);
+    const media=introMedia.current;
+    if(media){
+      try{media.pause();media.currentTime=0}catch{}
+    }
+  }
+
+  function openInvite(event:MouseEvent<HTMLAnchorElement>){
+    event.preventDefault();
+    history.pushState({},"","/?access=invite");
+    setNotice("");
+    finishIntro();
+    inviteRef.current=true;
+    setInvite(true);
+  }
+
+  function closeInvite(event:MouseEvent<HTMLAnchorElement>){
+    event.preventDefault();
+    history.pushState({},"","/");
+    setNotice("");
+    inviteRef.current=false;
+    setInvite(false);
+    setIntroPhase("checking");
+  }
+
+  async function submit(event:FormEvent){
+    event.preventDefault();
+    if(busy)return;
+    setBusy(true);
+    setNotice("");
+    try{
+      const response=await fetch("/api/access",{method:"POST",credentials:"same-origin",cache:"no-store",headers:{"content-type":"application/json"},body:JSON.stringify({code,name})});
+      if(!response.ok){
+        const data=await response.json().catch(()=>({})) as {error?:string};
+        setNotice(data.error==="Participant name is required"?c.required:c.error);
+        return;
+      }
+      const data=await response.json() as {role:"lead"|"participant"};
+      go(data.role==="lead"?"/workspace?view=journal":"/workspace");
+      return;
+    }catch{
+      setNotice(c.networkError);
+    }finally{
+      setBusy(false);
+    }
+  }
+
+  function go(url:string){
+    try{location.href=url}catch{location.replace(url)}
+    setTimeout(()=>{if(!location.href.includes(url))location.href=url},600);
+  }
+
+  const introActive=!invite&&introPhase!=="done";
+  const wordmark=<span className="wordmark wordmarkInline"><span>WHAT </span><strong>100 PEOPLE</strong><span> DO TO A </span><strong>GAME</strong></span>;
+  const language=<label className="languagePicker"><span><b aria-hidden="true">LANG</b>{c.language}</span><select tabIndex={introActive?-1:undefined} aria-label={c.language} value={lang} onChange={e=>setLang(e.target.value as Lang)}><option value="zh">中文</option><option value="en">English</option></select></label>;
+
+  if(!invite){
+    return <main className={`entryGate${introActive?" introPending":""}${introPhase==="leaving"?" introRevealing":""}`}>
+      {introActive&&<OpeningSequence
+        phase={introPhase}
+        onPlaying={()=>{
+          setIntroWaitingForGesture(false);
+          setIntroPhase(current=>current==="loading"?"playing":current);
+        }}
+        onPlaybackBlocked={setIntroWaitingForGesture}
+        onPlaybackEnd={beginIntroExit}
+        onPlaybackError={beginIntroExit}
+        onFinish={finishIntro}
+        onSkip={beginIntroExit}
+        onSoundToggle={toggleIntroSound}
+        soundOn={introSoundOn}
+        mediaRef={introMedia}
+      />}
+      <div className="entryTop" aria-hidden={introActive} inert={introActive?true:undefined}>{wordmark}{language}</div>
+      <section aria-hidden={introActive} inert={introActive?true:undefined}>
+        <h1 className="publicBrandTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority={!introActive}/></h1>
+        <div className="entryChoices"><a tabIndex={introActive?-1:undefined} className="entryChoice" href="/concept"><b>{c.publicVisit}</b><span>{c.publicDescription}</span></a><a tabIndex={introActive?-1:undefined} className="entryChoice" href="/?access=invite" onClick={openInvite}><b>{c.inviteEntry}</b><span>{c.inviteDescription}</span></a></div>
+      </section>
+      <footer className="copyright" aria-hidden={introActive} inert={introActive?true:undefined}>{c.copyright}</footer>
+    </main>;
+  }
+
+  return <main className="entryGate inviteGate">
+    <div className="entryTop"><a href="/" onClick={closeInvite}>← {c.back}</a>{language}</div>
+    <section>
+      <span className="kicker">{c.privateAccess}</span>
+      <h1>{c.enterCode}</h1>
+      <p>{c.intro}</p>
+      <aside className="creatorWelcome"><strong>{c.welcome}</strong><span>{c.welcomeDetail}</span></aside>
+      <form className="gateInvite" onSubmit={submit} aria-busy={busy}>
+        <label><span>{c.name}</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" maxLength={40} placeholder={c.namePlaceholder}/></label>
+        <label><span>{c.code}</span><input value={code} onChange={e=>setCode(e.target.value)} autoComplete="one-time-code" inputMode="numeric" placeholder={c.code}/></label>
+        <button className="primary" type="submit" disabled={busy}>{busy?c.entering:c.verify}</button>
+      </form>
+      {notice&&<p className="gateError" role="alert">{notice}</p>}
+    </section>
+    <footer className="copyright">{c.copyright}</footer>
+  </main>;
 }

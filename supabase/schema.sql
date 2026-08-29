@@ -236,6 +236,14 @@ CREATE TABLE IF NOT EXISTS "site_traffic_daily" (
   "updated_at" bigint NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS "lead_login_attempts" (
+  "id" text PRIMARY KEY NOT NULL,
+  "client_key" text NOT NULL,
+  "attempted_at" bigint NOT NULL
+);
+CREATE INDEX IF NOT EXISTS "idx_lead_login_attempts_client_time" ON "lead_login_attempts" ("client_key", "attempted_at");
+CREATE INDEX IF NOT EXISTS "idx_lead_login_attempts_time" ON "lead_login_attempts" ("attempted_at");
+
 -- ============================================================================
 -- Seed data (idempotent). Mirrors the original D1 seed; the designer list was
 -- regenerated cleanly here because the upstream migration file was corrupted.

@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isOwner, participantId } from "../_shared";
+import { d1, isLead, participantId } from "../_shared";
 
 const allowedKinds = new Set(["session_start", "view", "heartbeat", "interaction"]);
 
 export async function POST(req: NextRequest) {
+  if(await isLead(req))return NextResponse.json({ok:true});
   const body = await req.json().catch(() => ({}));
   const kind = allowedKinds.has(body.kind) ? body.kind : "interaction";
   const surface = String(body.surface ?? "home").slice(0, 64);
   const duration = Math.max(0, Math.min(300, Number(body.durationSeconds) || 0));
   const existing = await participantId(req);
-  if(!existing)return isOwner(req)?NextResponse.json({ok:true}):NextResponse.json({error:"Invitation required"},{status:401});
+  if(!existing)return NextResponse.json({error:"Invitation required"},{status:401});
   const id = existing;
   const now = Date.now();
   const db = d1();

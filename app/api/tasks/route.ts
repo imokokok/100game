@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isOwner, participantId } from "../_shared";
+import { d1, isLead, participantId } from "../_shared";
 
 export async function GET(req: NextRequest) {
   const participant = await participantId(req);
-  if (!participant && !isOwner(req)) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
-  if (isOwner(req) && !participant) {
+  const lead=await isLead(req);
+  if (!participant && !lead) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
+  if (lead) {
     const rows = await d1().prepare("SELECT id, title_zh, title_en, status, sort_order, week FROM tasks ORDER BY week, sort_order").all();
     return NextResponse.json({ tasks: rows.results });
   }
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const participant = await participantId(req);
+  const participant = await isLead(req) ? "owner" : await participantId(req);
   if (!participant) return NextResponse.json({ error: "Invitation required" }, { status: 401 });
   const body = await req.json().catch(() => ({}));
   const taskId = String(body.taskId ?? "");
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  if (!isOwner(req)) return NextResponse.json({ error: "Only the Owner can create tasks" }, { status: 403 });
+  if (!(await isLead(req))) return NextResponse.json({ error: "Only the Lead Designer can create tasks" }, { status: 403 });
   const body = await req.json().catch(() => ({}));
   const titleZh = String(body.titleZh ?? "").trim().slice(0, 160);
   const titleEn = String(body.titleEn ?? titleZh).trim().slice(0, 160);
@@ -50,7 +51,7 @@ export async function PUT(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  if (!isOwner(req)) return NextResponse.json({ error: "Only the Owner can update tasks" }, { status: 403 });
+  if (!(await isLead(req))) return NextResponse.json({ error: "Only the Lead Designer can update tasks" }, { status: 403 });
   const body = await req.json().catch(() => ({}));
   const id = String(body.id ?? "");
   const status = body.status === "archived" ? "archived" : "active";
