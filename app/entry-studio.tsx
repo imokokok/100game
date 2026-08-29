@@ -130,6 +130,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
       className="openingVideo"
       width="1280"
       height="720"
+      poster="/video/opening-title-poster.jpg"
       autoPlay
       playsInline
       preload="auto"
@@ -163,6 +164,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
 
 export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
   if(!initialInvite){
+    preload("/video/opening-title-poster.jpg",{as:"image",type:"image/jpeg",fetchPriority:"high"});
     preload("/video/opening-title-6a63d7e7.mp4",{as:"video",type:"video/mp4"});
   }
   const [lang,setLang]=useState<Lang>("zh");
