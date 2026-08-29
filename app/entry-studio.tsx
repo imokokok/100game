@@ -117,6 +117,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
       width="1280"
       height="720"
       poster="/video/opening-title-poster.webp"
+      autoPlay
       playsInline
       preload="auto"
       muted={!soundOn}
@@ -214,7 +215,9 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
 
   useEffect(()=>{
     if(introPhase==="loading"&&!introWaitingForGesture){
-      const fallback=window.setTimeout(()=>beginIntroExit(),8000);
+      // Slow mobile networks must not make the opening disappear. If playback
+      // has not started, keep the film visible and expose a direct play action.
+      const fallback=window.setTimeout(()=>setIntroWaitingForGesture(true),8000);
       return()=>window.clearTimeout(fallback);
     }
     if(introPhase==="playing"){
@@ -329,7 +332,13 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
         }}
         onPlaybackBlocked={setIntroWaitingForGesture}
         onPlaybackEnd={beginIntroExit}
-        onPlaybackError={beginIntroExit}
+        onPlaybackError={()=>{
+          // A transient media/autoplay error is not permission to skip the
+          // supplied opening film. Keep its poster on screen and let the user
+          // retry or explicitly choose Skip.
+          setIntroWaitingForGesture(true);
+          setIntroPhase(current=>current==="done"||current==="leaving"?current:"loading");
+        }}
         onFinish={finishIntro}
         onSkip={beginIntroExit}
         onSoundToggle={toggleIntroSound}
