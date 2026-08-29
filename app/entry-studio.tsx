@@ -19,24 +19,16 @@ function TitlePicture({className,alt="",priority=false,onLoad,onError,imageRef}:
  </picture>;
 }
 
-function OpeningSequence({phase,onReady,onFinish,onSoundRequest,onSoundToggle,soundOn}:{phase:IntroPhase;onReady:()=>void;onFinish:()=>void;onSoundRequest:()=>void;onSoundToggle:()=>void;soundOn:boolean}){
- const fragments=["what","hundred","people","do","game"];
+function OpeningSequence({phase,onReady,onPlaybackEnd,onFinish,onSoundRequest,onSoundToggle,soundOn,mediaRef}:{phase:IntroPhase;onReady:()=>void;onPlaybackEnd:()=>void;onFinish:()=>void;onSoundRequest:()=>void;onSoundToggle:()=>void;soundOn:boolean;mediaRef:Ref<HTMLVideoElement>}){
  const ready=useRef(false);
- const preloadImage=useRef<HTMLImageElement>(null);
- function artworkReady(image?:HTMLImageElement|null){
+ function mediaReady(){
   if(ready.current)return;
   ready.current=true;
-  if(image&&typeof image.decode==="function")image.decode().then(onReady,onReady);
-  else onReady();
+  onReady();
  }
- useEffect(()=>{if(preloadImage.current?.complete)artworkReady(preloadImage.current)},[]);
- const active=phase==="playing"||phase==="leaving";
  return <div className={`openingSequence${phase==="loading"?" isLoading":" isPlaying"}${phase==="leaving"?" isLeaving":""}`} onPointerDown={onSoundRequest} aria-label="WHAT 100 PEOPLE DO TO A GAME opening title">
   <div className="openingPaper" aria-hidden="true"/>
-  <div className="openingArtwork" role="img" aria-label="WHAT 100 PEOPLE DO TO A GAME">
-   <TitlePicture className={active?"openingArtworkBase":"openingArtworkPreload"} priority imageRef={preloadImage} onLoad={event=>artworkReady(event.currentTarget)} onError={()=>artworkReady()}/>
-   {active&&fragments.map(name=><span className={`openingFragment openingFragment-${name}`} key={name} aria-hidden="true"><TitlePicture/></span>)}
-  </div>
+  <video ref={mediaRef} className="openingVideo" src="/video/opening-title.mp4" autoPlay playsInline preload="auto" muted={!soundOn} onCanPlay={mediaReady} onLoadedData={mediaReady} onEnded={onPlaybackEnd} aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"/>
   <button className={`openingSound${soundOn?" isOn":""}`} type="button" aria-pressed={soundOn} onPointerDown={event=>event.stopPropagation()} onClick={onSoundToggle}>
    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path className="soundWave" d="M16 9.3c1.4 1.5 1.4 3.9 0 5.4M18.8 6.5c3 3 3 8 0 11"/></svg>
    <span>{soundOn?"声音已开 / Sound on":"开启声音 / Sound"}</span>
@@ -46,7 +38,7 @@ function OpeningSequence({phase,onReady,onFinish,onSoundRequest,onSoundToggle,so
 }
 
 export function EntryStudio(){
- const [lang,setLang]=useState<Lang>("zh"),[invite,setInvite]=useState(false),[name,setName]=useState(""),[code,setCode]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false),[introPhase,setIntroPhase]=useState<IntroPhase>("loading"),[introSoundOn,setIntroSoundOn]=useState(false);const introAudio=useRef<HTMLAudioElement>(null);const c=copy[lang];
+ const [lang,setLang]=useState<Lang>("zh"),[invite,setInvite]=useState(false),[name,setName]=useState(""),[code,setCode]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false),[introPhase,setIntroPhase]=useState<IntroPhase>("loading"),[introSoundOn,setIntroSoundOn]=useState(false);const introMedia=useRef<HTMLVideoElement>(null);const c=copy[lang];
  useEffect(()=>{const saved=storageGet("hundred-language");const next:Lang=saved==="en"||(!saved&&navigator.language.toLowerCase().startsWith("en"))?"en":"zh";setLang(next);const sync=()=>{const params=parseQuery(location.search);const nextInvite=params.access==="invite"||"invite" in params;setInvite(nextInvite);setIntroPhase(nextInvite?"done":"loading");const token=params.invite;if(token)setCode(token)};const restore=(event:PageTransitionEvent)=>{if(event.persisted)sync()};sync();window.addEventListener("popstate",sync);window.addEventListener("pageshow",restore);return()=>{window.removeEventListener("popstate",sync);window.removeEventListener("pageshow",restore)}},[]);
  useEffect(()=>{storageSet("hundred-language",lang);document.documentElement.lang=lang==="zh"?"zh-CN":"en"},[lang]);
  useEffect(()=>{
@@ -58,23 +50,23 @@ export function EntryStudio(){
   const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   const compact=typeof matchMedia==="function"&&matchMedia("(max-width: 700px), (hover: none) and (pointer: coarse)").matches;
   if(introPhase==="playing"){
-   const timer=window.setTimeout(()=>setIntroPhase("leaving"),reduced?900:compact?2300:2600);
+   const timer=window.setTimeout(()=>setIntroPhase("leaving"),reduced?1200:compact?3600:4000);
    const audioTimer=reduced?0:window.setTimeout(()=>playIntroSound(),70);
    return()=>{window.clearTimeout(timer);if(audioTimer)window.clearTimeout(audioTimer)};
   }
-  const timer=window.setTimeout(()=>finishIntro(),reduced?120:compact?280:340);
+  const timer=window.setTimeout(()=>finishIntro(),reduced?140:compact?500:620);
   return()=>window.clearTimeout(timer);
  },[introPhase]);
- function playIntroSound(){if(introPhase!=="playing")return;const audio=introAudio.current;if(!audio)return;if(!audio.paused){setIntroSoundOn(true);return}try{audio.volume=.24;if(audio.currentTime<.02)audio.currentTime=.08;const playback=audio.play();if(playback&&typeof playback.then==="function")playback.then(()=>setIntroSoundOn(true),()=>setIntroSoundOn(false));else setIntroSoundOn(true)}catch{setIntroSoundOn(false)}}
+ function playIntroSound(){if(introPhase!=="playing")return;const media=introMedia.current;if(!media)return;try{media.volume=1;media.muted=false;const playback=media.play();if(playback&&typeof playback.then==="function")playback.then(()=>setIntroSoundOn(true),()=>{media.muted=true;setIntroSoundOn(false);void media.play().catch(()=>{})});else setIntroSoundOn(true)}catch{media.muted=true;setIntroSoundOn(false);void media.play().catch(()=>{})}}
  function requestIntroSound(){if(introPhase==="playing"&&!introSoundOn)playIntroSound()}
- function toggleIntroSound(){const audio=introAudio.current;if(!audio)return;if(introSoundOn){try{audio.pause()}catch{}setIntroSoundOn(false);return}playIntroSound()}
- function finishIntro(){setIntroPhase("done");setIntroSoundOn(false);const audio=introAudio.current;if(audio){try{audio.pause();audio.currentTime=0}catch{}}}
+ function toggleIntroSound(){const media=introMedia.current;if(!media)return;if(introSoundOn){media.muted=true;setIntroSoundOn(false);return}playIntroSound()}
+ function finishIntro(){setIntroPhase("done");setIntroSoundOn(false);const media=introMedia.current;if(media){try{media.pause();media.currentTime=0}catch{}}}
  function openInvite(event:MouseEvent<HTMLAnchorElement>){event.preventDefault();history.pushState({},"","/?access=invite");setNotice("");setIntroPhase("done");setInvite(true)}
  function closeInvite(event:MouseEvent<HTMLAnchorElement>){event.preventDefault();history.pushState({},"","/");setNotice("");setIntroPhase("loading");setInvite(false)}
  async function submit(event:FormEvent){event.preventDefault();if(busy)return;setBusy(true);setNotice("");try{const response=await fetch("/api/access",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({code,name})});if(!response.ok){const data=await response.json().catch(()=>({})) as {error?:string};setNotice(data.error==="Participant name is required"?c.required:c.error);return}const data=await response.json() as {role:"lead"|"participant";session?:string};go(data.role==="lead"?"/workspace?view=journal":data.session?`/workspace?k=${encodeURIComponent(data.session)}`:"/workspace");return}catch{setNotice(c.networkError)}finally{setBusy(false)}}
  function go(url:string){try{location.href=url}catch{location.replace(url)}setTimeout(()=>{if(!location.href.includes(url))location.href=url},600)}
  const wordmark=<span className="wordmark wordmarkInline"><span>WHAT </span><strong>100 PEOPLE</strong><span> DO TO A </span><strong>GAME</strong></span>;
  const language=<label className="languagePicker"><span><b aria-hidden="true">LANG</b>{c.language}</span><select aria-label={c.language} value={lang} onChange={e=>setLang(e.target.value as Lang)}><option value="zh">中文</option><option value="en">English</option></select></label>;
- if(!invite)return <main className={`entryGate${introPhase==="checking"?" introChecking":""}`}>{introPhase!=="checking"&&introPhase!=="done"&&<><audio ref={introAudio} src="/audio/printer-intro.mp3" preload="auto" aria-hidden="true"/><OpeningSequence phase={introPhase} onReady={()=>setIntroPhase(current=>current==="loading"?"playing":current)} onFinish={finishIntro} onSoundRequest={requestIntroSound} onSoundToggle={toggleIntroSound} soundOn={introSoundOn}/></>}<div className="entryTop">{wordmark}{language}</div><section><h1 className="publicBrandTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority/></h1><div className="entryChoices"><a className="entryChoice" href="/concept"><b>{c.publicVisit}</b><span>{c.publicDescription}</span></a><a className="entryChoice" href="/?access=invite" onClick={openInvite}><b>{c.inviteEntry}</b><span>{c.inviteDescription}</span></a></div></section><footer className="copyright">{c.copyright}</footer></main>;
+ if(!invite){const introActive=introPhase!=="checking"&&introPhase!=="done";return <main className={`entryGate${introPhase==="checking"?" introChecking":""}${introActive?" introPending":""}${introPhase==="leaving"?" introRevealing":""}`}>{introActive&&<OpeningSequence phase={introPhase} onReady={()=>setIntroPhase(current=>current==="loading"?"playing":current)} onPlaybackEnd={()=>setIntroPhase(current=>current==="playing"?"leaving":current)} onFinish={finishIntro} onSoundRequest={requestIntroSound} onSoundToggle={toggleIntroSound} soundOn={introSoundOn} mediaRef={introMedia}/>}<div className="entryTop">{wordmark}{language}</div><section><h1 className="publicBrandTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority/></h1><div className="entryChoices"><a className="entryChoice" href="/concept"><b>{c.publicVisit}</b><span>{c.publicDescription}</span></a><a className="entryChoice" href="/?access=invite" onClick={openInvite}><b>{c.inviteEntry}</b><span>{c.inviteDescription}</span></a></div></section><footer className="copyright">{c.copyright}</footer></main>}
  return <main className="entryGate inviteGate"><div className="entryTop"><a href="/" onClick={closeInvite}>← {c.back}</a>{language}</div><section><span className="kicker">{c.privateAccess}</span><h1>{c.enterCode}</h1><p>{c.intro}</p><aside className="creatorWelcome"><strong>{c.welcome}</strong><span>{c.welcomeDetail}</span></aside><form className="gateInvite" onSubmit={submit} aria-busy={busy}><label><span>{c.name}</span><input value={name} onChange={e=>setName(e.target.value)} autoComplete="name" maxLength={40} placeholder={c.namePlaceholder}/></label><label><span>{c.code}</span><input value={code} onChange={e=>setCode(e.target.value)} autoComplete="one-time-code" inputMode="numeric" placeholder={c.code}/></label><button className="primary" type="submit" disabled={busy}>{busy?c.entering:c.verify}</button></form>{notice&&<p className="gateError" role="alert">{notice}</p>}</section><footer className="copyright">{c.copyright}</footer></main>;
 }

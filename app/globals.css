@@ -6077,6 +6077,20 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   margin:auto;
   transform-origin:50% 52%;
 }
+.openingVideo{
+  position:relative;
+  z-index:2;
+  display:block;
+  width:min(94vw,calc((100vh - 96px)*1.78),1280px);
+  width:min(94vw,calc((100svh - 96px)*1.78),1280px);
+  max-height:calc(100vh - 96px);
+  max-height:calc(100svh - 96px);
+  object-fit:contain;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  transform:translateZ(0);
+}
 .openingArtworkPreload,
 .openingArtworkBase{
   display:block;
@@ -6179,8 +6193,12 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .openingSound:active,.openingSkip:active{box-shadow:inset 3px 3px 6px rgba(123,108,88,.24),inset -3px -3px 6px rgba(255,255,255,.72);transform:translateY(1px)}
 .openingSequence.isLeaving{
   pointer-events:none;
-  animation:openingExit .36s cubic-bezier(.76,0,.24,1) forwards!important;
+  animation:openingExit .62s cubic-bezier(.22,.61,.36,1) forwards!important;
 }
+.openingSequence.isLeaving .openingArtwork{animation:openingLogoLift .58s cubic-bezier(.22,.61,.36,1) forwards!important}
+.openingSequence.isLeaving .openingVideo{animation:openingLogoLift .58s cubic-bezier(.22,.61,.36,1) forwards!important}
+.openingSequence.isLeaving .openingPaper{animation:openingPaperRelease .62s cubic-bezier(.22,.61,.36,1) forwards!important}
+.openingSequence.isLeaving .openingSound,.openingSequence.isLeaving .openingSkip{animation:openingControlOut .18s ease forwards!important}
 @keyframes openingPaste{
   0%{opacity:0;transform:translate3d(var(--opening-x,0),var(--opening-y,0),0) rotate(var(--opening-rotate,0deg)) scale(1.045)}
   62%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(.985)}
@@ -6190,12 +6208,39 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 @keyframes openingArtworkSettle{0%{transform:scale(.992)}52%{transform:scale(1.008)}100%{transform:scale(1)}}
 @keyframes openingPaperRed{0%{opacity:0;transform:translate3d(-22%,0,0) rotate(-2deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-2deg)}}
 @keyframes openingPaperBlack{0%{opacity:0;transform:translate3d(24%,0,0) rotate(-4deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-4deg)}}
-@keyframes openingExit{0%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,-1.5vh,0)}}
+@keyframes openingExit{0%{opacity:1}34%{opacity:1}100%{opacity:0}}
+@keyframes openingLogoLift{0%{opacity:1;transform:translate3d(0,0,0) scale(1)}100%{opacity:0;transform:translate3d(0,-7vh,0) scale(.955)}}
+@keyframes openingPaperRelease{0%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,-2.5vh,0)}}
+@keyframes openingControlOut{to{opacity:0;transform:translateY(8px)}}
 @keyframes openingFailOpen{to{opacity:0;visibility:hidden;pointer-events:none}}
+
+/* The access screen is already mounted beneath the opening. During the final
+   beat it resolves in layers, so the hand-off feels continuous rather than
+   like a route flash. */
+.entryGate.introPending{overflow:hidden!important}
+.entryGate.introPending>.entryTop,
+.entryGate.introPending>section .publicBrandTitle,
+.entryGate.introPending>section .entryChoice,
+.entryGate.introPending>.copyright{
+  opacity:0;
+  will-change:transform,opacity;
+}
+.entryGate.introPending>.entryTop{transform:translate3d(0,-12px,0)}
+.entryGate.introPending>section .publicBrandTitle{transform:translate3d(0,24px,0) scale(.985)}
+.entryGate.introPending>section .entryChoice{transform:translate3d(0,28px,0)}
+.entryGate.introPending>.copyright{transform:translate3d(0,10px,0)}
+.entryGate.introPending.introRevealing>.entryTop{animation:entryLayerIn .46s cubic-bezier(.22,.61,.36,1) .06s both!important}
+.entryGate.introPending.introRevealing>section .publicBrandTitle{animation:entryTitleIn .54s cubic-bezier(.16,.8,.28,1) .12s both!important}
+.entryGate.introPending.introRevealing>section .entryChoice:first-child{animation:entryLayerIn .52s cubic-bezier(.16,.8,.28,1) .20s both!important}
+.entryGate.introPending.introRevealing>section .entryChoice:nth-child(2){animation:entryLayerIn .52s cubic-bezier(.16,.8,.28,1) .27s both!important}
+.entryGate.introPending.introRevealing>.copyright{animation:entryLayerIn .42s ease-out .28s both!important}
+@keyframes entryLayerIn{to{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes entryTitleIn{to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
 
 @media(max-width:700px){
   .openingSequence{padding:20px 12px 64px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));padding-bottom:max(64px,calc(48px + env(safe-area-inset-bottom)))}
   .openingArtwork{width:min(96vw,calc((100vh - 96px)*1.5),720px);width:min(96vw,calc((100svh - 96px)*1.5),720px)}
+  .openingVideo{width:min(96vw,calc((100vh - 104px)*1.78),760px);width:min(96vw,calc((100svh - 104px)*1.78),760px);max-height:calc(100vh - 104px);max-height:calc(100svh - 104px)}
   .openingPaper::before{top:14vh;width:88vw;height:34vw;left:-23vw}
   .openingPaper::after{bottom:18vh;width:78vw;right:-18vw;height:12px}
   .openingSkip,.openingSound{font-size:11px;min-height:44px;padding-inline:13px}
@@ -6210,6 +6255,12 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .openingSequence.isPlaying .openingArtwork{animation:openingArtworkSettle .20s cubic-bezier(.2,.8,.2,1) 1.76s both!important}
   .openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .07s linear 1.74s forwards!important}
   .openingSequence.isPlaying .openingFragment{animation-duration:.28s!important}
+  .openingSequence.isLeaving{animation-duration:.5s!important}
+  .openingSequence.isLeaving .openingArtwork{animation-duration:.46s!important}
+  .openingSequence.isLeaving .openingVideo{animation-duration:.46s!important}
+  .openingSequence.isLeaving .openingPaper{animation-duration:.5s!important}
+  .entryGate.introPending>section .publicBrandTitle{transform:translate3d(0,16px,0) scale(.99)}
+  .entryGate.introPending>section .entryChoice{transform:translate3d(0,18px,0)}
 }
 @supports not ((clip-path:polygon(0 0,100% 0,100% 100%,0 100%)) or (-webkit-clip-path:polygon(0 0,100% 0,100% 100%,0 100%))){
   .openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .12s linear forwards!important}
@@ -6220,4 +6271,8 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .openingSequence.isPlaying .openingArtwork{animation:none!important;opacity:1!important}
   .openingSequence.isPlaying .openingArtworkBase{animation:none!important;opacity:1!important}
   .openingSequence.isLeaving{animation:none!important;opacity:0!important}
+  .entryGate.introPending.introRevealing>.entryTop,
+  .entryGate.introPending.introRevealing>section .publicBrandTitle,
+  .entryGate.introPending.introRevealing>section .entryChoice,
+  .entryGate.introPending.introRevealing>.copyright{animation:none!important;opacity:1!important;transform:none!important}
 }
