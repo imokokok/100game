@@ -6032,6 +6032,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   isolation:isolate;
   touch-action:manipulation;
 }
+.openingSequence.isLoading{animation:openingFailOpen 0s linear 2.5s forwards!important}
 .openingPaper{
   position:absolute;
   inset:0;
@@ -6058,7 +6059,6 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   top:8vh;
   background:#c72d24;
   clip-path:polygon(2% 13%,94% 0,100% 58%,88% 100%,0 87%);
-  animation:openingPaperRed .68s cubic-bezier(.2,.8,.2,1) .05s both!important;
 }
 .openingPaper::after{
   width:min(64vw,820px);
@@ -6067,7 +6067,6 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   bottom:13vh;
   background:#171715;
   transform:rotate(-4deg);
-  animation:openingPaperBlack .64s cubic-bezier(.2,.8,.2,1) .18s both!important;
 }
 .openingArtwork{
   position:relative;
@@ -6077,15 +6076,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   width:min(92vw,calc(80svh * 1.5),1120px);
   margin:auto;
   transform-origin:50% 52%;
-  animation:openingArtworkSettle .32s cubic-bezier(.2,.8,.2,1) 1.08s both!important;
 }
+.openingArtworkPreload,
 .openingArtworkBase{
   display:block;
   width:100%;
   height:auto;
   opacity:0;
-  animation:openingOriginalIn .1s linear 1.04s forwards!important;
 }
+.openingArtworkPreload img,
 .openingArtworkBase img{display:block;width:100%;height:auto}
 .openingFragment{
   display:none;
@@ -6098,22 +6097,22 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   opacity:0;
   transform:translate3d(var(--opening-x,0),var(--opening-y,0),0) rotate(var(--opening-rotate,0deg)) scale(1.045);
   transform-origin:50% 50%;
-  will-change:transform,opacity,clip-path;
-  animation:openingPaste .28s cubic-bezier(.16,.84,.28,1.2) var(--opening-delay,0s) both!important;
+  will-change:transform,opacity;
 }
 @supports ((clip-path:polygon(0 0,100% 0,100% 100%,0 100%)) or (-webkit-clip-path:polygon(0 0,100% 0,100% 100%,0 100%))){
   .openingFragment{display:block}
 }
 .openingFragment picture,.openingFragment img{display:block;width:100%;height:auto}
 .openingFragment-what{
-  --opening-delay:.06s;
+  --opening-delay:.08s;
   --opening-x:-4.5%;
   --opening-y:-3%;
   --opening-rotate:-2.2deg;
-  animation:openingRevealWhat .34s steps(4,end) .06s both!important;
+  -webkit-clip-path:polygon(4% 1%,50% 1%,50% 36%,4% 36%);
+  clip-path:polygon(4% 1%,50% 1%,50% 36%,4% 36%);
 }
 .openingFragment-hundred{
-  --opening-delay:.32s;
+  --opening-delay:.46s;
   --opening-x:-2.5%;
   --opening-y:5%;
   --opening-rotate:1.4deg;
@@ -6121,13 +6120,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   clip-path:polygon(7% 21%,55% 21%,55% 69%,7% 69%);
 }
 .openingFragment-people{
+  --opening-delay:.86s;
   --opening-x:5%;
   --opening-y:-1%;
   --opening-rotate:1.6deg;
-  animation:openingRevealPeople .4s steps(6,end) .49s both!important;
+  -webkit-clip-path:polygon(50% 22%,99% 22%,99% 64%,50% 64%);
+  clip-path:polygon(50% 22%,99% 22%,99% 64%,50% 64%);
 }
 .openingFragment-do{
-  --opening-delay:.72s;
+  --opening-delay:1.26s;
   --opening-x:-4%;
   --opening-y:4%;
   --opening-rotate:-2deg;
@@ -6135,18 +6136,22 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   clip-path:polygon(3% 60%,48% 60%,48% 91%,3% 91%);
 }
 .openingFragment-game{
-  --opening-delay:.88s;
+  --opening-delay:1.66s;
   --opening-x:5%;
   --opening-y:5%;
   --opening-rotate:1.8deg;
   -webkit-clip-path:polygon(41% 54%,100% 54%,100% 100%,41% 100%);
   clip-path:polygon(41% 54%,100% 54%,100% 100%,41% 100%);
 }
+.openingSequence.isPlaying .openingPaper::before{animation:openingPaperRed .34s cubic-bezier(.2,.8,.2,1) .02s both!important}
+.openingSequence.isPlaying .openingPaper::after{animation:openingPaperBlack .32s cubic-bezier(.2,.8,.2,1) .08s both!important}
+.openingSequence.isPlaying .openingArtwork{animation:openingArtworkSettle .22s cubic-bezier(.2,.8,.2,1) 2.04s both!important}
+.openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .08s linear 2.02s forwards!important}
+.openingSequence.isPlaying .openingFragment{animation:openingPaste .34s cubic-bezier(.16,.84,.28,1.12) var(--opening-delay,0s) both!important}
+.openingSound,
 .openingSkip{
   position:absolute;
-  right:18px;
   bottom:18px;
-  right:max(18px,env(safe-area-inset-right));
   bottom:max(18px,env(safe-area-inset-bottom));
   min-height:44px;
   padding:9px 16px;
@@ -6160,40 +6165,59 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   cursor:pointer;
   transition:box-shadow .14s ease,transform .14s ease;
 }
-.openingSkip:active{box-shadow:inset 3px 3px 6px rgba(123,108,88,.24),inset -3px -3px 6px rgba(255,255,255,.72);transform:translateY(1px)}
+.openingSkip{right:18px;right:max(18px,env(safe-area-inset-right))}
+.openingSound{
+  left:18px;
+  left:max(18px,env(safe-area-inset-left));
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+.openingSound svg{width:17px;height:17px;fill:currentColor;overflow:visible}
+.openingSound .soundWave{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.openingSound.isOn{color:#a9231c;box-shadow:inset 3px 3px 6px rgba(123,108,88,.20),inset -3px -3px 6px rgba(255,255,255,.76)}
+.openingSound:active,.openingSkip:active{box-shadow:inset 3px 3px 6px rgba(123,108,88,.24),inset -3px -3px 6px rgba(255,255,255,.72);transform:translateY(1px)}
 .openingSequence.isLeaving{
   pointer-events:none;
-  animation:openingExit .52s cubic-bezier(.76,0,.24,1) forwards!important;
+  animation:openingExit .36s cubic-bezier(.76,0,.24,1) forwards!important;
 }
 @keyframes openingPaste{
   0%{opacity:0;transform:translate3d(var(--opening-x,0),var(--opening-y,0),0) rotate(var(--opening-rotate,0deg)) scale(1.045)}
   62%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(.985)}
   100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
 }
-@keyframes openingRevealWhat{
-  0%{opacity:0;-webkit-clip-path:polygon(4% 1%,4% 1%,4% 36%,4% 36%);clip-path:polygon(4% 1%,4% 1%,4% 36%,4% 36%);transform:translate3d(-4.5%,-3%,0) rotate(-2.2deg) scale(1.045)}
-  100%{opacity:1;-webkit-clip-path:polygon(4% 1%,50% 1%,50% 36%,4% 36%);clip-path:polygon(4% 1%,50% 1%,50% 36%,4% 36%);transform:none}
-}
-@keyframes openingRevealPeople{
-  0%{opacity:0;-webkit-clip-path:polygon(50% 22%,50% 22%,50% 64%,50% 64%);clip-path:polygon(50% 22%,50% 22%,50% 64%,50% 64%);transform:translate3d(5%,-1%,0) rotate(1.6deg) scale(1.045)}
-  100%{opacity:1;-webkit-clip-path:polygon(50% 22%,99% 22%,99% 64%,50% 64%);clip-path:polygon(50% 22%,99% 22%,99% 64%,50% 64%);transform:none}
-}
 @keyframes openingOriginalIn{to{opacity:1}}
 @keyframes openingArtworkSettle{0%{transform:scale(.992)}52%{transform:scale(1.008)}100%{transform:scale(1)}}
 @keyframes openingPaperRed{0%{opacity:0;transform:translate3d(-22%,0,0) rotate(-2deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-2deg)}}
 @keyframes openingPaperBlack{0%{opacity:0;transform:translate3d(24%,0,0) rotate(-4deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-4deg)}}
-@keyframes openingExit{0%{opacity:1;-webkit-clip-path:inset(0 0 0 0);clip-path:inset(0 0 0 0);transform:translate3d(0,0,0)}100%{opacity:0;-webkit-clip-path:inset(0 0 100% 0);clip-path:inset(0 0 100% 0);transform:translate3d(0,-2vh,0)}}
+@keyframes openingExit{0%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,-1.5vh,0)}}
+@keyframes openingFailOpen{to{opacity:0;visibility:hidden;pointer-events:none}}
 
 @media(max-width:700px){
-  .openingSequence{padding:20px 12px 64px}
-  .openingArtwork{width:min(96vw,720px)}
+  .openingSequence{padding:20px 12px 64px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));padding-bottom:max(64px,calc(48px + env(safe-area-inset-bottom)))}
+  .openingArtwork{width:min(96vw,calc((100vh - 96px)*1.5),720px);width:min(96vw,calc((100svh - 96px)*1.5),720px)}
   .openingPaper::before{top:14vh;width:88vw;height:34vw;left:-23vw}
   .openingPaper::after{bottom:18vh;width:78vw;right:-18vw;height:12px}
-  .openingSkip{font-size:11px;min-height:44px;padding-inline:14px}
+  .openingSkip,.openingSound{font-size:11px;min-height:44px;padding-inline:13px}
+  .openingSound span{display:none}
+  .openingSound svg{width:19px;height:19px}
+  .openingFragment-what{--opening-delay:.05s}
+  .openingFragment-hundred{--opening-delay:.36s}
+  .openingFragment-people{--opening-delay:.70s}
+  .openingFragment-do{--opening-delay:1.04s}
+  .openingFragment-game{--opening-delay:1.38s}
+  .openingSequence.isPlaying .openingPaper::before,.openingSequence.isPlaying .openingPaper::after{animation:none!important;opacity:.04}
+  .openingSequence.isPlaying .openingArtwork{animation:openingArtworkSettle .20s cubic-bezier(.2,.8,.2,1) 1.76s both!important}
+  .openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .07s linear 1.74s forwards!important}
+  .openingSequence.isPlaying .openingFragment{animation-duration:.28s!important}
+}
+@supports not ((clip-path:polygon(0 0,100% 0,100% 100%,0 100%)) or (-webkit-clip-path:polygon(0 0,100% 0,100% 100%,0 100%))){
+  .openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .12s linear forwards!important}
+  .openingSequence.isPlaying .openingArtwork{animation:openingArtworkSettle .16s ease-out .02s both!important}
 }
 @media(prefers-reduced-motion:reduce){
-  .openingPaper::before,.openingPaper::after,.openingFragment{animation:none!important;opacity:0!important}
-  .openingArtwork{animation:none!important;opacity:1!important}
-  .openingArtworkBase{animation:none!important;opacity:1!important}
+  .openingSequence.isPlaying .openingPaper::before,.openingSequence.isPlaying .openingPaper::after,.openingSequence.isPlaying .openingFragment{animation:none!important;opacity:0!important}
+  .openingSequence.isPlaying .openingArtwork{animation:none!important;opacity:1!important}
+  .openingSequence.isPlaying .openingArtworkBase{animation:none!important;opacity:1!important}
   .openingSequence.isLeaving{animation:none!important;opacity:0!important}
 }
