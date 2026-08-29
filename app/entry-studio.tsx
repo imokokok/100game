@@ -31,7 +31,10 @@ function TitlePicture({className,alt="",priority=false,onLoad,onError,imageRef}:
 }
 
 function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,onSkip,onSoundToggle,soundOn,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;onSkip:()=>void;onSoundToggle:()=>void;soundOn:boolean;mediaRef:RefObject<HTMLVideoElement|null>}){
-  const [needsPlayGesture,setNeedsPlayGesture]=useState(false);
+  // Keep a real play action available until the media timeline has actually
+  // advanced. Some older iOS and WeChat WebViews resolve play() while still
+  // displaying the poster frame.
+  const [needsPlayGesture,setNeedsPlayGesture]=useState(true);
   const playbackErrorRef=useRef(onPlaybackError);
   playbackErrorRef.current=onPlaybackError;
 
@@ -47,7 +50,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     try{
       const playback=media.play();
       if(playback&&typeof playback.then==="function"){
-        void playback.then(()=>reportBlocked(false),()=>reportBlocked(true));
+        void playback.catch(()=>reportBlocked(true));
       }
     }catch{
       reportBlocked(true);
@@ -59,8 +62,8 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     const media=mediaRef.current;
     if(!media)return;
     let cancelled=false;
-    setNeedsPlayGesture(false);
-    onPlaybackBlocked(false);
+    setNeedsPlayGesture(true);
+    onPlaybackBlocked(true);
     media.volume=1;
     media.muted=true;
     try{media.currentTime=0}catch{}
@@ -69,11 +72,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
       try{
         const playback=media.play();
         if(playback&&typeof playback.then==="function"){
-          void playback.then(()=>{
-            if(cancelled)return;
-            setNeedsPlayGesture(false);
-            onPlaybackBlocked(false);
-          },()=>{
+          void playback.catch(()=>{
             if(cancelled)return;
             // Autoplay rejection is not a broken media file. Keep the opening
             // visible and offer a direct gesture instead of skipping it.
@@ -89,15 +88,30 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
       }
     };
     const retry=()=>{if(media.paused&&!media.error)attempt()};
+    const confirmProgress=()=>{
+      if(cancelled||media.currentTime<.05)return;
+      setNeedsPlayGesture(false);
+      onPlaybackBlocked(false);
+    };
+    const progressWatch=window.setTimeout(()=>{
+      if(cancelled)return;
+      if(media.paused||media.currentTime<.05){
+        setNeedsPlayGesture(true);
+        onPlaybackBlocked(true);
+      }
+    },1200);
     media.addEventListener("loadeddata",retry);
     media.addEventListener("canplay",retry);
+    media.addEventListener("timeupdate",confirmProgress);
     try{media.load();attempt()}catch{
       if(!cancelled)playbackErrorRef.current();
     }
     return()=>{
       cancelled=true;
+      window.clearTimeout(progressWatch);
       media.removeEventListener("loadeddata",retry);
       media.removeEventListener("canplay",retry);
+      media.removeEventListener("timeupdate",confirmProgress);
     };
   },[mediaRef,onPlaybackBlocked,phase]);
 
@@ -116,14 +130,21 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
       className="openingVideo"
       width="1280"
       height="720"
-      poster="/video/opening-title-poster.webp"
       autoPlay
       playsInline
       preload="auto"
+      controls={false}
+      {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
       muted={!soundOn}
-      onPlaying={onPlaying}
+      onPlaying={()=>{
+        reportBlocked(false);
+        onPlaying();
+      }}
       onEnded={onPlaybackEnd}
-      onError={onPlaybackError}
+      onError={()=>{
+        reportBlocked(true);
+        onPlaybackError();
+      }}
       disablePictureInPicture
       aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
     >
@@ -142,7 +163,6 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
 
 export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
   if(!initialInvite){
-    preload("/video/opening-title-poster.webp",{as:"image",type:"image/webp",fetchPriority:"high"});
     preload("/video/opening-title-6a63d7e7.mp4",{as:"video",type:"video/mp4"});
   }
   const [lang,setLang]=useState<Lang>("zh");
