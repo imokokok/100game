@@ -6159,6 +6159,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 }
 .openingSequence.isPlaying .openingPaper::before{animation:openingPaperRed .34s cubic-bezier(.2,.8,.2,1) .02s both!important}
 .openingSequence.isPlaying .openingPaper::after{animation:openingPaperBlack .32s cubic-bezier(.2,.8,.2,1) .08s both!important}
+.openingSequence.isPlaying .openingVideo{animation:openingVideoStage 2.05s cubic-bezier(.16,.84,.24,1) both!important;transform-origin:50% 58%;will-change:transform,opacity}
 .openingSequence.isPlaying .openingArtwork{animation:openingArtworkSettle .22s cubic-bezier(.2,.8,.2,1) 2.04s both!important}
 .openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .08s linear 2.02s forwards!important}
 .openingSequence.isPlaying .openingFragment{animation:openingPaste .34s cubic-bezier(.16,.84,.28,1.12) var(--opening-delay,0s) both!important}
@@ -6205,6 +6206,19 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
 }
 @keyframes openingOriginalIn{to{opacity:1}}
+@keyframes openingVideoStage{
+  0%{opacity:.12;transform:translate3d(0,7vh,0) rotate(-2.6deg) scale(.76)}
+  18%{opacity:1;transform:translate3d(0,-1.2vh,0) rotate(.9deg) scale(1.075)}
+  42%{transform:translate3d(0,.45vh,0) rotate(-.35deg) scale(.985)}
+  68%{transform:translate3d(0,-.15vh,0) rotate(.12deg) scale(1.012)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
+}
+@keyframes openingVideoStageCompact{
+  0%{opacity:.18;transform:translate3d(0,3.5vh,0) rotate(-1.35deg) scale(.84)}
+  22%{opacity:1;transform:translate3d(0,-.6vh,0) rotate(.45deg) scale(1.035)}
+  52%{transform:translate3d(0,.2vh,0) rotate(-.16deg) scale(.992)}
+  100%{opacity:1;transform:translate3d(0,0,0) rotate(0) scale(1)}
+}
 @keyframes openingArtworkSettle{0%{transform:scale(.992)}52%{transform:scale(1.008)}100%{transform:scale(1)}}
 @keyframes openingPaperRed{0%{opacity:0;transform:translate3d(-22%,0,0) rotate(-2deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-2deg)}}
 @keyframes openingPaperBlack{0%{opacity:0;transform:translate3d(24%,0,0) rotate(-4deg)}100%{opacity:.055;transform:translate3d(0,0,0) rotate(-4deg)}}
@@ -6243,6 +6257,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .openingVideo{width:min(96vw,calc((100vh - 104px)*1.78),760px);width:min(96vw,calc((100svh - 104px)*1.78),760px);max-height:calc(100vh - 104px);max-height:calc(100svh - 104px)}
   .openingPaper::before{top:14vh;width:88vw;height:34vw;left:-23vw}
   .openingPaper::after{bottom:18vh;width:78vw;right:-18vw;height:12px}
+  .openingPaper::before,.openingPaper::after{display:none!important}
   .openingSkip,.openingSound{font-size:11px;min-height:44px;padding-inline:13px}
   .openingSound span{display:none}
   .openingSound svg{width:19px;height:19px}
@@ -6252,6 +6267,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .openingFragment-do{--opening-delay:1.04s}
   .openingFragment-game{--opening-delay:1.38s}
   .openingSequence.isPlaying .openingPaper::before,.openingSequence.isPlaying .openingPaper::after{animation:none!important;opacity:.04}
+  .openingSequence.isPlaying .openingVideo{animation-name:openingVideoStageCompact!important;animation-duration:1.95s!important}
   .openingSequence.isPlaying .openingArtwork{animation:openingArtworkSettle .20s cubic-bezier(.2,.8,.2,1) 1.76s both!important}
   .openingSequence.isPlaying .openingArtworkBase{animation:openingOriginalIn .07s linear 1.74s forwards!important}
   .openingSequence.isPlaying .openingFragment{animation-duration:.28s!important}
@@ -6270,6 +6286,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   .openingSequence.isPlaying .openingPaper::before,.openingSequence.isPlaying .openingPaper::after,.openingSequence.isPlaying .openingFragment{animation:none!important;opacity:0!important}
   .openingSequence.isPlaying .openingArtwork{animation:none!important;opacity:1!important}
   .openingSequence.isPlaying .openingArtworkBase{animation:none!important;opacity:1!important}
+  .openingSequence.isPlaying .openingVideo{animation:none!important;opacity:1!important;transform:none!important;will-change:auto}
   .openingSequence.isLeaving{animation:none!important;opacity:0!important}
   .entryGate.introPending.introRevealing>.entryTop,
   .entryGate.introPending.introRevealing>section .publicBrandTitle,
