@@ -338,7 +338,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
       />}
       <div className="entryTop" aria-hidden={introActive} inert={introActive?true:undefined}>{wordmark}{language}</div>
       <section aria-hidden={introActive} inert={introActive?true:undefined}>
-        <h1 className="publicBrandTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority={!introActive}/></h1>
+        <h1 className="publicBrandTitle entryProjectTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority={!introActive}/></h1>
         <div className="entryChoices"><a tabIndex={introActive?-1:undefined} className="entryChoice" href="/concept"><b>{c.publicVisit}</b><span>{c.publicDescription}</span></a><a tabIndex={introActive?-1:undefined} className="entryChoice" href="/?access=invite" onClick={openInvite}><b>{c.inviteEntry}</b><span>{c.inviteDescription}</span></a></div>
       </section>
       <footer className="copyright" aria-hidden={introActive} inert={introActive?true:undefined}>{c.copyright}</footer>

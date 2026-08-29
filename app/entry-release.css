@@ -1,0 +1,73 @@
+/* Entry-only release safeguards. Loaded after the shared historical style
+   sheet so the access screen remains predictable across browser versions. */
+.entryGate:not(.inviteGate){
+  width:100%;
+  max-width:100vw!important;
+  overflow-x:clip!important;
+}
+.entryGate:not(.inviteGate)>section{
+  width:min(100%,1100px)!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+.entryGate:not(.inviteGate) .entryProjectTitle{
+  display:block!important;
+  visibility:visible;
+  min-width:0!important;
+}
+.entryGate:not(.inviteGate) .entryProjectTitle>picture,
+.entryGate:not(.inviteGate) .entryProjectTitle img{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+.entryGate:not(.inviteGate):not(.introPending) .entryProjectTitle{
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important;
+  animation:none!important;
+}
+
+@media(max-width:700px){
+  .entryGate:not(.inviteGate) .entryTop{
+    width:100%;
+    max-width:100vw;
+    min-width:0;
+    gap:10px;
+  }
+  .entryGate:not(.inviteGate) .entryTop>.wordmark{
+    min-width:0;
+    max-width:52vw;
+  }
+  .entryGate:not(.inviteGate) .entryTop>.languagePicker{
+    min-width:0!important;
+    max-width:43vw;
+  }
+  .entryGate:not(.inviteGate) .entryTop>.languagePicker select{
+    min-width:0!important;
+    max-width:25vw;
+  }
+  .entryGate:not(.inviteGate)>section{
+    width:100%!important;
+    padding-inline:18px!important;
+  }
+  .entryGate:not(.inviteGate) .entryProjectTitle{
+    width:100%!important;
+    max-width:100%!important;
+    margin-inline:auto!important;
+  }
+  .entryGate:not(.inviteGate) .entryChoices{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .entryGate:not(.inviteGate) .entryChoice{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+}
