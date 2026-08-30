@@ -30,7 +30,7 @@ function TitlePicture({className,alt="",priority=false,onLoad,onError,imageRef}:
   </picture>;
 }
 
-function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,onSkip,onSoundToggle,onSoundEnable,soundOn,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;onSkip:()=>void;onSoundToggle:()=>void;onSoundEnable:()=>void;soundOn:boolean;mediaRef:RefObject<HTMLVideoElement|null>}){
+function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;mediaRef:RefObject<HTMLVideoElement|null>}){
   // Keep a real play action available until the media timeline has actually
   // advanced. Some older iOS and WeChat WebViews resolve play() while still
   // displaying the poster frame.
@@ -50,7 +50,6 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     // only cross-browser way to guarantee audible playback.
     media.volume=1;
     media.muted=false;
-    onSoundEnable();
     onPlaybackBlocked(false);
     try{
       const playback=media.play();
@@ -128,6 +127,9 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     onAnimationEnd={event=>{
       if(event.currentTarget===event.target&&phase==="leaving")onFinish();
     }}
+    onPointerDown={needsPlayGesture?requestPlayback:undefined}
+    onTouchEnd={needsPlayGesture?requestPlayback:undefined}
+    onClick={needsPlayGesture?requestPlayback:undefined}
   >
     <div className="openingPaper" aria-hidden="true"/>
     <video
@@ -141,7 +143,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
       preload="auto"
       controls={false}
       {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
-      muted={!soundOn}
+      muted={false}
       onPlaying={()=>{
         reportBlocked(false);
         onPlaying();
@@ -156,14 +158,6 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     >
       <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
     </video>
-    {needsPlayGesture&&<button className="openingStart" type="button" onClick={requestPlayback}>播放有声片头 / Play with sound</button>}
-    <div className="openingControls">
-      <button className={`openingSound${soundOn?" isOn":""}`} type="button" aria-label={soundOn?"关闭片头声音 / Mute opening":"开启片头声音 / Play opening sound"} aria-pressed={soundOn} onClick={onSoundToggle}>
-        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path className="soundWave" d="M16 9.3c1.4 1.5 1.4 3.9 0 5.4M18.8 6.5c3 3 3 8 0 11"/></svg>
-        <span>{soundOn?"声音已开 / Sound on":"开启声音 / Sound"}</span>
-      </button>
-      <button className="openingSkip" type="button" onClick={onSkip}>跳过片头 / Skip</button>
-    </div>
   </div>;
 }
 
@@ -179,7 +173,6 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   const [notice,setNotice]=useState("");
   const [busy,setBusy]=useState(false);
   const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"checking");
-  const [introSoundOn,setIntroSoundOn]=useState(true);
   const [introWaitingForGesture,setIntroWaitingForGesture]=useState(false);
   const introMedia=useRef<HTMLVideoElement>(null);
   const inviteRef=useRef(initialInvite);
@@ -213,7 +206,6 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
       if(media){
         try{media.pause();media.currentTime=0}catch{}
       }
-      setIntroSoundOn(false);
       setIntroWaitingForGesture(false);
       setIntroPhase("checking");
     };
@@ -235,9 +227,8 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     if(invite||introPhase!=="checking")return;
     // The supplied opening film is the project title itself, not decorative
     // scroll motion. Keep it present on every fresh entry (including devices
-    // that request reduced UI motion); the Skip control remains immediately
-    // available and the surrounding transition is reduced in CSS.
-    setIntroSoundOn(true);
+    // that request reduced UI motion); the surrounding transition is reduced
+    // in CSS when requested.
     setIntroPhase("loading");
   },[introPhase,invite]);
 
@@ -263,37 +254,8 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
   }
 
-  function toggleIntroSound(){
-    const media=introMedia.current;
-    if(!media)return;
-    if(introSoundOn){
-      media.muted=true;
-      setIntroSoundOn(false);
-      return;
-    }
-    media.volume=1;
-    media.muted=false;
-    try{
-      const playback=media.play();
-      if(playback&&typeof playback.then==="function"){
-        void playback.then(()=>setIntroSoundOn(true),()=>{
-          media.muted=true;
-          setIntroSoundOn(false);
-          try{
-            const mutedPlayback=media.play();
-            if(mutedPlayback&&typeof mutedPlayback.catch==="function")void mutedPlayback.catch(()=>{});
-          }catch{}
-        });
-      }else setIntroSoundOn(true);
-    }catch{
-      media.muted=true;
-      setIntroSoundOn(false);
-    }
-  }
-
   function finishIntro(){
     setIntroPhase("done");
-    setIntroSoundOn(false);
     setIntroWaitingForGesture(false);
     const media=introMedia.current;
     if(media){
@@ -361,17 +323,10 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
         onPlaybackBlocked={setIntroWaitingForGesture}
         onPlaybackEnd={beginIntroExit}
         onPlaybackError={()=>{
-          // A transient media/autoplay error is not permission to skip the
-          // supplied opening film. Keep its poster on screen and let the user
-          // retry or explicitly choose Skip.
-          setIntroWaitingForGesture(true);
-          setIntroPhase(current=>current==="done"||current==="leaving"?current:"loading");
+          // A broken media file must not trap visitors on the opening layer.
+          beginIntroExit();
         }}
         onFinish={finishIntro}
-        onSkip={beginIntroExit}
-        onSoundToggle={toggleIntroSound}
-        onSoundEnable={()=>setIntroSoundOn(true)}
-        soundOn={introSoundOn}
         mediaRef={introMedia}
       />}
       <div className="entryTop" aria-hidden={introActive} inert={introActive?true:undefined}>{wordmark}{language}</div>

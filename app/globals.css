@@ -6491,9 +6491,10 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
   border:0!important;
   border-radius:0!important;
   background:transparent!important;
-  /* The supplied film was exported on white. Multiply lets that white adopt
-     the site's warm paper tone while preserving the red/black artwork. */
-  mix-blend-mode:multiply;
+  /* The supplied film was exported on pale grey-white. Darken replaces those
+     light pixels with the exact paper colour while preserving its red/black art. */
+  mix-blend-mode:darken;
+  filter:contrast(1.06) saturate(1.14) brightness(1.04);
   opacity:1!important;
   transform:none!important;
   animation:none!important;
