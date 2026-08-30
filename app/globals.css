@@ -6490,7 +6490,10 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
   object-position:50% 50%;
   border:0!important;
   border-radius:0!important;
-  background:var(--release-paper)!important;
+  background:transparent!important;
+  /* The supplied film was exported on white. Multiply lets that white adopt
+     the site's warm paper tone while preserving the red/black artwork. */
+  mix-blend-mode:multiply;
   opacity:1!important;
   transform:none!important;
   animation:none!important;
