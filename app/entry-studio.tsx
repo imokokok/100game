@@ -6,40 +6,26 @@ import {
   useState,
   type FormEvent,
   type MouseEvent,
-  type Ref,
   type RefObject,
-  type SyntheticEvent,
 } from "react";
-import {preload} from "react-dom";
 import {parseQuery,storageGet,storageSet} from "./client-compat";
 
 type Lang="zh"|"en";
 type IntroPhase="checking"|"loading"|"playing"|"leaving"|"done";
 
 const copy={
-  zh:{language:"语言",publicVisit:"普通访问",publicDescription:"阅读项目理念与共同创作者页面",inviteEntry:"邀请码进入",inviteDescription:"创作者协作区",back:"返回",privateAccess:"私密访问",enterCode:"填写邀请码",intro:"参与者填写微信群聊名和邀请码；主策划直接输入主策划验证码。",welcome:"创作区用于记录项目中的实际工作。",welcomeDetail:"不要求游戏制作经验。草图、文字、参考资料和未完成文件都可提交。",name:"微信群聊名（参与者）",namePlaceholder:"填写微信群聊名",code:"邀请码",verify:"验证并进入",entering:"正在进入…",required:"参与者请填写自己的微信群聊名。",error:"邀请码验证成功后才能进入协作区域。",networkError:"网络异常，请检查网络后重试。",copyright:"© 2026 HuieChen. 版权所有。"},
-  en:{language:"Language",publicVisit:"Public visit",publicDescription:"Read the project concept and contributors",inviteEntry:"Invitation access",inviteDescription:"Creator Workspace",back:"Back",privateAccess:"Private access",enterCode:"Enter invitation",intro:"Participants enter their WeChat group name and invitation code. The Lead Designer enters the lead access code.",welcome:"The workspace records active project work.",welcomeDetail:"Game-making experience is not required. Sketches, text, references, and unfinished files may be submitted.",name:"WeChat group name (participants)",namePlaceholder:"WeChat group name",code:"Invitation code",verify:"Verify and enter",entering:"Opening…",required:"Participants must enter their WeChat group name.",error:"The collaboration area opens after the invitation is verified.",networkError:"Network error. Please check your connection and try again.",copyright:"© 2026 HuieChen. All rights reserved."},
+  zh:{language:"语言",entryKicker:"选择进入方式",entryTitle:"选择你要进入的部分",publicVisit:"普通访问",publicDescription:"阅读项目理念与共同创作者页面",inviteEntry:"邀请码进入",inviteDescription:"创作者协作区",back:"返回",privateAccess:"私密访问",enterCode:"填写邀请码",intro:"参与者填写微信群聊名和邀请码；主策划直接输入主策划验证码。",welcome:"创作区用于记录项目中的实际工作。",welcomeDetail:"不要求游戏制作经验。草图、文字、参考资料和未完成文件都可提交。",name:"微信群聊名（参与者）",namePlaceholder:"填写微信群聊名",code:"邀请码",verify:"验证并进入",entering:"正在进入…",required:"参与者请填写自己的微信群聊名。",error:"邀请码验证成功后才能进入协作区域。",networkError:"网络异常，请检查网络后重试。",copyright:"© 2026 HuieChen. 版权所有。"},
+  en:{language:"Language",entryKicker:"Choose access",entryTitle:"Choose where to enter",publicVisit:"Public visit",publicDescription:"Read the project concept and contributors",inviteEntry:"Invitation access",inviteDescription:"Creator Workspace",back:"Back",privateAccess:"Private access",enterCode:"Enter invitation",intro:"Participants enter their WeChat group name and invitation code. The Lead Designer enters the lead access code.",welcome:"The workspace records active project work.",welcomeDetail:"Game-making experience is not required. Sketches, text, references, and unfinished files may be submitted.",name:"WeChat group name (participants)",namePlaceholder:"WeChat group name",code:"Invitation code",verify:"Verify and enter",entering:"Opening…",required:"Participants must enter their WeChat group name.",error:"The collaboration area opens after the invitation is verified.",networkError:"Network error. Please check your connection and try again.",copyright:"© 2026 HuieChen. All rights reserved."},
 };
 
-function TitlePicture({className,alt="",priority=false,onLoad,onError,imageRef}:{className?:string;alt?:string;priority?:boolean;onLoad?:(event:SyntheticEvent<HTMLImageElement>)=>void;onError?:()=>void;imageRef?:Ref<HTMLImageElement>}){
-  return <picture className={className}>
-    <source media="(max-width: 860px)" srcSet="/what-100-people-title-600.webp" type="image/webp"/>
-    <source srcSet="/what-100-people-title.webp" type="image/webp"/>
-    <source srcSet="/what-100-people-title-600.png" type="image/png"/>
-    <img ref={imageRef} src="/what-100-people-title-600.png" alt={alt} width="1200" height="800" fetchPriority={priority?"high":undefined} onLoad={onLoad} onError={onError}/>
-  </picture>;
-}
-
 function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;mediaRef:RefObject<HTMLVideoElement|null>}){
-  // Keep a real play action available until the media timeline has actually
-  // advanced. Some older iOS and WeChat WebViews resolve play() while still
-  // displaying the poster frame.
-  const [needsPlayGesture,setNeedsPlayGesture]=useState(true);
+  // Start audibly where a browser permits it, then fall back to muted motion.
+  // A tap anywhere on the film restores its soundtrack without adding UI.
+  const [soundEnabled,setSoundEnabled]=useState(true);
   const playbackErrorRef=useRef(onPlaybackError);
   playbackErrorRef.current=onPlaybackError;
 
   function reportBlocked(blocked:boolean){
-    setNeedsPlayGesture(blocked);
     onPlaybackBlocked(blocked);
   }
 
@@ -50,6 +36,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     // only cross-browser way to guarantee audible playback.
     media.volume=1;
     media.muted=false;
+    setSoundEnabled(true);
     onPlaybackBlocked(false);
     try{
       const playback=media.play();
@@ -66,11 +53,26 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     const media=mediaRef.current;
     if(!media)return;
     let cancelled=false;
-    setNeedsPlayGesture(true);
     onPlaybackBlocked(true);
     media.volume=1;
     media.muted=false;
+    setSoundEnabled(true);
     try{media.currentTime=0}catch{}
+    const startMuted=()=>{
+      if(cancelled)return;
+      media.muted=true;
+      setSoundEnabled(false);
+      try{
+        const mutedPlayback=media.play();
+        if(mutedPlayback&&typeof mutedPlayback.then==="function"){
+          void mutedPlayback.catch(()=>{
+            if(!cancelled)onPlaybackBlocked(true);
+          });
+        }
+      }catch{
+        onPlaybackBlocked(true);
+      }
+    };
     const attempt=()=>{
       if(cancelled)return;
       try{
@@ -78,29 +80,24 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
         if(playback&&typeof playback.then==="function"){
           void playback.catch(()=>{
             if(cancelled)return;
-            // Autoplay rejection is not a broken media file. Keep the opening
-            // visible and offer a direct gesture instead of skipping it.
-            setNeedsPlayGesture(true);
-            onPlaybackBlocked(true);
+            // Browsers normally reject audible autoplay. Fall back to muted
+            // playback immediately so the opening never traps the visitor;
+            // the next tap can still enable its original soundtrack.
+            startMuted();
           });
         }
       }catch{
-        if(!cancelled){
-          setNeedsPlayGesture(true);
-          onPlaybackBlocked(true);
-        }
+        startMuted();
       }
     };
     const retry=()=>{if(media.paused&&!media.error)attempt()};
     const confirmProgress=()=>{
       if(cancelled||media.currentTime<.05)return;
-      setNeedsPlayGesture(false);
       onPlaybackBlocked(false);
     };
     const progressWatch=window.setTimeout(()=>{
       if(cancelled)return;
       if(media.paused||media.currentTime<.05){
-        setNeedsPlayGesture(true);
         onPlaybackBlocked(true);
       }
     },1200);
@@ -127,9 +124,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     onAnimationEnd={event=>{
       if(event.currentTarget===event.target&&phase==="leaving")onFinish();
     }}
-    onPointerDown={needsPlayGesture?requestPlayback:undefined}
-    onTouchEnd={needsPlayGesture?requestPlayback:undefined}
-    onClick={needsPlayGesture?requestPlayback:undefined}
+    onClick={requestPlayback}
   >
     <div className="openingPaper" aria-hidden="true"/>
     <div className="openingMedia">
@@ -144,7 +139,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
         preload="auto"
         controls={false}
         {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
-        muted={false}
+        muted={!soundEnabled}
         onPlaying={()=>{
           reportBlocked(false);
           onPlaying();
@@ -164,10 +159,6 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
 }
 
 export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
-  if(!initialInvite){
-    preload("/video/opening-title-poster.jpg",{as:"image",type:"image/jpeg",fetchPriority:"high"});
-    preload("/video/opening-title-6a63d7e7.mp4",{as:"video",type:"video/mp4"});
-  }
   const [lang,setLang]=useState<Lang>("zh");
   const [invite,setInvite]=useState(initialInvite);
   const [name,setName]=useState("");
@@ -236,9 +227,9 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
 
   useEffect(()=>{
     if(introPhase==="loading"&&!introWaitingForGesture){
-      // Slow mobile networks must not make the opening disappear. If playback
-      // has not started, keep the film visible and expose a direct play action.
-      const fallback=window.setTimeout(()=>setIntroWaitingForGesture(true),8000);
+      // Never let a slow network, unsupported decoder, or old WebView trap the
+      // visitor behind the opening layer. The entry page is always available.
+      const fallback=window.setTimeout(()=>beginIntroExit(),4200);
       return()=>window.clearTimeout(fallback);
     }
     if(introPhase==="playing"){
@@ -333,7 +324,8 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
       />}
       <div className="entryTop" aria-hidden={introActive} inert={introActive?true:undefined}>{wordmark}{language}</div>
       <section aria-hidden={introActive} inert={introActive?true:undefined}>
-        <h1 className="publicBrandTitle entryProjectTitle"><TitlePicture alt="WHAT 100 PEOPLE DO TO A GAME" priority={!introActive}/></h1>
+        <span className="kicker entryKicker">{c.entryKicker}</span>
+        <h1 className="entryAccessTitle">{c.entryTitle}</h1>
         <div className="entryChoices"><a tabIndex={introActive?-1:undefined} className="entryChoice" href="/concept"><b>{c.publicVisit}</b><span>{c.publicDescription}</span></a><a tabIndex={introActive?-1:undefined} className="entryChoice" href="/?access=invite" onClick={openInvite}><b>{c.inviteEntry}</b><span>{c.inviteDescription}</span></a></div>
       </section>
       <footer className="copyright" aria-hidden={introActive} inert={introActive?true:undefined}>{c.copyright}</footer>

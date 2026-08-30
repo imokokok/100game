@@ -4462,6 +4462,124 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   }
 }
 
+/* Final public entry: the collage belongs only to the opening film. The
+   destination is the quiet two-choice screen, with no repeated project art. */
+.entryGate:not(.inviteGate)>.entryTop,
+.entryGate:not(.inviteGate)>.copyright{display:none!important}
+.entryGate:not(.inviteGate)>section{
+  min-height:100vh;
+  min-height:100svh;
+  width:min(1180px,100%);
+  max-width:1180px!important;
+  margin:0 auto;
+  padding:clamp(38px,7vh,78px) clamp(24px,6vw,74px)!important;
+  align-content:center;
+}
+.entryGate:not(.inviteGate) .entryKicker{
+  display:block;
+  margin:0 0 22px;
+  color:#c72d24!important;
+  font-size:15px;
+  font-weight:750;
+  letter-spacing:.025em;
+}
+.entryGate:not(.inviteGate) .entryAccessTitle{
+  max-width:9ch!important;
+  margin:0 0 clamp(46px,6vw,72px)!important;
+  color:#333!important;
+  font-size:clamp(58px,7.2vw,98px)!important;
+  font-weight:650!important;
+  line-height:.98!important;
+  letter-spacing:-.06em!important;
+  text-wrap:balance;
+}
+.entryGate:not(.inviteGate) .entryChoices{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:clamp(24px,3vw,36px)!important;
+}
+.entryGate:not(.inviteGate) .entryChoices .entryChoice{
+  min-height:clamp(220px,25vw,280px)!important;
+  padding:clamp(34px,4vw,48px)!important;
+  justify-content:flex-end!important;
+  border:0!important;
+  border-radius:26px!important;
+  overflow:hidden!important;
+}
+.entryGate:not(.inviteGate) .entryChoices .entryChoice:first-child{
+  background:#c72d24!important;
+  box-shadow:0 14px 28px rgba(114,33,26,.18)!important;
+}
+.entryGate:not(.inviteGate) .entryChoices .entryChoice:nth-child(2){
+  background:#171715!important;
+  box-shadow:0 14px 28px rgba(23,23,21,.17)!important;
+}
+.entryGate:not(.inviteGate) .entryChoices .entryChoice:before{
+  inset:clamp(30px,3vw,42px) auto auto clamp(34px,4vw,48px)!important;
+  color:#fff!important;
+  font-size:20px!important;
+}
+.entryGate:not(.inviteGate) .entryChoices .entryChoice b{
+  color:#fff!important;
+  font-size:clamp(34px,3.4vw,48px)!important;
+  font-weight:650!important;
+}
+.entryGate:not(.inviteGate) .entryChoices .entryChoice span{
+  color:rgba(255,255,255,.78)!important;
+  font-size:16px!important;
+}
+.entryGate.introPending>section .entryKicker,
+.entryGate.introPending>section .entryAccessTitle{
+  opacity:0;
+  transform:translate3d(0,18px,0);
+  will-change:opacity,transform;
+}
+.entryGate.introPending.introRevealing>section .entryKicker{
+  animation:releaseEntryIn .38s cubic-bezier(.22,.61,.36,1) .08s both!important;
+}
+.entryGate.introPending.introRevealing>section .entryAccessTitle{
+  animation:releaseEntryIn .46s cubic-bezier(.16,.8,.28,1) .12s both!important;
+}
+
+@media(max-width:700px){
+  .entryGate:not(.inviteGate)>section{
+    width:100%;
+    padding:26px 7px 72px!important;
+    align-content:start;
+  }
+  .entryGate:not(.inviteGate) .entryKicker{margin:0 0 28px;font-size:15px}
+  .entryGate:not(.inviteGate) .entryAccessTitle{
+    max-width:7.4ch!important;
+    margin-bottom:58px!important;
+    font-size:clamp(51px,14.2vw,60px)!important;
+    line-height:.98!important;
+  }
+  .entryGate:not(.inviteGate) .entryChoices{
+    grid-template-columns:1fr!important;
+    gap:36px!important;
+  }
+  .entryGate:not(.inviteGate) .entryChoices .entryChoice{
+    min-height:234px!important;
+    padding:40px!important;
+    border-radius:26px!important;
+  }
+  .entryGate:not(.inviteGate) .entryChoices .entryChoice:before{
+    inset:35px auto auto 40px!important;
+    font-size:20px!important;
+  }
+  .entryGate:not(.inviteGate) .entryChoices .entryChoice b{font-size:39px!important}
+  .entryGate:not(.inviteGate) .entryChoices .entryChoice span{font-size:16px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .entryGate.introPending.introRevealing>section .entryKicker,
+  .entryGate.introPending.introRevealing>section .entryAccessTitle{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
+
 .surveyResponseList{display:grid;gap:8px;margin-top:10px}
 .surveyResponseList details{border-top:1px solid rgba(48,44,38,.16);padding-top:8px}
 .surveyResponseList summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:42px;cursor:pointer;font-size:13px;font-weight:700}
@@ -6479,7 +6597,9 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
   left:50%;
   top:50%;
   width:100vw;
-  height:auto;
+  /* Explicit fallback for Safari 13 / older embedded WebViews, which do not
+     implement aspect-ratio on positioned media wrappers. */
+  height:56.25vw;
   aspect-ratio:16/9;
   overflow:hidden;
   background-color:#e8e2d8!important;
@@ -6495,14 +6615,15 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
   background:
     linear-gradient(to bottom,
       var(--release-paper) 0,
-      transparent clamp(10px,2.2vw,24px),
-      transparent calc(100% - clamp(90px,32vw,275px)),
-      var(--release-paper) calc(100% - clamp(50px,24vw,210px)),
+      var(--release-paper) 2%,
+      transparent 12%,
+      transparent 45%,
+      var(--release-paper) 65%,
       var(--release-paper) 100%),
     linear-gradient(to right,
       transparent 0,
-      transparent calc(100% - clamp(145px,38vw,480px)),
-      var(--release-paper) calc(100% - clamp(55px,28vw,360px)),
+      transparent 45%,
+      var(--release-paper) 72%,
       var(--release-paper) 100%);
 }
 .openingSequence.isPlaying .openingMedia::after{
@@ -6643,6 +6764,12 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
     height:100vh;
     height:100svh;
   }
+}
+
+@supports not (mix-blend-mode:darken){
+  /* The film remains usable in very old WebViews; edge masks still merge its
+     exported canvas into the page even when blend modes are unavailable. */
+  .openingVideo{mix-blend-mode:normal!important;filter:none!important}
 }
 
 /* Shared raised / pressed language for navigation and controls. */
