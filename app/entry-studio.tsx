@@ -30,7 +30,7 @@ function TitlePicture({className,alt="",priority=false,onLoad,onError,imageRef}:
   </picture>;
 }
 
-function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,onSkip,onSoundToggle,soundOn,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;onSkip:()=>void;onSoundToggle:()=>void;soundOn:boolean;mediaRef:RefObject<HTMLVideoElement|null>}){
+function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,onSkip,onSoundToggle,onSoundEnable,soundOn,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;onSkip:()=>void;onSoundToggle:()=>void;onSoundEnable:()=>void;soundOn:boolean;mediaRef:RefObject<HTMLVideoElement|null>}){
   // Keep a real play action available until the media timeline has actually
   // advanced. Some older iOS and WeChat WebViews resolve play() while still
   // displaying the poster frame.
@@ -46,7 +46,12 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
   function requestPlayback(){
     const media=mediaRef.current;
     if(!media)return;
-    media.muted=true;
+    // This function runs directly inside a click/tap gesture, which is the
+    // only cross-browser way to guarantee audible playback.
+    media.volume=1;
+    media.muted=false;
+    onSoundEnable();
+    onPlaybackBlocked(false);
     try{
       const playback=media.play();
       if(playback&&typeof playback.then==="function"){
@@ -65,7 +70,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     setNeedsPlayGesture(true);
     onPlaybackBlocked(true);
     media.volume=1;
-    media.muted=true;
+    media.muted=false;
     try{media.currentTime=0}catch{}
     const attempt=()=>{
       if(cancelled)return;
@@ -151,7 +156,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     >
       <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
     </video>
-    {needsPlayGesture&&<button className="openingStart" type="button" onClick={requestPlayback}>播放片头 / Play opening</button>}
+    {needsPlayGesture&&<button className="openingStart" type="button" onClick={requestPlayback}>播放有声片头 / Play with sound</button>}
     <div className="openingControls">
       <button className={`openingSound${soundOn?" isOn":""}`} type="button" aria-label={soundOn?"关闭片头声音 / Mute opening":"开启片头声音 / Play opening sound"} aria-pressed={soundOn} onClick={onSoundToggle}>
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4Z"/><path className="soundWave" d="M16 9.3c1.4 1.5 1.4 3.9 0 5.4M18.8 6.5c3 3 3 8 0 11"/></svg>
@@ -174,7 +179,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   const [notice,setNotice]=useState("");
   const [busy,setBusy]=useState(false);
   const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"checking");
-  const [introSoundOn,setIntroSoundOn]=useState(false);
+  const [introSoundOn,setIntroSoundOn]=useState(true);
   const [introWaitingForGesture,setIntroWaitingForGesture]=useState(false);
   const introMedia=useRef<HTMLVideoElement>(null);
   const inviteRef=useRef(initialInvite);
@@ -232,6 +237,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     // scroll motion. Keep it present on every fresh entry (including devices
     // that request reduced UI motion); the Skip control remains immediately
     // available and the surrounding transition is reduced in CSS.
+    setIntroSoundOn(true);
     setIntroPhase("loading");
   },[introPhase,invite]);
 
@@ -364,6 +370,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
         onFinish={finishIntro}
         onSkip={beginIntroExit}
         onSoundToggle={toggleIntroSound}
+        onSoundEnable={()=>setIntroSoundOn(true)}
         soundOn={introSoundOn}
         mediaRef={introMedia}
       />}
