@@ -6456,8 +6456,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 .openingSequence.isChecking,
 .openingSequence.isLoading,
 .openingSequence.isPlaying{
-  animation:none!important;
-  opacity:1!important;
+  animation:releaseOpeningEnter .42s cubic-bezier(.22,.61,.36,1) both!important;
   visibility:visible!important;
   pointer-events:auto!important;
 }
@@ -6474,12 +6473,47 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
   background-image:none!important;
 }
 .openingPaper::before,.openingPaper::after{display:none!important}
+.openingMedia{
+  position:absolute;
+  z-index:2;
+  left:50%;
+  top:50%;
+  width:100vw;
+  height:auto;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background-color:#e8e2d8!important;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.openingMedia::after{
+  content:"";
+  position:absolute;
+  z-index:3;
+  inset:-1px;
+  pointer-events:none;
+  background:
+    linear-gradient(to bottom,
+      var(--release-paper) 0,
+      transparent clamp(10px,2.2vw,24px),
+      transparent calc(100% - clamp(90px,32vw,275px)),
+      var(--release-paper) calc(100% - clamp(50px,24vw,210px)),
+      var(--release-paper) 100%),
+    linear-gradient(to right,
+      transparent 0,
+      transparent calc(100% - clamp(145px,38vw,480px)),
+      var(--release-paper) calc(100% - clamp(55px,28vw,360px)),
+      var(--release-paper) 100%);
+}
+.openingSequence.isPlaying .openingMedia::after{
+  animation:releaseEdgeCleanup 1.08s cubic-bezier(.22,.61,.36,1) both;
+}
 .openingVideo,
 .openingSequence.isPlaying .openingVideo,
 .openingSequence.isLoading .openingVideo{
-  position:absolute!important;
-  inset:0!important;
-  z-index:2!important;
+  position:relative!important;
+  inset:auto!important;
+  z-index:1!important;
   display:block!important;
   width:100%!important;
   height:100%!important;
@@ -6495,7 +6529,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
      light pixels with the exact paper colour while preserving its red/black art. */
   mix-blend-mode:darken;
   filter:contrast(1.06) saturate(1.14) brightness(1.04);
-  opacity:1!important;
+  opacity:1;
   transform:none!important;
   animation:none!important;
   will-change:auto!important;
@@ -6571,21 +6605,23 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 }
 .openingSequence.isLeaving{
   pointer-events:none;
-  animation:releaseOpeningExit .74s cubic-bezier(.22,.61,.36,1) both!important;
+  animation:releaseOpeningExit .86s cubic-bezier(.22,.61,.36,1) both!important;
 }
-.openingSequence.isLeaving .openingVideo{
-  animation:releaseMediaExit .74s cubic-bezier(.22,.61,.36,1) both!important;
+.openingSequence.isLeaving .openingMedia{
+  animation:releaseMediaExit .86s cubic-bezier(.22,.61,.36,1) both!important;
   transform-origin:50% 50%;
 }
 .openingSequence.isLeaving .openingPaper{
-  animation:releasePaperExit .74s cubic-bezier(.22,.61,.36,1) both!important;
+  animation:releasePaperExit .86s cubic-bezier(.22,.61,.36,1) both!important;
 }
 .openingSequence.isLeaving .openingControls{animation:releaseControlsExit .22s ease both!important}
 .openingSequence.isLeaving .openingControls .openingSound,
 .openingSequence.isLeaving .openingControls .openingSkip{animation:none!important}
 @keyframes releaseLoading{to{transform:scaleX(.86)}}
-@keyframes releaseOpeningExit{0%,18%{opacity:1}100%{opacity:0;visibility:hidden}}
-@keyframes releaseMediaExit{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.992)}}
+@keyframes releaseOpeningEnter{from{opacity:0}to{opacity:1}}
+@keyframes releaseEdgeCleanup{0%,56%{opacity:1}100%{opacity:0}}
+@keyframes releaseOpeningExit{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+@keyframes releaseMediaExit{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.992)}}
 @keyframes releasePaperExit{to{opacity:0}}
 @keyframes releaseControlsExit{to{opacity:0;transform:translateY(6px)}}
 
@@ -6600,6 +6636,14 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 .entryGate.introPending.introRevealing>section .entryChoice:nth-child(2){animation:releaseEntryIn .44s cubic-bezier(.16,.8,.28,1) .19s both!important}
 .entryGate.introPending.introRevealing>.copyright{animation:releaseEntryIn .36s ease-out .22s both!important}
 @keyframes releaseEntryIn{to{opacity:1;transform:none}}
+
+@media(min-aspect-ratio:16/9){
+  .openingMedia{
+    width:auto;
+    height:100vh;
+    height:100svh;
+  }
+}
 
 /* Shared raised / pressed language for navigation and controls. */
 .entryGate .entryTop,
@@ -6796,7 +6840,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 
 @media(prefers-reduced-motion:reduce){
   .openingSequence.isLoading::after{animation:none!important;transform:scaleX(.45)}
-  .openingSequence.isLeaving,.openingSequence.isLeaving .openingVideo,.openingSequence.isLeaving .openingPaper,.openingSequence.isLeaving .openingControls{animation:none!important;opacity:0!important}
+  .openingSequence.isLeaving,.openingSequence.isLeaving .openingMedia,.openingSequence.isLeaving .openingVideo,.openingSequence.isLeaving .openingPaper,.openingSequence.isLeaving .openingControls{animation:none!important;opacity:0!important}
   .entryGate.introPending.introRevealing>.entryTop,
   .entryGate.introPending.introRevealing>section .publicBrandTitle,
   .entryGate.introPending.introRevealing>section .entryChoice,

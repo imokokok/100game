@@ -132,32 +132,34 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     onClick={needsPlayGesture?requestPlayback:undefined}
   >
     <div className="openingPaper" aria-hidden="true"/>
-    <video
-      ref={mediaRef}
-      className="openingVideo"
-      width="1280"
-      height="720"
-      poster="/video/opening-title-poster.jpg"
-      autoPlay
-      playsInline
-      preload="auto"
-      controls={false}
-      {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
-      muted={false}
-      onPlaying={()=>{
-        reportBlocked(false);
-        onPlaying();
-      }}
-      onEnded={onPlaybackEnd}
-      onError={()=>{
-        reportBlocked(true);
-        onPlaybackError();
-      }}
-      disablePictureInPicture
-      aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
-    >
-      <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
-    </video>
+    <div className="openingMedia">
+      <video
+        ref={mediaRef}
+        className="openingVideo"
+        width="1280"
+        height="720"
+        poster="/video/opening-title-poster.jpg"
+        autoPlay
+        playsInline
+        preload="auto"
+        controls={false}
+        {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
+        muted={false}
+        onPlaying={()=>{
+          reportBlocked(false);
+          onPlaying();
+        }}
+        onEnded={onPlaybackEnd}
+        onError={()=>{
+          reportBlocked(true);
+          onPlaybackError();
+        }}
+        disablePictureInPicture
+        aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
+      >
+        <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
+      </video>
+    </div>
   </div>;
 }
 
