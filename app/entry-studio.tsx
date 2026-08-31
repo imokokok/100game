@@ -19,9 +19,9 @@ const copy={
 };
 
 function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlaybackError,onFinish,mediaRef}:{phase:IntroPhase;onPlaying:()=>void;onPlaybackBlocked:(blocked:boolean)=>void;onPlaybackEnd:()=>void;onPlaybackError:()=>void;onFinish:()=>void;mediaRef:RefObject<HTMLVideoElement|null>}){
-  // Start audibly where a browser permits it, then fall back to muted motion.
-  // A tap anywhere on the film restores its soundtrack without adding UI.
-  const [soundEnabled,setSoundEnabled]=useState(true);
+  // Mobile browsers only permit reliable inline autoplay while muted. A tap
+  // anywhere on the film may restore its soundtrack without adding controls.
+  const [soundEnabled,setSoundEnabled]=useState(false);
   const playbackErrorRef=useRef(onPlaybackError);
   playbackErrorRef.current=onPlaybackError;
 
@@ -53,65 +53,28 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
     const media=mediaRef.current;
     if(!media)return;
     let cancelled=false;
-    onPlaybackBlocked(true);
+    onPlaybackBlocked(false);
     media.volume=1;
-    media.muted=false;
-    setSoundEnabled(true);
-    try{media.currentTime=0}catch{}
-    const startMuted=()=>{
-      if(cancelled)return;
-      media.muted=true;
-      setSoundEnabled(false);
-      try{
-        const mutedPlayback=media.play();
-        if(mutedPlayback&&typeof mutedPlayback.then==="function"){
-          void mutedPlayback.catch(()=>{
-            if(!cancelled)onPlaybackBlocked(true);
-          });
-        }
-      }catch{
-        onPlaybackBlocked(true);
-      }
-    };
-    const attempt=()=>{
-      if(cancelled)return;
-      try{
-        const playback=media.play();
-        if(playback&&typeof playback.then==="function"){
-          void playback.catch(()=>{
-            if(cancelled)return;
-            // Browsers normally reject audible autoplay. Fall back to muted
-            // playback immediately so the opening never traps the visitor;
-            // the next tap can still enable its original soundtrack.
-            startMuted();
-          });
-        }
-      }catch{
-        startMuted();
-      }
-    };
-    const retry=()=>{if(media.paused&&!media.error)attempt()};
+    media.muted=true;
+    setSoundEnabled(false);
     const confirmProgress=()=>{
       if(cancelled||media.currentTime<.05)return;
       onPlaybackBlocked(false);
     };
-    const progressWatch=window.setTimeout(()=>{
-      if(cancelled)return;
-      if(media.paused||media.currentTime<.05){
-        onPlaybackBlocked(true);
-      }
-    },1200);
-    media.addEventListener("loadeddata",retry);
-    media.addEventListener("canplay",retry);
     media.addEventListener("timeupdate",confirmProgress);
-    try{media.load();attempt()}catch{
+    try{
+      // Do not call load() or reset currentTime here. Both operations restart
+      // the request during hydration in iOS/WeChat and can freeze a decoded
+      // middle frame. The server-rendered autoplay request is already active.
+      const playback=media.play();
+      if(playback&&typeof playback.then==="function"){
+        void playback.catch(()=>{if(!cancelled)onPlaybackBlocked(true)});
+      }
+    }catch{
       if(!cancelled)playbackErrorRef.current();
     }
     return()=>{
       cancelled=true;
-      window.clearTimeout(progressWatch);
-      media.removeEventListener("loadeddata",retry);
-      media.removeEventListener("canplay",retry);
       media.removeEventListener("timeupdate",confirmProgress);
     };
   },[mediaRef,onPlaybackBlocked,phase]);
@@ -166,8 +129,13 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   const [notice,setNotice]=useState("");
   const [busy,setBusy]=useState(false);
   const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"checking");
-  const [introWaitingForGesture,setIntroWaitingForGesture]=useState(false);
+  const [introRun,setIntroRun]=useState(0);
+  // Playback policy is diagnostic only. Keeping it in a ref avoids a render
+  // loop from unreliable media events and, crucially, never cancels the
+  // fail-open deadline.
+  const introPlaybackBlocked=useRef(false);
   const introMedia=useRef<HTMLVideoElement>(null);
+  const introHardStop=useRef<number|null>(null);
   const inviteRef=useRef(initialInvite);
   const c=copy[lang];
 
@@ -182,7 +150,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
       inviteRef.current=nextInvite;
       setInvite(nextInvite);
       if(nextInvite){
-        setIntroWaitingForGesture(false);
+        introPlaybackBlocked.current=false;
         setIntroPhase("done");
       }else if(wasInvite){
         setIntroPhase("checking");
@@ -192,15 +160,20 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     };
     const restore=(event:PageTransitionEvent)=>{
       if(!event.persisted)return;
+      if(introHardStop.current!==null){
+        window.clearTimeout(introHardStop.current);
+        introHardStop.current=null;
+      }
       sync();
       const params=parseQuery(location.search);
       if(params.access==="invite"||"invite" in params)return;
       const media=introMedia.current;
       if(media){
-        try{media.pause();media.currentTime=0}catch{}
+        try{media.pause()}catch{}
       }
-      setIntroWaitingForGesture(false);
+      introPlaybackBlocked.current=false;
       setIntroPhase("checking");
+      setIntroRun(current=>current+1);
     };
     sync();
     window.addEventListener("popstate",sync);
@@ -226,22 +199,37 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   },[introPhase,invite]);
 
   useEffect(()=>{
-    if(introPhase==="loading"&&!introWaitingForGesture){
+    if(introPhase==="loading"){
       // Never let a slow network, unsupported decoder, or old WebView trap the
       // visitor behind the opening layer. The entry page is always available.
-      const fallback=window.setTimeout(()=>beginIntroExit(),4200);
+      const fallback=window.setTimeout(()=>beginIntroExit(),2400);
       return()=>window.clearTimeout(fallback);
     }
     if(introPhase==="playing"){
-      const fallback=window.setTimeout(()=>beginIntroExit(),5500);
+      const fallback=window.setTimeout(()=>beginIntroExit(),4600);
       return()=>window.clearTimeout(fallback);
     }
     if(introPhase==="leaving"){
       const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const fallback=window.setTimeout(()=>finishIntro(),reduced?40:1100);
+      const fallback=window.setTimeout(()=>finishIntro(),reduced?40:650);
       return()=>window.clearTimeout(fallback);
     }
-  },[introPhase,introWaitingForGesture]);
+  },[introPhase]);
+
+  useEffect(()=>{
+    if(invite)return;
+    // This wall-clock watchdog is deliberately independent of video events
+    // and React playback state. Some WeChat/X5 WebViews freeze on a decoded
+    // middle frame without firing `ended`, `error`, `stalled`, or `playing`.
+    // Even in that failure mode the access screen is released automatically.
+    const release=()=>setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
+    const hardStop=window.setTimeout(release,4800);
+    introHardStop.current=hardStop;
+    return()=>{
+      window.clearTimeout(hardStop);
+      if(introHardStop.current===hardStop)introHardStop.current=null;
+    };
+  },[invite,introRun]);
 
   function beginIntroExit(){
     setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
@@ -249,10 +237,14 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
 
   function finishIntro(){
     setIntroPhase("done");
-    setIntroWaitingForGesture(false);
+    introPlaybackBlocked.current=false;
+    if(introHardStop.current!==null){
+      window.clearTimeout(introHardStop.current);
+      introHardStop.current=null;
+    }
     const media=introMedia.current;
     if(media){
-      try{media.pause();media.currentTime=0}catch{}
+      try{media.pause()}catch{}
     }
   }
 
@@ -310,10 +302,10 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
       {introActive&&<OpeningSequence
         phase={introPhase}
         onPlaying={()=>{
-          setIntroWaitingForGesture(false);
+          introPlaybackBlocked.current=false;
           setIntroPhase(current=>current==="loading"?"playing":current);
         }}
-        onPlaybackBlocked={setIntroWaitingForGesture}
+        onPlaybackBlocked={blocked=>{introPlaybackBlocked.current=blocked}}
         onPlaybackEnd={beginIntroExit}
         onPlaybackError={()=>{
           // A broken media file must not trap visitors on the opening layer.

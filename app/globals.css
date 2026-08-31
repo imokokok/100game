@@ -6938,6 +6938,16 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 }
 
 @media(max-width:700px){
+  /* Keep the opening on the compositor fast path in iOS, WeChat and older
+     Android WebViews. Per-frame blend/filter passes can freeze these engines
+     even though the MP4 itself is small. */
+  .openingVideo,
+  .openingSequence.isPlaying .openingVideo,
+  .openingSequence.isLoading .openingVideo{
+    mix-blend-mode:normal!important;
+    filter:none!important;
+  }
+  .openingMedia::after{display:none!important}
   .openingControls{left:12px;right:12px;bottom:12px;left:max(12px,env(safe-area-inset-left));right:max(12px,env(safe-area-inset-right));bottom:max(12px,env(safe-area-inset-bottom))}
   .openingControls .openingSound,.openingControls .openingSkip{min-height:42px;padding:9px 12px!important;font-size:10px!important}
   .openingControls .openingSound span{display:none}
