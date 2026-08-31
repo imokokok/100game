@@ -96,7 +96,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
         className="openingVideo"
         width="1280"
         height="720"
-        poster="/video/opening-title-poster.jpg"
+        poster="/video/opening-title-poster-ed541f.jpg"
         autoPlay
         playsInline
         preload="auto"
@@ -115,7 +115,7 @@ function OpeningSequence({phase,onPlaying,onPlaybackBlocked,onPlaybackEnd,onPlay
         disablePictureInPicture
         aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
       >
-        <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
+        <source src="/video/opening-title-ed541f.mp4" type="video/mp4"/>
       </video>
     </div>
   </div>;
