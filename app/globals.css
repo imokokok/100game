@@ -6734,12 +6734,15 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 
 @media(max-width:700px){
   /* Keep the opening on the compositor fast path in iOS, WeChat and older
-     Android WebViews. Per-frame blend/filter passes can freeze these engines
-     even though the MP4 itself is small. */
+     Android WebViews. The darken blend stays ON so the film's pale grey-white
+     export merges into the paper theme exactly like desktop; only the
+     per-frame filter is dropped, since filter passes are what freeze these
+     engines. Plain blend is a compositor-level op modern phones handle fine.
+     WebViews without blend support inherit the global
+     @supports not (mix-blend-mode:darken) fallback. */
   .openingVideo,
   .openingSequence.isPlaying .openingVideo,
   .openingSequence.isLoading .openingVideo{
-    mix-blend-mode:normal!important;
     filter:none!important;
   }
   .openingMedia::after{display:none!important}
