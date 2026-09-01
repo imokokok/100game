@@ -12,7 +12,7 @@ const zh={
  hero:{
   eyebrow:"AN INDEPENDENT COLLECTIVE GAME PROJECT",titleLabel:"WHAT 100 PEOPLE DO TO A GAME",
   lineOne:"WHAT",lineTwoPrefix:"100",lineTwoSuffix:"PEOPLE",lineThreePrefix:"DO TO A",lineThreeAccent:"GAME",
-  subtitle:"一百个人，做一件不普通的事。",note:"DIFFERENT PEOPLE. A WIDER TOMORROW.",scroll:"向下阅读",
+  subtitle:"一百个人，做一件不普通的事。",note:"DIFFERENT PEOPLE. A WIDER TOMORROW.",
  },
  question:{
   eyebrow:"A QUESTION",title:"游戏是什么？",
@@ -65,7 +65,7 @@ const en={
  hero:{
   eyebrow:"AN INDEPENDENT COLLECTIVE GAME PROJECT",titleLabel:"WHAT 100 PEOPLE DO TO A GAME",
   lineOne:"WHAT",lineTwoPrefix:"100",lineTwoSuffix:"PEOPLE",lineThreePrefix:"DO TO A",lineThreeAccent:"GAME",
-  subtitle:"One hundred people making something uncommon.",note:"DIFFERENT PEOPLE. A WIDER TOMORROW.",scroll:"Scroll",
+  subtitle:"One hundred people making something uncommon.",note:"DIFFERENT PEOPLE. A WIDER TOMORROW.",
  },
  question:{
   eyebrow:"A QUESTION",title:"What is a game?",
@@ -107,7 +107,3 @@ const en={
 };
 
 export const editorialContent={zh,en} as const;
-
-export const editorialAssets={
- people:{src:"/images/people-collage-v1.webp",width:1586,height:992},
-} as const;

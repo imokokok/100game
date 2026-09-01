@@ -8,6 +8,32 @@ import {
 
 type IntroPhase="checking"|"loading"|"playing"|"leaving"|"done";
 
+function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:string;onChange:(next:EditorialLang)=>void}){
+ const [open,setOpen]=useState(false);
+ const root=useRef<HTMLDivElement>(null),trigger=useRef<HTMLButtonElement>(null);
+
+ useEffect(()=>{
+  if(!open)return;
+  const closeOutside=(event:PointerEvent)=>{if(root.current&&!root.current.contains(event.target as Node))setOpen(false)};
+  const closeWithKeyboard=(event:KeyboardEvent)=>{if(event.key!=="Escape")return;setOpen(false);trigger.current?.focus()};
+  document.addEventListener("pointerdown",closeOutside);
+  window.addEventListener("keydown",closeWithKeyboard);
+  return()=>{document.removeEventListener("pointerdown",closeOutside);window.removeEventListener("keydown",closeWithKeyboard)};
+ },[open]);
+
+ const select=(next:EditorialLang)=>{onChange(next);setOpen(false);window.setTimeout(()=>trigger.current?.focus(),0)};
+ return <div ref={root} className={`editorialLanguage${open?" isOpen":""}`}>
+  <span className="editorialLanguageLabel">{label}</span>
+  <button ref={trigger} className="editorialLanguageTrigger" type="button" aria-label={label} aria-haspopup="listbox" aria-expanded={open} onClick={()=>setOpen(value=>!value)}>
+   <span>{lang==="zh"?"中文":"EN"}</span><i aria-hidden="true"/>
+  </button>
+  {open&&<div className="editorialLanguageMenu" role="listbox" aria-label={label}>
+   <button type="button" role="option" aria-selected={lang==="zh"} onClick={()=>select("zh")}>中文</button>
+   <button type="button" role="option" aria-selected={lang==="en"} onClick={()=>select("en")}>EN</button>
+  </div>}
+ </div>;
+}
+
 function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void}){
  const [soundEnabled,setSoundEnabled]=useState(false);
 
@@ -55,6 +81,10 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
   onAnimationEnd={event=>{if(event.currentTarget===event.target&&phase==="leaving")onFinish()}}
  >
   <div className="openingMedia">
+   <picture className="openingTitleStill" aria-hidden="true">
+    <source srcSet="/images/title-art-sharp-v2.webp" type="image/webp"/>
+    <img src="/images/title-art-sharp-v2-fallback.png" alt="" width="1920" height="1280" decoding="async" draggable="false"/>
+   </picture>
    <video
     ref={mediaRef}
     className="openingVideo"
@@ -196,7 +226,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     </nav>
     <div className="editorialTools">
      <a className="editorialSurveyLink" href="/survey/participant-portrait">{c.ui.survey}</a>
-     <label className="editorialLanguage"><span>{c.ui.language}</span><select value={lang} onChange={event=>setLang(event.target.value as EditorialLang)} aria-label={c.ui.language}><option value="zh">中文</option><option value="en">EN</option></select></label>
+     <EditorialLanguageMenu lang={lang} label={c.ui.language} onChange={setLang}/>
      <a ref={creatorButton} className="editorialCreatorButton" href="/lead" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
     </div>
    </header>

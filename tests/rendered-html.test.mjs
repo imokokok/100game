@@ -394,7 +394,13 @@ test("builds the public story as eight editable editorial sections", async () =>
     assert.match(sections, new RegExp(`id=\\"section-0${number}\\"`));
   }
   assert.match(content, /world:\{eyebrow:"THE GAME",title:"我们正在\\n构建的世界"\}/);
-  assert.match(content, /people:\{src:"\/images\/people-collage-v1\.webp",width:1586,height:992\}/);
+  for (const number of [1,2,3,5,6,7,8]) {
+    assert.match(sections, new RegExp(`EditorialArtwork number=\\{${number}\\}`));
+    await access(new URL(`../public/images/editorial-art-${number}-v2.webp`, import.meta.url));
+    await access(new URL(`../public/images/editorial-art-${number}-v2.png`, import.meta.url));
+  }
+  assert.doesNotMatch(sections, /heroDoorPlane|questionOrb|whyRedCircle|worldDoor|inspirationPlane|closingArch/);
+  assert.doesNotMatch(content, /向下阅读|scroll:"Scroll"/);
   assert.doesNotMatch(`${entry}\n${sections}`, /project-recruitment-poster|Join Us|加入我们|成为第101个人/);
   assert.match(css, /\.editorialPage\.motionReady \[data-reveal\]/);
   assert.match(css, /@media\(max-width:820px\)/);

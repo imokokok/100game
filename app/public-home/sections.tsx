@@ -1,18 +1,24 @@
-import {editorialAssets,editorialContent,type EditorialLang} from "./content";
-import type {CSSProperties} from "react";
+import {editorialContent,type EditorialLang} from "./content";
 
 type Copy=(typeof editorialContent)[EditorialLang];
 
 function Lines({text}:{text:string}){
  return <>{text.split("\n").map((line,index)=><span key={`${line}-${index}`}>{line}</span>)}</>;
 }
-
 function SectionNumber({number}:{number:string}){
  return <span className="editorialSectionNumber" aria-label={`Section ${number}`}>{number}<i aria-hidden="true"> / 08</i></span>;
 }
 
 function Eyebrow({children}:{children:string}){
  return <p className="editorialEyebrow">{children}</p>;
+}
+
+function EditorialArtwork({number}:{number:1|2|3|5|6|7|8}){
+ const base=`/images/editorial-art-${number}-v2`;
+ return <picture className={`editorialArtwork editorialArtwork${String(number).padStart(2,"0")}`} aria-hidden="true">
+  <source srcSet={`${base}.webp`} type="image/webp"/>
+  <img src={`${base}.png`} alt="" width="1024" height="768" loading={number===1?"eager":"lazy"} decoding="async" draggable="false"/>
+ </picture>;
 }
 
 export function ProjectMark(){
@@ -31,14 +37,9 @@ export function HeroSection({copy}:{copy:Copy["hero"]}){
    </h1>
    <p className="editorialHeroSubtitle">{copy.subtitle}</p>
    <p className="editorialHeroNote">{copy.note}</p>
-   <a className="editorialScroll" href="#section-02"><span aria-hidden="true">↓</span>{copy.scroll}</a>
   </div>
   <div className="editorialHeroStage" data-reveal="visual" aria-hidden="true">
-   <div className="heroDoorPlane heroDoorPlaneBack"/>
-   <div className="heroDoorPlane heroDoorPlaneFront"/>
-   <div className="heroDoorRedEdge"/>
-   <div className="heroDoorThreshold"/>
-   <div className="editorialFigure"><i/></div>
+   <EditorialArtwork number={1}/>
   </div>
  </section>;
 }
@@ -51,11 +52,7 @@ export function QuestionSection({copy}:{copy:Copy["question"]}){
    <h2 id="questionTitle"><Lines text={copy.title}/></h2>
   </div>
   <div className="questionVisual" data-reveal="visual" aria-hidden="true">
-   <div className="questionDoor questionDoorLeft"/>
-   <div className="questionDoor questionDoorRight"/>
-   <div className="questionOrb"><i/><b/></div>
-   <div className="questionGround"/>
-   <div className="editorialFigure questionFigure"><i/></div>
+   <EditorialArtwork number={2}/>
   </div>
   <div className="editorialQuestionBody" data-reveal="copy">
    <div className="questionStatements">{copy.statements.map(item=><span key={item}>{item}</span>)}</div>
@@ -66,7 +63,6 @@ export function QuestionSection({copy}:{copy:Copy["question"]}){
 }
 
 export function Why100Section({copy}:{copy:Copy["why"]}){
- const people=Array.from({length:28},(_,index)=>index);
  return <section className="editorialSection editorialWhy" id="section-03" aria-labelledby="whyTitle">
   <SectionNumber number="03"/>
   <div className="editorialWhyHeading" data-reveal="title">
@@ -74,10 +70,7 @@ export function Why100Section({copy}:{copy:Copy["why"]}){
    <h2 id="whyTitle"><Lines text={copy.title}/></h2>
   </div>
   <div className="whyVisual" data-reveal="visual" aria-hidden="true">
-   <div className="whyRedCircle"/>
-   <div className="whyPeopleField">{people.map(index=><i key={index} style={{"--person-index":index} as CSSProperties}/>)}</div>
-   <div className="whyGround"/>
-   <div className="editorialFigure whyFigure"><i/></div>
+   <EditorialArtwork number={3}/>
   </div>
   <div className="editorialWhyBody" data-reveal="copy">
    <p>{copy.body}</p>
@@ -109,10 +102,7 @@ export function WorldSection({copy}:{copy:Copy["world"]}){
    <h2 id="worldTitle"><Lines text={copy.title}/></h2>
   </div>
   <div className="worldVisual" data-reveal="visual" aria-hidden="true">
-   <div className="worldDoor worldDoorDark"/>
-   <div className="worldDoor worldDoorPaper"/>
-   <div className="worldRedSun"/>
-   <div className="worldGround"/>
+   <EditorialArtwork number={5}/>
   </div>
  </section>;
 }
@@ -124,8 +114,8 @@ export function PeopleSection({copy}:{copy:Copy["people"]}){
    <Eyebrow>{copy.eyebrow}</Eyebrow>
    <h2 id="peopleTitle"><Lines text={copy.title}/></h2>
   </div>
-  <figure className="peopleCollage" data-reveal="visual">
-   <img src={editorialAssets.people.src} width={editorialAssets.people.width} height={editorialAssets.people.height} loading="eager" fetchPriority="low" decoding="async" alt={copy.imageAlt}/>
+  <figure className="peopleCollage" data-reveal="visual" role="img" aria-label={copy.imageAlt}>
+   <EditorialArtwork number={6}/>
   </figure>
   <div className="peopleBody editorialBodyCopy" data-reveal="copy">{copy.body.map(paragraph=><p key={paragraph}>{paragraph}</p>)}</div>
  </section>;
@@ -139,10 +129,7 @@ export function InspirationSection({copy}:{copy:Copy["inspiration"]}){
    <h2 id="inspirationTitle"><Lines text={copy.title}/></h2>
   </div>
   <div className="inspirationVisual" data-reveal="visual" aria-hidden="true">
-   <div className="inspirationCross"><i/><b/></div>
-   <div className="inspirationPlane inspirationPlaneBack"/>
-   <div className="inspirationPlane inspirationPlaneFront"/>
-   <div className="editorialFigure inspirationFigure"><i/></div>
+   <EditorialArtwork number={7}/>
   </div>
   <div className="inspirationBody editorialBodyCopy" data-reveal="copy">{copy.body.map(paragraph=><p key={paragraph}>{paragraph}</p>)}</div>
  </section>;
@@ -156,9 +143,7 @@ export function ClosingSection({copy}:{copy:Copy["closing"]}){
    <h2 id="closingTitle"><Lines text={copy.title}/></h2>
   </div>
   <div className="closingVisual" data-reveal="visual" aria-hidden="true">
-   <div className="closingArch"><i/></div>
-   <div className="closingRedDoor"/>
-   <div className="closingPath"/>
+   <EditorialArtwork number={8}/>
   </div>
   <p className="closingBody" data-reveal="copy">{copy.body}</p>
   <p className="closingAside" aria-hidden="true"><Lines text={copy.aside}/></p>
