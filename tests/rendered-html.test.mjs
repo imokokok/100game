@@ -227,13 +227,14 @@ test("keeps supporting interface text legible", async () => {
 });
 
 test("keeps invitation placeholders visible on narrow screens", async () => {
-  const [entry, studio, css] = await Promise.all([
+  const [entry, content, studio, css] = await Promise.all([
     readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/public-home/content.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  assert.match(entry, /namePlaceholder:"填写你的微信群聊名"/);
-  assert.doesNotMatch(`${entry}\n${studio}`, /填写你在群里使用的名字|Name used in the group/);
+  assert.match(content, /namePlaceholder:"填写你的微信群聊名"/);
+  assert.doesNotMatch(`${entry}\n${content}\n${studio}`, /填写你在群里使用的名字|Name used in the group/);
   assert.match(css, /-webkit-text-size-adjust:100%/);
   assert.match(css, /\.gateInvite label\{min-width:0\}/);
   assert.match(css, /\.gateInvite input\{font-size:15px!important;padding-inline:14px\}/);
@@ -375,7 +376,29 @@ test("keeps workspace navigation refresh-safe and gives the lead the correct ext
   assert.match(participantApi, /role: row \? "participant" : null/);
   assert.match(leadResponsesApi, /!isOwner\(req\)&&!await isLead\(req\)/);
   assert.match(css, /Mobile navigation and filter rails remain complete without browser scrollbars/);
-  assert.match(entry, /busy\?c\.entering:c\.enter/);
+  assert.match(entry, /busy\?c\.ui\.entering:c\.ui\.enter/);
+});
+
+test("builds the public story as eight editable editorial sections", async () => {
+  const [entry, sections, content, css] = await Promise.all([
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/public-home/sections.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/public-home/content.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/public-editorial.css", import.meta.url), "utf8"),
+  ]);
+  for (const component of ["HeroSection","QuestionSection","Why100Section","ProcessSection","WorldSection","PeopleSection","InspirationSection","ClosingSection"]) {
+    assert.match(entry, new RegExp(`<${component} copy=`));
+    assert.match(sections, new RegExp(`export function ${component}`));
+  }
+  for (let number=1; number<=8; number+=1) {
+    assert.match(sections, new RegExp(`id=\\"section-0${number}\\"`));
+  }
+  assert.match(content, /world:\{eyebrow:"THE GAME",title:"我们正在\\n构建的世界"\}/);
+  assert.match(content, /people:\{src:"\/images\/people-collage-v1\.webp",width:1586,height:992\}/);
+  assert.doesNotMatch(`${entry}\n${sections}`, /project-recruitment-poster|Join Us|加入我们|成为第101个人/);
+  assert.match(css, /\.editorialPage\.motionReady \[data-reveal\]/);
+  assert.match(css, /@media\(max-width:820px\)/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
 });
 
 test("returns to workspace home once and resets the rendered scroll surface", async () => {
