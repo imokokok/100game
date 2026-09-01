@@ -1,12 +1,13 @@
 "use client";
 
-import {useEffect,useRef,useState,type FormEvent,type MouseEvent} from "react";
+import {useCallback,useEffect,useRef,useState,type FormEvent,type MouseEvent,type RefObject} from "react";
 
 type Lang="zh"|"en";
+type IntroPhase="checking"|"loading"|"playing"|"leaving"|"done";
 
 const copy={
  zh:{
-  language:"语言",project:"项目",survey:"填写问卷",creator:"主创入口",
+  language:"语言",project:"项目",survey:"填写问卷",creator:"创作入口",
   kicker:"PARTICIPATORY GAME PROJECT · 共同创作计划",
   title:"一百个人，如何共同做出一个游戏？",
   intro:"我们邀请一百个年龄、职业与经验不同的人，在三十天中通过选择、协商和试验，共同形成一件尚未被预设形式的游戏作品。参与不以游戏制作经验为前提。",
@@ -47,17 +48,119 @@ const copy={
  }
 } as const;
 
-export function EntryStudio(){
- const [lang,setLang]=useState<Lang>("zh"),[creatorOpen,setCreatorOpen]=useState(false),[name,setName]=useState(""),[code,setCode]=useState(""),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
- const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null);
+function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void}){
+ const [soundEnabled,setSoundEnabled]=useState(false);
+
+ const enableSound=useCallback(()=>{
+  const media=mediaRef.current;if(!media)return;
+  media.volume=1;media.muted=false;
+  try{
+   const playback=media.play();
+   if(playback&&typeof playback.then==="function")void playback.then(()=>setSoundEnabled(true)).catch(()=>{media.muted=true;setSoundEnabled(false);void media.play().catch(()=>undefined)});
+   else setSoundEnabled(true);
+  }catch{media.muted=true;setSoundEnabled(false);try{void media.play()}catch{/* The independent timeout releases the page. */}}
+ },[mediaRef]);
+
+ useEffect(()=>{
+  if(phase!=="loading")return;
+  const media=mediaRef.current;if(!media)return;
+  let cancelled=false;
+  media.volume=1;
+  // Try the soundtrack first where the host browser permits it, then fall
+  // back immediately to reliable muted inline playback. No load() or seek is
+  // used here because both can freeze hydrated video in iOS and WeChat/X5.
+  media.muted=false;
+  try{
+   const audible=media.play();
+   if(audible&&typeof audible.then==="function"){
+    void audible.then(()=>{if(!cancelled)setSoundEnabled(true)}).catch(()=>{
+     if(cancelled)return;media.muted=true;setSoundEnabled(false);
+     try{const muted=media.play();if(muted&&typeof muted.catch==="function")void muted.catch(()=>{if(!cancelled)onError()})}catch{onError()}
+    });
+   }else window.setTimeout(()=>{if(!cancelled)setSoundEnabled(true)},0);
+  }catch{
+   media.muted=true;
+   try{void media.play()}catch{onError()}
+  }
+  const bridge=()=>enableSound();
+  document.addEventListener("WeixinJSBridgeReady",bridge);
+  document.addEventListener("YixinJSBridgeReady",bridge);
+  return()=>{cancelled=true;document.removeEventListener("WeixinJSBridgeReady",bridge);document.removeEventListener("YixinJSBridgeReady",bridge)};
+ },[enableSound,mediaRef,onError,phase]);
+
+ return <div
+  className={`openingSequence is${phase[0].toUpperCase()}${phase.slice(1)}`}
+  role="dialog"
+  aria-modal="true"
+  aria-label="WHAT 100 PEOPLE DO TO A GAME opening title"
+  onPointerDown={enableSound}
+  onTouchEnd={enableSound}
+  onAnimationEnd={event=>{if(event.currentTarget===event.target&&phase==="leaving")onFinish()}}
+ >
+  <div className="openingMedia">
+   <video
+    ref={mediaRef}
+    className="openingVideo"
+    width="1280"
+    height="720"
+    poster="/video/opening-title-poster-65f6fc0.webp"
+    autoPlay
+    playsInline
+    preload="auto"
+    controls={false}
+    controlsList="nodownload noplaybackrate noremoteplayback"
+    {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
+    muted={!soundEnabled}
+    onPlaying={onPlaying}
+    onEnded={onEnded}
+    onError={onError}
+    disablePictureInPicture
+    disableRemotePlayback
+    aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
+   >
+    <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
+    <track kind="captions" src="/video/opening-title-captions.vtt" srcLang="en" label="Sound effects"/>
+   </video>
+  </div>
+ </div>;
+}
+
+export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
+ const [lang,setLang]=useState<Lang>("zh"),[creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
+ const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"loading");
+ const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null);
  const c=copy[lang];
 
  useEffect(()=>{
-  try{const saved=localStorage.getItem("hundred-language");if(saved==="en")setLang("en")}catch{}
-  const sync=()=>{const params=new URLSearchParams(location.search);setCreatorOpen(params.get("access")==="invite"||params.has("invite"));const token=params.get("invite");if(token)setCode(token)};
-  sync();window.addEventListener("popstate",sync);return()=>window.removeEventListener("popstate",sync);
+  const sync=()=>{const params=new URLSearchParams(location.search);const nextOpen=params.get("access")==="invite"||params.has("invite");setCreatorOpen(nextOpen);if(nextOpen)finishIntro();const token=params.get("invite");if(token)setCode(token)};
+  const restore=(event:PageTransitionEvent)=>{if(event.persisted)finishIntro()};
+  const hydrate=window.setTimeout(()=>{try{const saved=localStorage.getItem("hundred-language");if(saved==="en")setLang("en")}catch{/* Storage can be disabled in embedded browsers. */}sync()},0);
+  window.addEventListener("popstate",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("pageshow",restore)};
  },[]);
- useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";try{localStorage.setItem("hundred-language",lang)}catch{}},[lang]);
+ useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";try{localStorage.setItem("hundred-language",lang)}catch{/* Storage can be disabled in embedded browsers. */}},[lang]);
+ useEffect(()=>{
+  if(introPhase==="loading"){
+   const fallback=window.setTimeout(()=>beginIntroExit(),2600);return()=>window.clearTimeout(fallback);
+  }
+  if(introPhase==="playing"){
+   const fallback=window.setTimeout(()=>beginIntroExit(),3800);return()=>window.clearTimeout(fallback);
+  }
+  if(introPhase==="leaving"){
+   const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+   const fallback=window.setTimeout(()=>finishIntro(),reduced?80:650);return()=>window.clearTimeout(fallback);
+  }
+ },[introPhase]);
+ useEffect(()=>{
+  if(initialInvite)return;
+  const release=()=>setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
+  const hardStop=window.setTimeout(release,5200);introHardStop.current=hardStop;
+  return()=>{window.clearTimeout(hardStop);if(introHardStop.current===hardStop)introHardStop.current=null};
+ },[initialInvite]);
+ useEffect(()=>{
+  if(introPhase==="done")return;
+  const previous=document.body.style.overflow;document.body.style.overflow="hidden";
+  return()=>{document.body.style.overflow=previous};
+ },[introPhase]);
  useEffect(()=>{
   if(!creatorOpen)return;
   const previous=document.body.style.overflow;document.body.style.overflow="hidden";
@@ -71,7 +174,13 @@ export function EntryStudio(){
   const url=new URL(location.href);if(open)url.searchParams.set("access","invite");else{url.searchParams.delete("access");url.searchParams.delete("invite")}
   const target=`${url.pathname}${url.search}${url.hash}`;(push?history.pushState:history.replaceState).call(history,{},"",target);
  }
- function openCreator(event?:MouseEvent<HTMLAnchorElement>){event?.preventDefault();setNotice("");setCreatorOpen(true);updateCreatorUrl(true,true)}
+ function beginIntroExit(){setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving")}
+ function finishIntro(){
+  setIntroPhase("done");
+  if(introHardStop.current!==null){window.clearTimeout(introHardStop.current);introHardStop.current=null}
+  const media=introMedia.current;if(media)try{media.pause()}catch{/* The media may already be detached. */}
+ }
+ function openCreator(event?:MouseEvent<HTMLAnchorElement>){event?.preventDefault();finishIntro();setNotice("");setCreatorOpen(true);updateCreatorUrl(true,true)}
  function closeCreator(restoreFocus=true){setNotice("");setCreatorOpen(false);updateCreatorUrl(false,false);if(restoreFocus)window.setTimeout(()=>creatorButton.current?.focus(),0)}
  function changeLang(next:Lang){setLang(next)}
  async function submit(event:FormEvent){
@@ -88,7 +197,18 @@ export function EntryStudio(){
   }catch{setNotice(c.error)}finally{window.clearTimeout(timeout);setBusy(false)}
  }
 
- return <main className="publicHome">
+ const introActive=introPhase!=="done";
+
+ return <main className={`publicHome${introActive?" homeIntroPending":""}${introPhase==="leaving"?" homeIntroRevealing":""}`}>
+  {introActive&&<OpeningSequence
+   phase={introPhase}
+   mediaRef={introMedia}
+   onPlaying={()=>setIntroPhase(current=>current==="checking"||current==="loading"?"playing":current)}
+   onEnded={beginIntroExit}
+   onError={beginIntroExit}
+   onFinish={finishIntro}
+  />}
+  <div className="homePageBody">
   <header className="homeHeader">
    <a className="homeBrand" href="#top" aria-label="WHAT 100 PEOPLE DO TO A GAME"><span>WHAT </span><strong>100 PEOPLE</strong><span> DO TO A </span><strong>GAME</strong></a>
    <nav className="homeNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
@@ -145,5 +265,6 @@ export function EntryStudio(){
     {notice&&<p className="homeCreatorError" role="alert">{notice}</p>}
    </section>
   </div>}
+  </div>
  </main>;
 }

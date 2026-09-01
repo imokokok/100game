@@ -19,12 +19,18 @@ test("server-renders the public homepage and resilient native links", async () =
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>WHAT 100 PEOPLE DO TO A GAME \/ 一百个人怎么做游戏<\/title>/i);
-  assert.match(html, /class="publicHome"/);
+  assert.match(html, /class="publicHome homeIntroPending"/);
+  assert.match(html, /class="openingSequence isLoading"/);
+  assert.match(html, /src="\/video\/opening-title-6a63d7e7\.mp4"/);
+  assert.match(html, /autoPlay=""/);
+  assert.match(html, /playsInline=""/);
+  assert.match(html, /webkit-playsinline="true"/);
+  assert.doesNotMatch(html, /播放片头|跳过片头|Play with sound|Skip/);
   assert.match(html, /href="\/concept"/);
   assert.match(html, /href="\/survey\/participant-portrait"/);
   assert.match(html, /href="\/lead"/);
   assert.doesNotMatch(html, /Owner 管理入口/);
-  assert.match(html, /主创入口/);
+  assert.match(html, /创作入口/);
   assert.match(html, /© 2026 HuieChen/);
 });
 
@@ -160,6 +166,8 @@ test("keeps management records private while the public questionnaire can submit
   assert.match(proxy, /X-Content-Type-Options/);
   assert.match(proxy, /X-Frame-Options/);
   assert.match(proxy, /Permissions-Policy/);
+  assert.match(proxy, /public, max-age=31536000, immutable/);
+  assert.match(proxy, /no-store, no-cache, must-revalidate, max-age=0/);
 });
 
 test("keeps the public entry lightweight and defers the workspace", async () => {
@@ -173,7 +181,7 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   ]);
   assert.doesNotMatch(layout, /PortfolioMotion/);
   assert.doesNotMatch(layout, /ClickFeedback/);
-  assert.match(page, /<EntryStudio\s*\/>/);
+  assert.match(page, /<EntryStudio initialInvite=\{access==="invite"\|\|hasInvite\} initialCode=\{inviteCode\?\?""\}\/>/);
   assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
   assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=journal":"\/workspace"\)/);
   assert.match(workspace, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\} initialResponses=\{initialResponses\}\/>/);
@@ -243,9 +251,13 @@ test("uses a public project homepage instead of an access-choice gate", async ()
     readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
   ]);
-  assert.match(entry, /className="publicHome"/);
+  assert.match(entry, /className=\{`publicHome/);
   assert.match(entry, /href="\/survey\/participant-portrait"/);
   assert.match(entry, /className="homeCreatorOverlay"/);
+  assert.match(entry, /opening-title-6a63d7e7\.mp4/);
+  assert.match(entry, /WeixinJSBridgeReady/);
+  assert.match(entry, /x5-video-player-type/);
+  assert.doesNotMatch(entry, /media\.load\(/);
   assert.doesNotMatch(entry, /className="entryChoices"/);
   assert.doesNotMatch(studio, /className="entryChoices"/);
 });

@@ -2434,3 +2434,90 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 .survey-shell .proposal-note p{margin:0;color:#4d4943;font-size:13px;line-height:1.7}
 @media(pointer:coarse){.homeHeroCopy,.homeNumbers{animation:none}}
 @media(max-width:700px){.survey-shell .option{box-shadow:none!important}.survey-shell .question{box-shadow:none!important}}
+
+/* Opening film: the public homepage is already rendered underneath, so a
+   failed decoder or failed hydration can never trap a visitor. */
+.homePageBody{min-height:100vh;min-height:100svh}
+.openingSequence{
+ position:fixed;
+ inset:0;
+ top:0;
+ right:0;
+ bottom:0;
+ left:0;
+ z-index:200;
+ min-height:100vh;
+ min-height:100svh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ overflow:hidden;
+ background:#e8e2d8;
+ touch-action:manipulation;
+ -webkit-tap-highlight-color:transparent;
+ animation:openingEmergencyRelease 5.6s steps(1,end) forwards;
+}
+.openingMedia{
+ position:relative;
+ width:min(100vw,1280px);
+ max-width:100%;
+ height:56.25vw;
+ height:min(56.25vw,720px);
+ max-height:100vh;
+ max-height:100svh;
+ aspect-ratio:16/9;
+ flex:0 0 auto;
+ overflow:hidden;
+ background:#e8e2d8;
+ transform:translateZ(0) scale(.992);
+ animation:openingFilmSettle 2.25s cubic-bezier(.2,.75,.22,1) both;
+}
+.openingMedia:after{
+ content:"";
+ position:absolute;
+ inset:-1px;
+ pointer-events:none;
+ background:
+  linear-gradient(to bottom,#e8e2d8 0,rgba(232,226,216,0) 12%,rgba(232,226,216,0) 88%,#e8e2d8 100%),
+  linear-gradient(to right,#e8e2d8 0,rgba(232,226,216,0) 5%,rgba(232,226,216,0) 95%,#e8e2d8 100%);
+}
+.openingVideo{
+ width:100%;
+ height:100%;
+ display:block;
+ object-fit:contain;
+ background:#e8e2d8;
+}
+.openingSequence.isLeaving{animation:openingFilmExit .62s cubic-bezier(.22,1,.36,1) forwards}
+.openingSequence.isLeaving .openingMedia{transform:translateZ(0) scale(1.012)}
+.homeIntroRevealing .homePageBody{animation:homePageReveal .62s cubic-bezier(.22,1,.36,1) both}
+@keyframes openingFilmSettle{
+ from{opacity:.86;transform:translateZ(0) scale(.975)}
+ to{opacity:1;transform:translateZ(0) scale(1)}
+}
+@keyframes openingFilmExit{
+ from{opacity:1;visibility:visible}
+ to{opacity:0;visibility:hidden;pointer-events:none}
+}
+@keyframes openingEmergencyRelease{
+ 0%,99%{opacity:1;visibility:visible}
+ 100%{opacity:0;visibility:hidden;pointer-events:none}
+}
+@keyframes homePageReveal{
+ from{opacity:.72;transform:translateY(8px)}
+ to{opacity:1;transform:none}
+}
+@media(max-width:700px){
+ .openingMedia{width:100vw;max-width:none;animation:none;transform:none}
+ .openingMedia:after{
+  background:
+   linear-gradient(to bottom,#e8e2d8 0,rgba(232,226,216,0) 15%,rgba(232,226,216,0) 85%,#e8e2d8 100%),
+   linear-gradient(to right,#e8e2d8 0,rgba(232,226,216,0) 3%,rgba(232,226,216,0) 97%,#e8e2d8 100%);
+ }
+ .openingSequence.isLeaving .openingMedia{transform:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .openingMedia{animation:none}
+ .openingSequence.isLeaving{animation-duration:.08s}
+ .homeIntroRevealing .homePageBody{animation:none}
+}
