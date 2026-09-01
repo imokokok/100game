@@ -324,7 +324,7 @@
 
 @media(max-width:1080px){
  .editorialHeader{grid-template-columns:76px minmax(220px,1fr) auto;gap:18px;padding-inline:26px}
- .editorialTools{gap:10px}.editorialSurveyLink{display:none}.editorialLanguage>span{display:none}
+ .editorialTools{gap:10px}.editorialLanguage>span{display:none}
  .editorialSection{padding-inline:42px}
  .editorialHero{grid-template-columns:minmax(0,1fr) minmax(280px,.75fr)}
  .editorialHero h1{font-size:clamp(56px,7.4vw,92px)}
@@ -366,7 +366,7 @@
 @media(max-width:600px){
  .editorialHeader{min-height:108px;padding-inline:16px}
  .editorialProjectMark strong{font-size:17px}.editorialProjectMark span{font-size:10px}
- .editorialTools{gap:8px}.editorialLanguage select{min-height:40px;width:58px;padding:0 8px}.editorialCreatorButton{min-height:42px;padding:0 12px;font-size:12px}
+ .editorialTools{gap:8px}.editorialSurveyLink{font-size:10px}.editorialLanguage select{min-height:40px;width:58px;padding:0 8px}.editorialCreatorButton{min-height:42px;padding:0 12px;font-size:12px}
  .editorialNav{gap:24px}.editorialNav a{font-size:11px}
  .editorialSection{padding:24px 20px 68px;gap:28px;scroll-margin-top:108px}
  .editorialEyebrow{margin-bottom:16px;font-size:10px;letter-spacing:.19em}

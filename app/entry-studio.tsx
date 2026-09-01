@@ -96,7 +96,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";try{localStorage.setItem("hundred-language",lang)}catch{/* Storage can be disabled in embedded browsers. */}},[lang]);
  useEffect(()=>{
   if(introPhase==="loading"){
-   const fallback=window.setTimeout(()=>beginIntroExit(),2600);return()=>window.clearTimeout(fallback);
+   const fallback=window.setTimeout(()=>beginIntroExit(),4000);return()=>window.clearTimeout(fallback);
   }
   if(introPhase==="playing"){
    const fallback=window.setTimeout(()=>beginIntroExit(),3800);return()=>window.clearTimeout(fallback);
@@ -109,7 +109,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  useEffect(()=>{
   if(initialInvite)return;
   const release=()=>setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
-  const hardStop=window.setTimeout(release,5200);introHardStop.current=hardStop;
+  const hardStop=window.setTimeout(release,6800);introHardStop.current=hardStop;
   return()=>{window.clearTimeout(hardStop);if(introHardStop.current===hardStop)introHardStop.current=null};
  },[initialInvite]);
  useEffect(()=>{
@@ -158,7 +158,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   if(introHardStop.current!==null){window.clearTimeout(introHardStop.current);introHardStop.current=null}
   const media=introMedia.current;if(media)try{media.pause()}catch{/* The media may already be detached. */}
  }
- function openCreator(event?:MouseEvent<HTMLAnchorElement>){event?.preventDefault();finishIntro();setNotice("");setCreatorOpen(true);updateCreatorUrl(true,true)}
+ function openCreator(event?:MouseEvent<HTMLAnchorElement>){if(event){event.preventDefault();creatorButton.current=event.currentTarget}finishIntro();setNotice("");setCreatorOpen(true);updateCreatorUrl(true,true)}
  function closeCreator(restoreFocus=true){setNotice("");setCreatorOpen(false);updateCreatorUrl(false,false);if(restoreFocus)window.setTimeout(()=>creatorButton.current?.focus(),0)}
  async function submit(event:FormEvent){
   event.preventDefault();if(busy)return;if(!name.trim()){setNotice(c.ui.required);firstInput.current?.focus();return}

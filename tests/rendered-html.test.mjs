@@ -508,10 +508,9 @@ test("renders the project game title in red across public and workspace surfaces
   assert.match(css, /\.surveyHub>header>a,[\s\S]*\.survey-confirm>\.eyebrow\{color:#c72d24!important\}/);
 });
 
-test("keeps the concept callout in normal reading flow on mobile", async () => {
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
-  assert.match(css, /Public editorial asides stay in the document flow instead of inheriting the studio rail/);
-  assert.match(css, /\.publicPage \.conceptRecruitment\{[\s\S]*position:static!important;[\s\S]*width:auto!important;[\s\S]*height:auto!important;[\s\S]*display:block!important/);
+test("keeps the concept page free of expired recruitment calls", async () => {
+  const concept = await readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(concept, /conceptRecruitment|project-recruitment-poster|BE 1 OF 100|招募截止|Applications close/);
 });
 
 test("does not present participant identity as a non-working button", async () => {
@@ -531,9 +530,13 @@ test("uses the current project name in public page metadata", async () => {
 });
 
 test("keeps public navigation labels intact on mobile", async () => {
-  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const [css, editorialCss] = await Promise.all([
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/public-editorial.css", import.meta.url), "utf8"),
+  ]);
   assert.match(css, /Public navigation labels remain readable as single units on narrow screens/);
   assert.match(css, /\.publicPage \.top>nav a\{white-space:nowrap\}/);
+  assert.doesNotMatch(editorialCss, /\.editorialSurveyLink\{display:none\}/);
 });
 
 test("uses purposeful motion with tactile feedback and a reduced-motion fallback", async () => {
@@ -584,18 +587,18 @@ test("allows only the lead to delete explicitly identified questionnaire respons
   assert.doesNotMatch(route, /DELETE FROM questionnaire_responses WHERE wechat_name/);
 });
 
-test("shows the original recruitment poster inside public access", async () => {
-  const [concept, css] = await Promise.all([
-    readFile(new URL("../app/concept/concept-page.tsx", import.meta.url), "utf8"),
+test("keeps the original opening film and reveals the new editorial page", async () => {
+  const [entry, css] = await Promise.all([
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  await access(new URL("../public/project-recruitment-poster.jpg", import.meta.url));
-  assert.match(concept, /className="projectPoster"/);
-  assert.match(concept, /src="\/project-recruitment-poster\.jpg"/);
-  assert.match(concept, /width="1024" height="1536" loading="lazy" decoding="async"/);
-  assert.match(concept, /项目招募海报 · 2026/);
-  assert.match(css, /The public concept page presents the original project poster as a primary artefact/);
-  assert.match(css, /\.projectPoster\{width:min\(100%,760px\)/);
+  await access(new URL("../public/video/opening-title-6a63d7e7.mp4", import.meta.url));
+  assert.match(entry, /src="\/video\/opening-title-6a63d7e7\.mp4"/);
+  assert.match(entry, /beginIntroExit\(\),4000/);
+  assert.match(entry, /release,6800/);
+  assert.match(css, /openingEmergencyRelease 7\.2s/);
+  assert.match(css, /\.homeIntroRevealing \.editorialPage\{animation:homePageReveal/);
+  assert.doesNotMatch(css, /\.homeIntroRevealing \.homePageBody/);
 });
 
 test("keeps the lead response drawer edge crisp and free of glow", async () => {
