@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "admin": "node scripts/lead-admin.mjs"
   },
   "dependencies": {
     "@vercel/blob": "2.8.0",
