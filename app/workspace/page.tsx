@@ -1,7 +1,7 @@
 import {headers} from "next/headers";
 import {redirect} from "next/navigation";
 import {NextRequest} from "next/server";
-import {d1,isLead,participantId} from "../api/_shared";
+import {currentAdmin,d1,participantId} from "../api/_shared";
 import {Studio,type WorkspaceRole,type WorkspaceView} from "../studio";
 import type {LeadResponse} from "../lead/lead-dashboard";
 
@@ -12,8 +12,9 @@ export default async function WorkspacePage({searchParams}:{searchParams:Promise
  const request=new NextRequest("https://100peoplegame.com/workspace",{headers:requestHeaders});
  let participant:{id:string;display_code:string};
  let role:WorkspaceRole;
- if(await isLead(request)){
-  participant={id:"owner",display_code:"Hera"};role="lead";
+ const admin=await currentAdmin(request);
+ if(admin){
+  participant={id:"owner",display_code:admin.displayName};role="lead";
  }else{
   const id=await participantId(request);
   if(!id)redirect("/?access=invite");

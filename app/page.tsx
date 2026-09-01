@@ -9,5 +9,11 @@ export default async function Home({ searchParams }: HomeProps) {
   const access = Array.isArray(params.access) ? params.access[0] : params.access;
   const hasInvite = Object.prototype.hasOwnProperty.call(params, "invite");
   const inviteCode = Array.isArray(params.invite) ? params.invite[0] : params.invite;
-  return <EntryStudio initialInvite={access === "invite" || hasInvite} initialCode={inviteCode ?? ""} />;
+  return (
+    <EntryStudio
+      initialInvite={access === "invite" || hasInvite}
+      initialLead={access === "lead"}
+      initialCode={inviteCode ?? ""}
+    />
+  );
 }
