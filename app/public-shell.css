@@ -37,6 +37,12 @@
 .openingSequence.isLoading::after{display:none!important}
 .homeIntroRevealing .editorialPage{animation:homePageReveal .62s cubic-bezier(.22,1,.36,1) both}
 
+/* The supplied film is 960×720. On very wide displays, cap its 16:9 stage so
+   the encoded artwork is never enlarged beyond a restrained 1.125×. */
+@media(min-width:901px){
+ .openingMedia{width:min(100vw,1440px)!important;height:min(56.25vw,810px)!important;max-width:1440px!important;max-height:810px!important}
+}
+
 @keyframes homeFade{from{opacity:0}to{opacity:1}}
 @keyframes homeDialog{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes homePageReveal{from{opacity:.72;transform:translateY(8px)}to{opacity:1;transform:none}}

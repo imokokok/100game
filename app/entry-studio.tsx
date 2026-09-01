@@ -89,7 +89,7 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
    <video
     ref={mediaRef}
     className="openingVideo"
-    width="1280"
+    width="960"
     height="720"
     poster="/video/opening-title-poster-ed541f.webp"
     autoPlay
