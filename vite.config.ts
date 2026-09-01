@@ -44,6 +44,12 @@ export default defineConfig(async () => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
+    build: {
+      // Keep the public surface parseable in older iOS/WeChat WebViews.
+      // Runtime feature fallbacks are handled in the client components.
+      target: "es2018",
+      cssTarget: "safari12",
+    },
     server: isCodexSeatbeltSandbox
       ? { watch: { useFsEvents: false, usePolling: true } }
       : undefined,

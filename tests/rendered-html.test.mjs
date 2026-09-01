@@ -13,18 +13,19 @@ async function render(path="/") {
   );
 }
 
-test("server-renders the real access page and resilient links", async () => {
+test("server-renders the public homepage and resilient native links", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>WHAT 100 PEOPLE DO TO A GAME \/ 一百个人怎么做游戏<\/title>/i);
+  assert.match(html, /class="publicHome"/);
   assert.match(html, /href="\/concept"/);
-  assert.match(html, /href="\/\?access=invite"/);
+  assert.match(html, /href="\/survey\/participant-portrait"/);
+  assert.match(html, /href="\/lead"/);
   assert.doesNotMatch(html, /Owner 管理入口/);
-  assert.match(html, /创作者协作区/);
+  assert.match(html, /主创入口/);
   assert.match(html, /© 2026 HuieChen/);
-  assert.match(html, /© 2026 HuieChen\. 版权所有。/);
 });
 
 test("invited participants can create and immediately join chat groups", async () => {
@@ -141,7 +142,7 @@ test("chat has no reactions and waits for live data before choosing a screen", a
   assert.match(styles, /chatInitialLoading/);
 });
 
-test("keeps management and participant records behind server authorization", async () => {
+test("keeps management records private while the public questionnaire can submit", async () => {
   const [studio, questionnaire, leadResponses, leadLogin, proxy] = await Promise.all([
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/questionnaire/route.ts", import.meta.url), "utf8"),
@@ -150,8 +151,10 @@ test("keeps management and participant records behind server authorization", asy
     readFile(new URL("../proxy.ts", import.meta.url), "utf8"),
   ]);
   assert.doesNotMatch(studio, /params\.get\("creator"\)/);
-  assert.match(questionnaire, /participantId\(req\)/);
-  assert.match(questionnaire, /Invitation required/);
+  assert.doesNotMatch(questionnaire, /participantId\(req\)/);
+  assert.doesNotMatch(questionnaire, /Invitation required/);
+  assert.match(questionnaire, /INSERT INTO questionnaire_responses/);
+  assert.match(questionnaire, /payload\.length>65536/);
   assert.match(leadResponses, /private, no-store/);
   assert.match(leadLogin, /validLeadCredentials/);
   assert.match(proxy, /X-Content-Type-Options/);
@@ -221,7 +224,7 @@ test("keeps invitation placeholders visible on narrow screens", async () => {
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  assert.match(entry, /namePlaceholder:"填写微信群聊名"/);
+  assert.match(entry, /namePlaceholder:"填写你的微信群聊名"/);
   assert.doesNotMatch(`${entry}\n${studio}`, /填写你在群里使用的名字|Name used in the group/);
   assert.match(css, /-webkit-text-size-adjust:100%/);
   assert.match(css, /\.gateInvite label\{min-width:0\}/);
@@ -235,14 +238,15 @@ test("keeps public back navigation visually lightweight", async () => {
   assert.match(css, /\.publicPage \.top>\.publicBack:focus-visible\{[^}]*outline:2px solid #c72d24/);
 });
 
-test("keeps entry cards free of redundant arrows", async () => {
+test("uses a public project homepage instead of an access-choice gate", async () => {
   const [entry, studio] = await Promise.all([
     readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
   ]);
-  const entryChoices = entry.match(/className="entryChoices">([\s\S]*?)<\/div><\/section>/)?.[1] ?? "";
-  assert.ok(entryChoices);
-  assert.doesNotMatch(entryChoices, /<i>→<\/i>/);
+  assert.match(entry, /className="publicHome"/);
+  assert.match(entry, /href="\/survey\/participant-portrait"/);
+  assert.match(entry, /className="homeCreatorOverlay"/);
+  assert.doesNotMatch(entry, /className="entryChoices"/);
   assert.doesNotMatch(studio, /className="entryChoices"/);
 });
 
@@ -359,7 +363,7 @@ test("keeps workspace navigation refresh-safe and gives the lead the correct ext
   assert.match(participantApi, /role: row \? "participant" : null/);
   assert.match(leadResponsesApi, /!isOwner\(req\)&&!await isLead\(req\)/);
   assert.match(css, /Mobile navigation and filter rails remain complete without browser scrollbars/);
-  assert.match(entry, /busy\?c\.entering:c\.verify/);
+  assert.match(entry, /busy\?c\.entering:c\.enter/);
 });
 
 test("returns to workspace home once and resets the rendered scroll surface", async () => {
@@ -401,7 +405,7 @@ test("presents the survey centre as a restrained project register", async () => 
   assert.match(hub, /surveyIndex/);
   assert.match(hub, /surveyStatus/);
   assert.match(hub, /surveyCta/);
-  assert.match(hub, /返回项目入口/);
+  assert.match(hub, /返回项目首页/);
   assert.doesNotMatch(hub, /返回创作者协作区/);
   assert.doesNotMatch(hub, /<strong>\{zh\?"进入问卷"/);
   assert.match(hub, /© 2026 HuieChen/);
@@ -591,10 +595,11 @@ test("keeps same-route invitation navigation synchronized with browser history",
   const entry = await readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8");
   assert.match(entry, /window\.addEventListener\("popstate",sync\)/);
   assert.match(entry, /window\.removeEventListener\("popstate",sync\)/);
-  assert.match(entry, /function openInvite\(event:MouseEvent<HTMLAnchorElement>\)/);
-  assert.match(entry, /history\.pushState\(\{\},"","\/\?access=invite"\)/);
-  assert.match(entry, /href="\/\?access=invite" onClick=\{openInvite\}/);
-  assert.match(entry, /href="\/" onClick=\{closeInvite\}/);
+  assert.match(entry, /function updateCreatorUrl\(open:boolean,push:boolean\)/);
+  assert.match(entry, /history\.pushState:history\.replaceState/);
+  assert.match(entry, /url\.searchParams\.set\("access","invite"\)/);
+  assert.match(entry, /href="\/lead" onClick=\{openCreator\}/);
+  assert.match(entry, /aria-haspopup="dialog"/);
 });
 
 test("server-renders an authenticated workspace shell without a client identity waterfall", async () => {
