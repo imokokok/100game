@@ -1,0 +1,49 @@
+/* Public-only primitives loaded after the legacy workspace sheet. */
+.homeCreatorOverlay{
+ position:fixed;
+ inset:0;
+ z-index:1000;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:16px;
+ background:rgba(23,23,21,.58);
+ animation:homeFade .18s ease-out both;
+}
+.homeCreatorPanel{
+ position:relative;
+ width:min(560px,100%);
+ max-height:calc(100vh - 32px);
+ max-height:calc(100dvh - 32px);
+ overflow:auto;
+ animation:homeDialog .2s ease-out both;
+}
+.homeCreatorForm input{min-width:0;-webkit-appearance:none;appearance:none}
+.homeCreatorForm button:disabled{opacity:.65;cursor:wait}
+
+/* The original H.264/AAC opening stays untouched. This sharp transparent
+   still only sits behind it as a decoder/poster fallback. */
+.openingTitleStill{
+ position:absolute;
+ inset:0;
+ z-index:0;
+ display:grid;
+ place-items:center;
+ background:#e8e2d8;
+ pointer-events:none;
+}
+.openingTitleStill img{display:block;width:100%;height:100%;object-fit:contain}
+.openingMedia>.openingVideo{position:relative!important;z-index:1!important}
+.openingSequence.isLoading::after{display:none!important}
+.homeIntroRevealing .editorialPage{animation:homePageReveal .62s cubic-bezier(.22,1,.36,1) both}
+
+@keyframes homeFade{from{opacity:0}to{opacity:1}}
+@keyframes homeDialog{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes homePageReveal{from{opacity:.72;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+@media(max-width:600px){
+ .homeCreatorOverlay{align-items:flex-end;padding:0;background:rgba(23,23,21,.5)}
+}
+@media(prefers-reduced-motion:reduce){
+ .homeCreatorOverlay,.homeCreatorPanel,.homeIntroRevealing .editorialPage{animation:none!important}
+}
