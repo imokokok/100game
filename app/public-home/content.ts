@@ -3,6 +3,7 @@ export type EditorialLang="zh"|"en";
 const zh={
  ui:{
   language:"语言",project:"项目",about:"理念",process:"过程",stories:"故事",survey:"参与者问卷",creator:"创作入口",
+  pending:"待录入",projectEyebrow:"THE PROJECTS",projectEmpty:"成品内容将在这里发布。",processEyebrow:"PHOTOJOURNAL",processEmpty:"项目过程与 Photojournal 内容将在整理后发布。",
   creatorKicker:"CREATOR ACCESS · 创作协作区",creatorTitle:"进入创作协作区",
   creatorIntro:"项目成员与主策划从这里进入。参与者请填写微信群聊名及邀请码。",
   name:"微信群聊名",namePlaceholder:"填写你的微信群聊名",code:"邀请码",codePlaceholder:"填写邀请码",
@@ -55,7 +56,8 @@ const zh={
 
 const en={
  ui:{
-  language:"Language",project:"Project",about:"About",process:"Process",stories:"Stories",survey:"Participant questionnaire",creator:"Creator access",
+  language:"Language",project:"Projects",about:"Concept",process:"Process",stories:"Stories",survey:"Participant questionnaire",creator:"Creator access",
+  pending:"Coming soon",projectEyebrow:"THE PROJECTS",projectEmpty:"Finished works will be published here.",processEyebrow:"PHOTOJOURNAL",processEmpty:"Project process and Photojournal entries will appear here after editing.",
   creatorKicker:"CREATOR ACCESS",creatorTitle:"Enter the collaboration space",
   creatorIntro:"Project members and the Lead Designer enter here. Participants should provide their WeChat group name and invitation code.",
   name:"WeChat group name",namePlaceholder:"Your WeChat group name",code:"Invitation code",codePlaceholder:"Enter invitation code",
