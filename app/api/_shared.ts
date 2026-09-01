@@ -1,15 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 import { put, get, del } from "@vercel/blob";
 import { getDb, type Database } from "../../db";
+import { dummyPassword, randomToken, sha256Hex, verifyPassword } from "../../db/admin-crypto.mjs";
 
 export type { Database };
 
-export const LEAD_NAME = "Hera";
-const LEAD_SESSION_MAX_AGE = 60 * 60 * 8;
-const LEAD_RATE_WINDOW_MS = 15 * 60 * 1000;
-const LEAD_CLIENT_ATTEMPT_LIMIT = 7;
-const LEAD_GLOBAL_ATTEMPT_LIMIT = 120;
-let leadRateTableReady: Promise<void> | null = null;
+export { sha256Hex as sha256 };
+
+// --- Session lifetime -----------------------------------------------------
+// A session dies four hours after it was created, or one hour after the last
+// request it served, whichever comes first.
+const ADMIN_SESSION_MAX_AGE_MS = 4 * 60 * 60 * 1000;
+const ADMIN_SESSION_IDLE_MS = 60 * 60 * 1000;
+// `last_seen_at` is refreshed at most once per minute per session so that a
+// busy dashboard does not turn every request into a database write.
+const ADMIN_SESSION_REFRESH_MS = 60 * 1000;
+// Validating a session now costs a database read. These lookups are cached
+// per instance so a page that checks the lead role several times still only
+// reads once.
+const ADMIN_CACHE_TTL_MS = 30 * 1000;
+const ADMIN_CACHE_MAX_ENTRIES = 500;
+export const ADMIN_COOKIE = "admin_session";
+// Superseded cookie from the previous hard-coded credential scheme.
+const LEGACY_ADMIN_COOKIE = "lead_session";
+
+const ADMIN_RATE_WINDOW_MS = 15 * 60 * 1000;
+const ADMIN_CLIENT_ATTEMPT_LIMIT = 7;
+const ADMIN_GLOBAL_ATTEMPT_LIMIT = 120;
+let adminTablesReady: Promise<void> | null = null;
+let adminRateTableReady: Promise<void> | null = null;
 
 /** Returns the Postgres-backed, D1-compatible database handle. */
 export function d1(): Database {
@@ -52,65 +71,297 @@ export async function deleteBlob(urlOrPathname: string): Promise<void> {
   await del(urlOrPathname, { token: process.env.BLOB_READ_WRITE_TOKEN });
 }
 
-// --- Auth ----------------------------------------------------------------
+// --- Administrator auth ---------------------------------------------------
+// Lead access is granted by a row in `admin_sessions` reached through a random
+// secret held in an HttpOnly cookie. Nothing about the account — not the
+// username, not the password — lives in the source tree or in an environment
+// variable any more, so adding, disabling, or re-issuing an administrator no
+// longer requires a redeploy.
+
+export type AdminPrincipal = {
+  id: string;
+  username: string;
+  displayName: string;
+};
+
+type AdminRow = {
+  id: string;
+  username: string;
+  display_name: string;
+  password_hash: string;
+  password_salt: string;
+  disabled_at: number | null;
+};
+
+type AdminSessionRow = {
+  admin_id: string;
+  username: string;
+  display_name: string;
+  created_at: number;
+  expires_at: number;
+  last_seen_at: number;
+  disabled_at: number | null;
+};
+
+const adminSessionCache = new Map<string, { admin: AdminPrincipal | null; expiresAt: number }>();
+
+async function ensureAdminTables(): Promise<void> {
+  if (!adminTablesReady) {
+    adminTablesReady = (async () => {
+      const db = d1();
+      await db.batch([
+        db.prepare(`CREATE TABLE IF NOT EXISTS admins (
+          id text PRIMARY KEY NOT NULL,
+          username text NOT NULL,
+          display_name text NOT NULL,
+          password_hash text NOT NULL,
+          password_salt text NOT NULL,
+          created_at bigint NOT NULL,
+          last_login_at bigint,
+          disabled_at bigint
+        )`),
+        db.prepare("CREATE UNIQUE INDEX IF NOT EXISTS idx_admins_username ON admins (lower(username))"),
+        db.prepare(`CREATE TABLE IF NOT EXISTS admin_sessions (
+          token_hash text PRIMARY KEY NOT NULL,
+          admin_id text NOT NULL,
+          created_at bigint NOT NULL,
+          expires_at bigint NOT NULL,
+          last_seen_at bigint NOT NULL,
+          ip text,
+          user_agent text,
+          revoked_at bigint
+        )`),
+        db.prepare("CREATE INDEX IF NOT EXISTS idx_admin_sessions_admin ON admin_sessions (admin_id, expires_at)"),
+        db.prepare(`CREATE TABLE IF NOT EXISTS admin_audit_log (
+          id text PRIMARY KEY NOT NULL,
+          admin_id text,
+          action text NOT NULL,
+          detail text,
+          ip text,
+          created_at bigint NOT NULL
+        )`),
+        db.prepare("CREATE INDEX IF NOT EXISTS idx_admin_audit_created ON admin_audit_log (created_at)"),
+      ]);
+    })().catch((error) => {
+      adminTablesReady = null;
+      throw error;
+    });
+  }
+  await adminTablesReady;
+}
+
+function readCookie(req: Request, name: string): string | null {
+  const header = req.headers.get("cookie");
+  if (!header) return null;
+  for (const entry of header.split(";")) {
+    const trimmed = entry.trim();
+    if (!trimmed.startsWith(`${name}=`)) continue;
+    try {
+      return decodeURIComponent(trimmed.slice(name.length + 1));
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+function clientAddress(req: Request): string {
+  // Vercel overwrites its forwarding headers at the edge. The generic
+  // forwarding header remains a fallback for local/self-hosted deployments.
+  const forwarded =
+    req.headers.get("x-vercel-forwarded-for") ??
+    req.headers.get("x-real-ip") ??
+    req.headers.get("x-forwarded-for") ??
+    "unknown";
+  return forwarded.split(",")[0]?.trim().slice(0, 64) || "unknown";
+}
+
+function clientAgent(req: Request): string {
+  return req.headers.get("user-agent")?.slice(0, 256) ?? "unknown";
+}
 
 /**
- * Legacy platform-owner authentication is intentionally disabled.
+ * Checks a submitted username and password against the `admins` table.
  *
- * Deployment-specific identity headers can be supplied by ordinary clients
- * unless an independently verified gateway signs them. They must never grant
- * access to private project data. Lead access is authorised exclusively by
- * the signed, HttpOnly session validated by `isLead` below.
+ * A missing account still performs one key derivation so that the response
+ * time does not reveal which administrator names exist.
  */
-export function isOwner(_req: NextRequest): boolean {
-  return false;
+export async function verifyAdminCredentials(
+  username: unknown,
+  password: unknown,
+): Promise<AdminPrincipal | null> {
+  const submittedUsername = String(username ?? "").trim();
+  const submittedPassword = String(password ?? "");
+  if (!submittedUsername || !submittedPassword) return null;
+  await ensureAdminTables();
+  const row = await d1()
+    .prepare(
+      "SELECT id, username, display_name, password_hash, password_salt, disabled_at FROM admins WHERE lower(username) = lower(?)",
+    )
+    .bind(submittedUsername)
+    .first<AdminRow>();
+  if (!row) {
+    const dummy = dummyPassword();
+    await verifyPassword(submittedPassword, dummy.salt, dummy.hash);
+    return null;
+  }
+  const matched = await verifyPassword(submittedPassword, row.password_salt, row.password_hash);
+  if (!matched || row.disabled_at) return null;
+  return { id: row.id, username: row.username, displayName: row.display_name };
 }
 
-function safeEq(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let value = 0;
-  for (let i = 0; i < a.length; i++) value |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return value === 0;
+/** Issues a new revocable session and attaches its cookie to the response. */
+export async function createAdminSession(
+  req: Request,
+  res: NextResponse,
+  admin: AdminPrincipal,
+): Promise<void> {
+  await ensureAdminTables();
+  const token = randomToken(32);
+  const now = Date.now();
+  await d1()
+    .prepare(
+      "INSERT INTO admin_sessions (token_hash, admin_id, created_at, expires_at, last_seen_at, ip, user_agent, revoked_at) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)",
+    )
+    .bind(
+      sha256Hex(token),
+      admin.id,
+      now,
+      now + ADMIN_SESSION_MAX_AGE_MS,
+      now,
+      clientAddress(req),
+      clientAgent(req),
+    )
+    .run();
+  await d1().prepare("UPDATE admins SET last_login_at = ? WHERE id = ?").bind(now, admin.id).run();
+  setAdminCookie(res, token);
+  await recordAudit(admin.id, "login", admin.username, req);
 }
 
-async function signLeadPayload(payload: string): Promise<string> {
-  const secret = process.env.LEAD_SESSION_SECRET;
-  if (!secret) throw new Error("Lead session secret is unavailable");
-  const key = await crypto.subtle.importKey(
-    "raw",
-    new TextEncoder().encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const bytes = new Uint8Array(
-    await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payload)),
-  );
-  return btoa(String.fromCharCode(...bytes)).replace(/=+$/g, "");
+/** Revokes the caller's own session. */
+export async function destroyAdminSession(req: Request, res: NextResponse): Promise<void> {
+  const token = readCookie(req, ADMIN_COOKIE);
+  const admin = await currentAdmin(req);
+  if (token) {
+    try {
+      await d1()
+        .prepare("UPDATE admin_sessions SET revoked_at = ? WHERE token_hash = ?")
+        .bind(Date.now(), sha256Hex(token))
+        .run();
+    } catch {
+      // A revoked row is a nicety; the cookie removal below is what ends the
+      // session, so a database failure must not block signing out.
+    }
+    adminSessionCache.delete(sha256Hex(token));
+  }
+  clearAdminSession(res);
+  if (admin) await recordAudit(admin.id, "logout", admin.username, req);
 }
 
-export function validLeadCredentials(name: unknown, code: unknown): boolean {
-  const expectedCode = process.env.LEAD_ACCESS_CODE;
-  const submittedName = String(name ?? "").trim();
-  const submittedCode = String(code ?? "").trim();
-  return Boolean(expectedCode && safeEq(submittedName, LEAD_NAME) && safeEq(submittedCode, expectedCode));
+/** Digest of the session cookie, used to identify a session without its secret. */
+export function adminTokenHash(req: Request): string | null {
+  const token = readCookie(req, ADMIN_COOKIE);
+  return token ? sha256Hex(token) : null;
 }
 
-export async function setLeadSession(res: NextResponse): Promise<void> {
-  const expiry = Date.now() + LEAD_SESSION_MAX_AGE * 1000;
-  const payload = `${LEAD_NAME}.${expiry}`;
-  const token = `${payload}.${await signLeadPayload(payload)}`;
-  res.cookies.set("lead_session", token, {
+/**
+ * Resolves the administrator behind the request, or null when there is none.
+ *
+ * Results are cached briefly per instance. Revoking a session therefore takes
+ * effect within thirty seconds everywhere rather than only on the instance
+ * that processed the revocation.
+ */
+export async function currentAdmin(req: Request): Promise<AdminPrincipal | null> {
+  const tokenHash = adminTokenHash(req);
+  if (!tokenHash) return null;
+  const now = Date.now();
+  const cached = adminSessionCache.get(tokenHash);
+  if (cached && cached.expiresAt > now) return cached.admin;
+  const admin = await loadAdminSession(tokenHash, now);
+  if (adminSessionCache.size >= ADMIN_CACHE_MAX_ENTRIES) adminSessionCache.clear();
+  adminSessionCache.set(tokenHash, { admin, expiresAt: now + ADMIN_CACHE_TTL_MS });
+  return admin;
+}
+
+async function loadAdminSession(tokenHash: string, now: number): Promise<AdminPrincipal | null> {
+  try {
+    await ensureAdminTables();
+    const row = await d1()
+      .prepare(
+        `SELECT s.admin_id AS admin_id, s.created_at AS created_at, s.expires_at AS expires_at,
+                s.last_seen_at AS last_seen_at, a.username AS username, a.display_name AS display_name,
+                a.disabled_at AS disabled_at
+         FROM admin_sessions s JOIN admins a ON a.id = s.admin_id
+         WHERE s.token_hash = ? AND s.revoked_at IS NULL`,
+      )
+      .bind(tokenHash)
+      .first<AdminSessionRow>();
+    if (!row || row.disabled_at) return null;
+    if (now > Number(row.expires_at)) return null;
+    if (now - Number(row.last_seen_at) > ADMIN_SESSION_IDLE_MS) return null;
+    if (now - Number(row.last_seen_at) > ADMIN_SESSION_REFRESH_MS) {
+      const refreshedExpiry = Math.min(
+        Number(row.created_at) + ADMIN_SESSION_MAX_AGE_MS,
+        now + ADMIN_SESSION_IDLE_MS,
+      );
+      await d1()
+        .prepare("UPDATE admin_sessions SET last_seen_at = ?, expires_at = ? WHERE token_hash = ?")
+        .bind(now, refreshedExpiry, tokenHash)
+        .run();
+    }
+    return { id: row.admin_id, username: row.username, displayName: row.display_name };
+  } catch {
+    // Missing credentials, an unreachable database, and malformed cookies must
+    // all fail closed instead of turning every protected endpoint into a 500.
+    return null;
+  }
+}
+
+/** True when the request carries a valid administrator session. */
+export async function isLead(req: Request): Promise<boolean> {
+  return (await currentAdmin(req)) !== null;
+}
+
+/**
+ * Signing identity recorded on rows the lead creates or edits. Older rows keep
+ * their original `lead:Hera` value; both forms are display-only audit text and
+ * are never used to make an authorisation decision.
+ */
+export async function adminPrincipal(req: Request): Promise<string> {
+  const admin = await currentAdmin(req);
+  return admin ? `admin:${admin.username}` : "lead:unknown";
+}
+
+/** Appends to the administrator audit trail. Never fails the caller. */
+export async function recordAudit(
+  adminId: string | null,
+  action: string,
+  detail: string | null,
+  req: Request,
+): Promise<void> {
+  try {
+    await ensureAdminTables();
+    await d1()
+      .prepare(
+        "INSERT INTO admin_audit_log (id, admin_id, action, detail, ip, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+      )
+      .bind(crypto.randomUUID(), adminId, action, detail, clientAddress(req), Date.now())
+      .run();
+  } catch {
+    // Losing an audit entry is preferable to rejecting the action it describes.
+  }
+}
+
+function setAdminCookie(res: NextResponse, token: string): void {
+  res.cookies.set(ADMIN_COOKIE, token, {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
     path: "/",
-    maxAge: LEAD_SESSION_MAX_AGE,
+    maxAge: Math.floor(ADMIN_SESSION_MAX_AGE_MS / 1000),
   });
-}
-
-export function clearLeadSession(res: NextResponse): void {
-  res.cookies.set("lead_session", "", {
+  // Drop a leftover cookie from the previous scheme so it cannot linger.
+  res.cookies.set(LEGACY_ADMIN_COOKIE, "", {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
@@ -119,36 +370,23 @@ export function clearLeadSession(res: NextResponse): void {
   });
 }
 
-export async function isLead(req: Request): Promise<boolean> {
-  const raw = req.headers
-    .get("cookie")
-    ?.split(";")
-    .map((entry) => entry.trim())
-    .find((entry) => entry.startsWith("lead_session="))
-    ?.slice("lead_session=".length);
-  if (!raw) return false;
-  try {
-    const parts = decodeURIComponent(raw).split(".");
-    if (parts.length !== 3) return false;
-    const [name, expiry, sig] = parts;
-    const expiresAt = Number(expiry);
-    if (!safeEq(name, LEAD_NAME) || !Number.isFinite(expiresAt) || Date.now() > expiresAt) return false;
-    const expected = await signLeadPayload(`${name}.${expiry}`);
-    return safeEq(sig, expected);
-  } catch {
-    // Missing secrets and malformed cookie encodings must fail closed instead
-    // of turning every protected endpoint into a 500 response.
-    return false;
+export function clearAdminSession(res: NextResponse): void {
+  for (const name of [ADMIN_COOKIE, LEGACY_ADMIN_COOKIE]) {
+    res.cookies.set(name, "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 0,
+    });
   }
 }
 
-export function isLeadName(name: unknown): boolean {
-  return safeEq(String(name ?? "").trim(), LEAD_NAME);
-}
+// --- Login rate limiting --------------------------------------------------
 
-async function ensureLeadRateTable(): Promise<void> {
-  if (!leadRateTableReady) {
-    leadRateTableReady = (async () => {
+async function ensureAdminRateTable(): Promise<void> {
+  if (!adminRateTableReady) {
+    adminRateTableReady = (async () => {
       const db = d1();
       await db.batch([
         db.prepare(`CREATE TABLE IF NOT EXISTS lead_login_attempts (
@@ -164,26 +402,18 @@ async function ensureLeadRateTable(): Promise<void> {
         ),
       ]);
     })().catch((error) => {
-      leadRateTableReady = null;
+      adminRateTableReady = null;
       throw error;
     });
   }
-  await leadRateTableReady;
+  await adminRateTableReady;
 }
 
-async function leadClientKey(req: Request): Promise<string> {
-  // Vercel overwrites its forwarding headers at the edge. The generic
-  // forwarding header remains a fallback for local/self-hosted deployments;
-  // the global bucket still limits an attacker who spoofs that fallback.
-  const forwarded =
-    req.headers.get("x-vercel-forwarded-for") ??
-    req.headers.get("x-real-ip") ??
-    req.headers.get("x-forwarded-for") ??
-    "unknown";
-  const address = forwarded.split(",")[0]?.trim() || "unknown";
-  const userAgent = req.headers.get("user-agent")?.slice(0, 256) ?? "unknown";
+function adminClientKey(req: Request): string {
+  const address = clientAddress(req);
+  const userAgent = clientAgent(req);
   const salt = process.env.LEAD_SESSION_SECRET ?? "lead-login-rate-limit";
-  return sha256(`${salt}\n${address}\n${userAgent}`);
+  return sha256Hex(`${salt}\n${address}\n${userAgent}`);
 }
 
 export type LeadLoginAttempt = {
@@ -193,24 +423,22 @@ export type LeadLoginAttempt = {
 };
 
 /**
- * Records and checks a lead-login attempt in Postgres. This is deliberately
+ * Records and checks a login attempt in Postgres. This is deliberately
  * durable rather than an in-memory counter so the limit applies across every
- * serverless instance. Database errors are allowed to propagate: lead login
- * must fail closed if its security state cannot be checked.
+ * serverless instance. Database errors are allowed to propagate: login must
+ * fail closed if its security state cannot be checked.
  */
 export async function beginLeadLoginAttempt(req: Request): Promise<LeadLoginAttempt> {
-  await ensureLeadRateTable();
+  await ensureAdminRateTable();
   const now = Date.now();
-  const cutoff = now - LEAD_RATE_WINDOW_MS;
-  const clientKey = await leadClientKey(req);
+  const cutoff = now - ADMIN_RATE_WINDOW_MS;
+  const clientKey = adminClientKey(req);
   const db = d1();
   await db.batch([
     db.prepare("DELETE FROM lead_login_attempts WHERE attempted_at < ?").bind(now - 24 * 60 * 60 * 1000),
-    db.prepare("INSERT INTO lead_login_attempts (id, client_key, attempted_at) VALUES (?, ?, ?)").bind(
-      crypto.randomUUID(),
-      clientKey,
-      now,
-    ),
+    db
+      .prepare("INSERT INTO lead_login_attempts (id, client_key, attempted_at) VALUES (?, ?, ?)")
+      .bind(crypto.randomUUID(), clientKey, now),
   ]);
   const [clientRow, globalRow, oldestClient, oldestGlobal] = await Promise.all([
     db
@@ -230,17 +458,19 @@ export async function beginLeadLoginAttempt(req: Request): Promise<LeadLoginAtte
       .bind(cutoff)
       .first<{ attempted_at: number | null }>(),
   ]);
-  const clientBlocked = Number(clientRow?.count ?? 0) > LEAD_CLIENT_ATTEMPT_LIMIT;
-  const globalBlocked = Number(globalRow?.count ?? 0) > LEAD_GLOBAL_ATTEMPT_LIMIT;
+  const clientBlocked = Number(clientRow?.count ?? 0) > ADMIN_CLIENT_ATTEMPT_LIMIT;
+  const globalBlocked = Number(globalRow?.count ?? 0) > ADMIN_GLOBAL_ATTEMPT_LIMIT;
   const oldest = globalBlocked ? oldestGlobal?.attempted_at : oldestClient?.attempted_at;
-  const retryAfter = Math.max(1, Math.ceil(((oldest ?? now) + LEAD_RATE_WINDOW_MS - now) / 1000));
+  const retryAfter = Math.max(1, Math.ceil(((oldest ?? now) + ADMIN_RATE_WINDOW_MS - now) / 1000));
   return { allowed: !clientBlocked && !globalBlocked, clientKey, retryAfter };
 }
 
 export async function clearLeadLoginAttempts(clientKey: string): Promise<void> {
-  await ensureLeadRateTable();
+  await ensureAdminRateTable();
   await d1().prepare("DELETE FROM lead_login_attempts WHERE client_key = ?").bind(clientKey).run();
 }
+
+// --- Participant sessions -------------------------------------------------
 
 export function clearParticipantSession(res: NextResponse): void {
   res.cookies.set("participant_session", "", {
@@ -252,17 +482,12 @@ export function clearParticipantSession(res: NextResponse): void {
   });
 }
 
-export async function sha256(value: string): Promise<string> {
-  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-  return [...new Uint8Array(bytes)].map((x) => x.toString(16).padStart(2, "0")).join("");
-}
-
 export async function participantId(req: NextRequest): Promise<string | null> {
   const token = req.cookies.get("participant_session")?.value;
   if (!token) return null;
   const row = await d1()
     .prepare("SELECT participant_id FROM participant_sessions WHERE token_hash = ? AND expires_at > ?")
-    .bind(await sha256(token), Date.now())
+    .bind(sha256Hex(token), Date.now())
     .first<{ participant_id: string }>();
   return row?.participant_id ?? null;
 }
