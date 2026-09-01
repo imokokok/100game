@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isLead, participantId, deleteBlob } from "../_shared";
+import { adminPrincipal, d1, isLead, participantId, deleteBlob } from "../_shared";
 
 export async function POST(req: NextRequest) {
   const ownerView = await isLead(req);
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   const id = crypto.randomUUID();
   const channelId = crypto.randomUUID();
   const now = Date.now();
-  const creator = ownerView ? "lead:Hera" : participant!;
+  const creator = ownerView ? await adminPrincipal(req) : participant!;
   const statements = [d1().prepare("INSERT INTO groups (id, name, created_by, created_at) VALUES (?, ?, ?, ?)").bind(id, name, creator, now)];
   statements.push(d1().prepare("INSERT INTO group_channels (id, group_id, name, kind, position, created_at) VALUES (?, ?, 'general', 'text', 0, ?)").bind(channelId, id, now));
   for (const participant of members) statements.push(d1().prepare("INSERT OR IGNORE INTO group_members (group_id, participant_id, joined_at) SELECT ?, id, ? FROM participants WHERE id = ?").bind(id, now, participant));

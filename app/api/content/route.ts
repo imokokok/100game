@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isLead } from "../_shared";
+import { adminPrincipal, d1, isLead } from "../_shared";
 
 const localeList = ["zh", "en", "ja", "es", "fr", "ar", "hi", "bn", "sw", "ha", "id", "pt"];
 const locales = new Set(localeList);
@@ -45,7 +45,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Content cannot be empty or longer than 1200 characters" }, { status: 400 });
   }
   const now = Date.now();
-  const editor = "lead:Hera";
+  const editor = await adminPrincipal(req);
   const statements = entries.map(([key, value]) => d1().prepare(`
     INSERT INTO content_overrides (locale, content_key, value, updated_at, updated_by)
     VALUES (?, ?, ?, ?, ?)

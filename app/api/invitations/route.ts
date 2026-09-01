@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isLead } from "../_shared";
-
-async function hash(value: string) {
-  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value));
-  return [...new Uint8Array(bytes)].map(x => x.toString(16).padStart(2, "0")).join("");
-}
+import { adminPrincipal, d1, isLead, sha256 } from "../_shared";
 
 function makeToken() {
   const bytes = crypto.getRandomValues(new Uint8Array(8));
@@ -33,10 +28,10 @@ export async function POST(req: NextRequest) {
   const invitationId = crypto.randomUUID();
   const displayCode = `P-${token.slice(-4)}`;
   const now = Date.now();
-  const owner = "lead:Hera";
+  const owner = await adminPrincipal(req);
   await d1().batch([
     d1().prepare("INSERT INTO participants (id, display_code, locale, created_at, last_active_at, activity_count) VALUES (?, ?, 'zh', ?, NULL, 0)").bind(participantId, displayCode, now),
-    d1().prepare("INSERT INTO invitations (id, token_hash, participant_id, label, token_hint, created_at, created_by, expires_at, revoked_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)").bind(invitationId, await hash(token), participantId, label, `…${token.slice(-4)}`, now, owner, now + days * 86400000),
+    d1().prepare("INSERT INTO invitations (id, token_hash, participant_id, label, token_hint, created_at, created_by, expires_at, revoked_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL)").bind(invitationId, sha256(token), participantId, label, `…${token.slice(-4)}`, now, owner, now + days * 86400000),
   ]);
   return NextResponse.json({ invitation: { id: invitationId, token, label, displayCode, expiresAt: now + days * 86400000 } }, { status: 201 });
 }

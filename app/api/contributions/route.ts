@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { d1, isLead, LEAD_NAME } from "../_shared";
+import { adminPrincipal, d1, isLead } from "../_shared";
 
 export async function GET(req: NextRequest) {
   if (!(await isLead(req))) return NextResponse.json({ error: "Lead sign-in required" }, { status: 401 });
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
   const points = Math.trunc(Number(body.points));
   const reason = String(body.reason ?? "").trim().slice(0, 240);
   if (!participant || !Number.isFinite(points) || points < -1000 || points > 1000 || !reason) return NextResponse.json({ error: "Invalid score entry" }, { status: 400 });
-  const recorder = `lead:${LEAD_NAME}`;
+  const recorder = await adminPrincipal(req);
   await d1().prepare("INSERT INTO contribution_entries (id, participant_id, points, reason, recorded_by, created_at) VALUES (?, ?, ?, ?, ?, ?)").bind(crypto.randomUUID(), participant, points, reason, recorder, Date.now()).run();
   return NextResponse.json({ ok: true }, { status: 201 });
 }
