@@ -66,6 +66,8 @@
  transition:transform .22s ease;
 }
 .editorialNav a:hover:after,.editorialSurveyLink:hover:after{transform:scaleX(1);transform-origin:left}
+.editorialNav a[aria-current="page"]{color:var(--ed-red)}
+.editorialNav a[aria-current="page"]:after{transform:scaleX(1);transform-origin:left}
 .editorialTools{display:flex;align-items:center;justify-content:flex-end;gap:14px;min-width:0}
 .editorialLanguage{position:relative;display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
 .editorialLanguageTrigger{
@@ -244,6 +246,37 @@
 .closingAside{grid-column:3;grid-row:2;align-self:end;margin:0 0 3vh;padding-left:20px;border-left:1px solid var(--ed-red);font:700 9px/1.25 "Courier New",monospace;letter-spacing:.12em}
 .closingAside span{display:block;margin-bottom:4px}
 
+/* Concept reel: the eight real editorial panels are one light, scroll-led sequence. */
+.conceptSections{position:relative}
+.conceptSections .editorialSection{scroll-snap-align:start;scroll-snap-stop:normal}
+.conceptSections .editorialArtwork{transition:transform .75s cubic-bezier(.22,1,.36,1)}
+.conceptSections .editorialSection.isReelActive .editorialArtwork{transform:translateY(-3px) scale(1.008)}
+.conceptReelIndicator{
+ position:fixed;right:clamp(10px,1.4vw,24px);top:50%;z-index:60;display:grid;justify-items:center;gap:9px;
+ padding:10px 7px;border:1px solid rgba(17,18,16,.25);background:rgba(244,240,232,.86);color:var(--ed-ink);
+ font:700 8px/1 "Courier New",monospace;letter-spacing:.08em;transform:translateY(-50%);
+}
+.conceptReelIndicator div{display:grid;gap:3px}
+.conceptReelIndicator button{width:18px;height:12px;display:grid;place-items:center;padding:0;border:0;background:transparent;cursor:pointer}
+.conceptReelIndicator button:before{content:"";width:3px;height:3px;border-radius:50%;background:rgba(17,18,16,.35);transition:height .22s ease,background .22s ease,border-radius .22s ease}
+.conceptReelIndicator button.isActive:before{height:11px;border-radius:2px;background:var(--ed-red)}
+
+/* Honest holding pages: no fabricated cards, controls or project data. */
+.editorialEmptyView{
+ position:relative;min-height:760px;min-height:max(760px,calc(100dvh - 72px));display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);
+ grid-template-rows:auto 1fr;gap:32px;padding:clamp(28px,4vw,64px) clamp(28px,5.2vw,88px) clamp(64px,7vw,112px);overflow:hidden;border-bottom:1px solid rgba(17,18,16,.55);isolation:isolate;
+}
+.editorialEmptyIndex{grid-column:1/-1;justify-self:end;font:700 10px/1.3 "Courier New",monospace;letter-spacing:.1em}
+.editorialEmptyCopy{grid-column:1;grid-row:2;align-self:center;max-width:760px;z-index:2}
+.editorialEmptyCopy h1{margin:0;font-family:"Songti SC","STSong",Georgia,serif;font-size:clamp(68px,10vw,150px);font-weight:700;line-height:.9;letter-spacing:-.065em}
+.editorialEmptyRule{display:block;width:62px;height:1px;margin:30px 0;background:var(--ed-ink)}
+.editorialEmptyCopy strong{display:block;margin-bottom:18px;color:var(--ed-red);font-family:"Songti SC","STSong",Georgia,serif;font-size:clamp(27px,3vw,46px)}
+.editorialEmptyCopy>p:last-child{margin:0;max-width:520px;color:var(--ed-muted);font-size:16px;line-height:1.8}
+.editorialEmptyShape{grid-column:2;grid-row:2;position:relative;align-self:stretch;min-height:480px}
+.editorialEmptyShape:before{content:"";position:absolute;inset:8% 8% 0 18%;background:var(--ed-ink);clip-path:polygon(20% 0,100% 14%,78% 100%,0 78%)}
+.editorialEmptyShape span{position:absolute;right:2%;top:4%;width:38%;aspect-ratio:1;border-radius:50%;background:var(--ed-red);mix-blend-mode:multiply}
+.editorialEmptyShape i{position:absolute;right:8%;bottom:0;width:52%;height:68%;border:1px solid rgba(244,240,232,.7);transform:rotate(9deg)}
+
 .editorialFooter{
  display:grid;
  grid-template-columns:minmax(0,1fr) auto auto;
@@ -308,6 +341,7 @@
 }
 
 @media(max-width:820px){
+ .conceptReelIndicator{display:none}
  .editorialPage.motionReady [data-reveal="visual"]{clip-path:none}
  .editorialHeader{position:sticky;min-height:112px;grid-template-columns:64px minmax(0,1fr);grid-template-rows:54px 44px;padding:6px 20px 8px}
  .editorialBrand{grid-column:1;grid-row:1}.editorialTools{grid-column:2;grid-row:1}.editorialNav{grid-column:1/-1;grid-row:2;justify-content:flex-start!important;gap:28px;overflow-x:auto;padding:0 2px;border-top:1px solid rgba(17,18,16,.2)}
@@ -332,6 +366,9 @@
  .inspirationVisual{width:min(100%,620px);justify-self:end}
  .closingVisual{width:min(100%,620px);justify-self:end}
  .editorialFooter{grid-template-columns:1fr auto;gap:18px}.editorialFooter>div{grid-column:1/-1;grid-row:1;justify-content:flex-start;flex-wrap:wrap}.editorialFooter>span:last-child{justify-self:end}
+ .editorialEmptyView{min-height:calc(100dvh - 112px);grid-template-columns:1fr;grid-template-rows:auto auto minmax(260px,.8fr);gap:26px;padding:28px 26px 64px}
+ .editorialEmptyIndex{grid-column:1;grid-row:1}.editorialEmptyCopy{grid-column:1;grid-row:2;align-self:start}.editorialEmptyShape{grid-column:1;grid-row:3;min-height:300px}
+ .editorialEmptyCopy h1{font-size:clamp(62px,18vw,104px)}
 }
 
 @media(max-width:600px){
@@ -353,6 +390,7 @@
  .publicHome .homeCreatorOverlay{align-items:flex-end;padding:0!important}
  .publicHome .editorialCreatorPanel{width:100%;max-height:90vh;padding:26px 20px calc(26px + env(safe-area-inset-bottom,0px));border-width:1px 0 0;box-shadow:0 -8px 0 var(--ed-red)!important}
  .publicHome .homeCreatorForm{grid-template-columns:1fr}.publicHome .homeCreatorForm button{grid-column:1}
+ .editorialEmptyView{min-height:calc(100dvh - 108px);padding:24px 20px 54px}.editorialEmptyShape{min-height:250px}.editorialEmptyCopy>p:last-child{font-size:14px}
 }
 
 @media(max-width:380px){

@@ -8,6 +8,35 @@ import {
 } from "./public-home/sections";
 
 type IntroPhase="loading"|"playing"|"leaving"|"done";
+type PublicView="concept"|"projects"|"process";
+
+function viewFromHash(hash:string):PublicView{
+ if(hash==="#projects")return "projects";
+ if(hash==="#process")return "process";
+ return "concept";
+}
+
+function EditorialEmptyView({eyebrow,title,status,body}:{eyebrow:string;title:string;status:string;body:string}){
+ return <section className="editorialEmptyView" aria-labelledby={`empty-${title}`}>
+  <div className="editorialEmptyIndex" aria-hidden="true">00 / 00</div>
+  <div className="editorialEmptyCopy" data-reveal>
+   <p className="editorialEyebrow">{eyebrow}</p>
+   <h1 id={`empty-${title}`}>{title}</h1>
+   <span className="editorialEmptyRule" aria-hidden="true"/>
+   <strong>{status}</strong>
+   <p>{body}</p>
+  </div>
+  <div className="editorialEmptyShape" aria-hidden="true"><span/><i/></div>
+ </section>;
+}
+
+function ConceptReelIndicator({active,onSelect}:{active:number;onSelect:(index:number)=>void}){
+ return <nav className="conceptReelIndicator" aria-label="理念页版面导航">
+  <span>{String(active+1).padStart(2,"0")}</span>
+  <div>{Array.from({length:8},(_,index)=><button key={index} type="button" className={active===index?"isActive":""} aria-label={`前往理念版面 ${index+1}`} aria-current={active===index?"step":undefined} onClick={()=>onSelect(index)}/>)}</div>
+  <span>08</span>
+ </nav>;
+}
 
 function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:string;onChange:(next:EditorialLang)=>void}){
  const [open,setOpen]=useState(false);
@@ -115,14 +144,15 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
 export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
  const [lang,setLang]=useState<EditorialLang>("zh"),[creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
  const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"loading");
+ const [publicView,setPublicView]=useState<PublicView>("concept"),[activeConcept,setActiveConcept]=useState(0);
  const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null);
  const c=editorialContent[lang];
 
  useEffect(()=>{
-  const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);if(nextOpen)finishIntro();const token=params.invite;if(token)setCode(token)};
+  const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);setPublicView(viewFromHash(location.hash));if(nextOpen)finishIntro();const token=params.invite;if(token)setCode(token)};
   const restore=(event:PageTransitionEvent)=>{if(event.persisted)finishIntro()};
   const hydrate=window.setTimeout(()=>{const saved=storageGet("hundred-language");if(saved==="en")setLang("en");sync()},0);
-  window.addEventListener("popstate",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("pageshow",restore)};
+  window.addEventListener("popstate",sync);window.addEventListener("hashchange",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("hashchange",sync);window.removeEventListener("pageshow",restore)};
  },[]);
  useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";storageSet("hundred-language",lang)},[lang]);
  useEffect(()=>{
@@ -177,10 +207,33 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   window.addEventListener("scroll",queueReveal,{passive:true});window.addEventListener("resize",queueReveal);
   const delayed=window.setTimeout(revealVisible,120);
   return()=>{observer.disconnect();window.clearTimeout(delayed);if(frame)window.cancelAnimationFrame(frame);window.removeEventListener("scroll",queueReveal);window.removeEventListener("resize",queueReveal)};
- },[introPhase]);
+ },[introPhase,publicView]);
+ useEffect(()=>{
+  if(introPhase!=="done"||publicView!=="concept")return;
+  const sections=Array.from(document.querySelectorAll<HTMLElement>(".conceptSections .editorialSection"));
+  if(!sections.length)return;
+  let frame=0;
+  const update=()=>{
+   frame=0;const center=window.innerHeight*.5;let best=0,distance=Number.POSITIVE_INFINITY;
+   sections.forEach((section,index)=>{const rect=section.getBoundingClientRect();const next=Math.abs(rect.top+rect.height*.5-center);if(next<distance){distance=next;best=index}});
+   sections.forEach((section,index)=>section.classList.toggle("isReelActive",index===best));setActiveConcept(best);
+  };
+  const queue=()=>{if(!frame)frame=window.requestAnimationFrame(update)};
+  queue();window.addEventListener("scroll",queue,{passive:true});window.addEventListener("resize",queue);
+  return()=>{if(frame)window.cancelAnimationFrame(frame);window.removeEventListener("scroll",queue);window.removeEventListener("resize",queue);sections.forEach(section=>section.classList.remove("isReelActive"))};
+ },[introPhase,publicView]);
 
  function updateCreatorUrl(open:boolean,push:boolean){
-  const target=open?"/?access=invite":"/";(push?history.pushState:history.replaceState).call(history,{},"",target);
+  const url=new URL(location.href);if(open)url.searchParams.set("access","invite");else{url.searchParams.delete("access");url.searchParams.delete("invite")}
+  const target=`${url.pathname}${url.search}${url.hash}`;(push?history.pushState:history.replaceState).call(history,{},"",target);
+ }
+ function changeView(event:MouseEvent<HTMLAnchorElement>,next:PublicView){
+  event.preventDefault();finishIntro();setPublicView(next);setActiveConcept(0);
+  history.pushState({},"",next==="concept"?"#concept":`#${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0);
+ }
+ function selectConcept(index:number){
+  const scroll=()=>document.getElementById(`section-${String(index+1).padStart(2,"0")}`)?.scrollIntoView({behavior:typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+  if(publicView!=="concept"){setPublicView("concept");history.pushState({},"","#concept");window.setTimeout(scroll,0)}else scroll();
  }
  function beginIntroExit(){setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving")}
  function finishIntro(){
@@ -214,14 +267,13 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
    onError={beginIntroExit}
    onFinish={finishIntro}
   />}
-  <div className="editorialPage">
+  <div className={`editorialPage editorialView-${publicView}`}>
    <header className="editorialHeader">
-    <a className="editorialBrand" href="#section-01" aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
+    <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
     <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
-     <a href="#section-01">Home</a>
-     <a href="#section-02">{c.ui.about}</a>
-     <a href="#section-04">{c.ui.project}</a>
-     <a href="#section-07">{c.ui.stories}</a>
+     <a href="#concept" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
+     <a href="#projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
+     <a href="#process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
     </nav>
     <div className="editorialTools">
      <a className="editorialSurveyLink" href="/survey/participant-portrait">{c.ui.survey}</a>
@@ -230,18 +282,19 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     </div>
    </header>
 
-   <HeroSection copy={c.hero}/>
-   <QuestionSection copy={c.question}/>
-   <Why100Section copy={c.why}/>
-   <ProcessSection copy={c.process}/>
-   <WorldSection copy={c.world}/>
-   <PeopleSection copy={c.people}/>
-   <InspirationSection copy={c.inspiration}/>
-   <ClosingSection copy={c.closing}/>
+   {publicView==="concept"?<>
+    <div className="conceptSections">
+     <HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/>
+     <WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/>
+    </div>
+    <ConceptReelIndicator active={activeConcept} onSelect={selectConcept}/>
+   </>:publicView==="projects"?
+    <EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:
+    <EditorialEmptyView eyebrow={c.ui.processEyebrow} title={c.ui.process} status={c.ui.pending} body={c.ui.processEmpty}/>}
 
    <footer className="editorialFooter">
     <span>{c.ui.footer}</span>
-    <div><a href="/concept">{c.ui.about}</a><a href="/survey/participant-portrait">{c.ui.survey}</a><a href="/?access=invite" onClick={openCreator}>{c.ui.creator}</a></div>
+    <div><a href="#concept" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="#projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="#process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey/participant-portrait">{c.ui.survey}</a><a href="/?access=invite" onClick={openCreator}>{c.ui.creator}</a></div>
     <span>© 2026 HuieChen</span>
    </footer>
 
