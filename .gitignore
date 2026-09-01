@@ -40,3 +40,6 @@ yarn-error.log*
 /outputs/
 /work/
 .pnpm-store/
+
+# typescript incremental build cache
+*.tsbuildinfo
