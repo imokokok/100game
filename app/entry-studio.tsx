@@ -106,8 +106,6 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
   role="dialog"
   aria-modal="true"
   aria-label="WHAT 100 PEOPLE DO TO A GAME opening title"
-  onPointerDown={enableSound}
-  onTouchEnd={enableSound}
   onAnimationEnd={event=>{if(event.currentTarget===event.target&&phase==="leaving")onFinish()}}
  >
   <div className="openingMedia">
@@ -133,6 +131,8 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
     onError={onError}
     disablePictureInPicture
     disableRemotePlayback
+    onPointerDown={enableSound}
+    onTouchEnd={enableSound}
     aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
    >
     <source src="/video/opening-title-ed541f.mp4" type="video/mp4"/>
@@ -254,29 +254,29 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   }catch{setNotice(c.ui.error)}finally{window.clearTimeout(timeout);setBusy(false)}
  }
 
- const introActive=introPhase!=="done";
+const introActive=introPhase!=="done";
 
- return <main className={`publicHome${introActive?" homeIntroPending":""}${introPhase==="leaving"?" homeIntroRevealing":""}`}>
-  {introActive&&<OpeningSequence
-   phase={introPhase}
-   mediaRef={introMedia}
-   onPlaying={()=>setIntroPhase(current=>current==="loading"?"playing":current)}
-   onEnded={beginIntroExit}
-   onError={beginIntroExit}
-   onFinish={finishIntro}
-  />}
-  <div className={`editorialPage editorialView-${publicView}`}>
-   <header className="editorialHeader">
-    <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
-    <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
-     <a href="#concept" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
-     <a href="#projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
-     <a href="#process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
-    </nav>
-    <div className="editorialTools">
-     <a className="editorialSurveyLink" href="/survey/participant-portrait">{c.ui.survey}</a>
-     <EditorialLanguageMenu lang={lang} label={c.ui.language} onChange={setLang}/>
-     <a ref={creatorButton} className="editorialCreatorButton" href="/?access=invite" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
+return <main className={`publicHome${introActive?" homeIntroPending":""}${introPhase==="leaving"?" homeIntroRevealing":""}`}>
+ {introActive&&<OpeningSequence
+  phase={introPhase}
+  mediaRef={introMedia}
+  onPlaying={()=>setIntroPhase(current=>current==="loading"?"playing":current)}
+  onEnded={beginIntroExit}
+  onError={beginIntroExit}
+  onFinish={finishIntro}
+ />}
+ <div className={`editorialPage editorialView-${publicView}`}>
+  <header className="editorialHeader">
+   <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
+   <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
+    <a href="#concept" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
+    <a href="#projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
+    <a href="#process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
+   </nav>
+   <div className="editorialTools">
+    <a className="editorialSurveyLink" href="/survey/participant-portrait">{c.ui.survey}</a>
+    <EditorialLanguageMenu lang={lang} label={c.ui.language} onChange={setLang}/>
+    <a ref={creatorButton} className="editorialCreatorButton" href="/?access=invite" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
     </div>
    </header>
 

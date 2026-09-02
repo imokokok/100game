@@ -6216,6 +6216,10 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   color:#333;
   isolation:isolate;
   touch-action:manipulation;
+  /* Never trap wheel / trackpad scrolling. The overlay is decorative + a
+     tap-to-unmute target; the page underneath must stay scrollable. Only the
+     video itself re-enables pointer events (see .openingVideo). */
+  pointer-events:none;
 }
 .openingSequence.isLoading{animation:openingFailOpen 0s linear 2.5s forwards!important}
 .openingPaper{
@@ -6257,6 +6261,11 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
   position:relative;
   z-index:2;
   display:block;
+  /* The only interactive part of the overlay: tap here to enable sound.
+     Re-enabling pointer events on the video lets wheel/trackpad scrolling
+     pass through the rest of the full-screen overlay. */
+  pointer-events:auto;
+  cursor:pointer;
   width:min(94vw,calc((100vh - 96px)*1.78),1280px);
   width:min(94vw,calc((100svh - 96px)*1.78),1280px);
   max-height:calc(100vh - 96px);
@@ -6431,7 +6440,8 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 .openingSequence.isPlaying{
   animation:releaseOpeningEnter .42s cubic-bezier(.22,.61,.36,1) both!important;
   visibility:visible!important;
-  pointer-events:auto!important;
+  /* Keep the overlay click-through for scrolling; only the video is interactive. */
+  pointer-events:none!important;
 }
 .entryGate.introPending{
   height:100vh!important;
