@@ -12,6 +12,7 @@
  color:var(--ed-ink);
  overflow-x:hidden;
 }
+.publicHome.homeIntroPending{position:fixed;inset:0;width:100%;height:100vh;height:100svh;overflow:hidden}
 .editorialPage,.editorialPage *{box-sizing:border-box}
 .editorialPage{
  min-width:0;

@@ -174,10 +174,8 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   return()=>{window.clearTimeout(hardStop);if(introHardStop.current===hardStop)introHardStop.current=null};
  },[initialInvite]);
  useEffect(()=>{
-  if(introPhase==="done")return;
-  const previous=document.body.style.overflow;document.body.style.overflow="hidden";
-  return()=>{document.body.style.overflow=previous};
- },[introPhase]);
+  if(introPhase==="done"&&!creatorOpen&&document.body.style.overflow==="hidden")document.body.style.removeProperty("overflow");
+ },[creatorOpen,introPhase]);
  useEffect(()=>{
   if(!creatorOpen)return;
   const previous=document.body.style.overflow;document.body.style.overflow="hidden";
