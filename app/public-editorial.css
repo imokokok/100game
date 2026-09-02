@@ -249,7 +249,6 @@
 
 /* Concept reel: the eight real editorial panels are one light, scroll-led sequence. */
 .conceptSections{position:relative}
-.conceptSections .editorialSection{scroll-snap-align:start;scroll-snap-stop:normal}
 .conceptSections .editorialArtwork{transition:transform .75s cubic-bezier(.22,1,.36,1)}
 .conceptSections .editorialSection.isReelActive .editorialArtwork{transform:translateY(-3px) scale(1.008)}
 .conceptReelIndicator{

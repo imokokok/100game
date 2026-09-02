@@ -6551,6 +6551,54 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 @keyframes releaseMediaExit{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.992)}}
 @keyframes releasePaperExit{to{opacity:0}}
 
+/* Discoverable sound toggle for the opening film. Only this control re-enables
+   pointer events; the rest of the overlay stays click-through so the page
+   underneath remains scrollable. */
+.openingSoundHint{
+  position:absolute;
+  left:50%;
+  bottom:clamp(20px,4vh,40px);
+  transform:translateX(-50%);
+  z-index:5;
+  pointer-events:auto;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  margin:0;
+  padding:11px 18px;
+  border:1px solid var(--release-ink);
+  border-radius:999px;
+  background:rgba(244,240,232,.92);
+  color:var(--release-ink);
+  font:700 11px/1 "Courier New",monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 2px 0 rgba(48,47,44,.18);
+  animation:openingHintPulse 1.8s ease-in-out infinite;
+}
+.openingSoundHint:before{
+  content:"";
+  width:0;
+  height:0;
+  border-style:solid;
+  border-width:6px 0 6px 9px;
+  border-color:transparent transparent transparent var(--release-red);
+}
+.openingSoundHint.isOn{
+  border-color:rgba(48,47,44,.4);
+  color:var(--release-muted);
+  box-shadow:none;
+  animation:none;
+}
+.openingSoundHint.isOn:before{border-left-color:var(--release-muted)}
+.openingSequence.isLeaving .openingSoundHint{pointer-events:none}
+@keyframes openingHintPulse{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){
+  .openingSoundHint{animation:none!important}
+}
+
 /* The destination resolves during the same 740 ms hand-off. */
 .entryGate.introPending>.entryTop,
 .entryGate.introPending>section .publicBrandTitle,

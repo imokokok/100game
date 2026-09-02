@@ -64,7 +64,7 @@ function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:s
  </div>;
 }
 
-function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void}){
+function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soundOffLabel,soundOnLabel}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void;soundOffLabel:string;soundOnLabel:string}){
  const [soundEnabled,setSoundEnabled]=useState(false);
 
  const enableSound=useCallback(()=>{
@@ -138,6 +138,15 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
     <source src="/video/opening-title-ed541f.mp4" type="video/mp4"/>
    </video>
   </div>
+  <button
+   type="button"
+   className={`openingSoundHint${soundEnabled?" isOn":""}`}
+   onClick={enableSound}
+   onPointerDown={enableSound}
+   aria-label={soundEnabled?soundOnLabel:soundOffLabel}
+  >
+   <span>{soundEnabled?soundOnLabel:soundOffLabel}</span>
+  </button>
  </div>;
 }
 
@@ -180,7 +189,21 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   if(!creatorOpen)return;
   const previous=document.body.style.overflow;document.body.style.overflow="hidden";
   const timer=window.setTimeout(()=>firstInput.current?.focus(),30);
-  const onKey=(event:KeyboardEvent)=>{if(event.key==="Escape")closeCreator(false)};
+  const onKey=(event:KeyboardEvent)=>{
+   if(event.key==="Escape"){event.preventDefault();closeCreator(false);return}
+   if(event.key!=="Tab")return;
+   const root=document.querySelector<HTMLElement>(".homeCreatorPanel");
+   if(!root)return;
+   const focusable=Array.from(root.querySelectorAll<HTMLElement>('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')).filter(el=>el.offsetParent!==null);
+   if(!focusable.length)return;
+   const first=focusable[0],last=focusable[focusable.length-1];
+   const active=document.activeElement as HTMLElement|null;
+   if(event.shiftKey){
+    if(active===first||!root.contains(active)){event.preventDefault();last.focus()}
+   }else{
+    if(active===last||!root.contains(active)){event.preventDefault();first.focus()}
+   }
+  };
   window.addEventListener("keydown",onKey);
   return()=>{window.clearTimeout(timer);window.removeEventListener("keydown",onKey);document.body.style.overflow=previous};
  },[creatorOpen]);
@@ -264,6 +287,8 @@ return <main className={`publicHome${introActive?" homeIntroPending":""}${introP
   onEnded={beginIntroExit}
   onError={beginIntroExit}
   onFinish={finishIntro}
+  soundOffLabel={c.ui.soundOff}
+  soundOnLabel={c.ui.soundOn}
  />}
  <div className={`editorialPage editorialView-${publicView}`}>
   <header className="editorialHeader">

@@ -8,6 +8,7 @@ const zh={
   creatorIntro:"项目成员与主策划从这里进入。参与者请填写微信群聊名及邀请码。",
   name:"微信群聊名",namePlaceholder:"填写你的微信群聊名",code:"邀请码",codePlaceholder:"填写邀请码",
   enter:"验证并进入",entering:"正在进入…",close:"关闭",required:"请填写微信群聊名。",
+  soundOff:"点按开启声音",soundOn:"声音已开启",
   error:"邀请码无效、已过期，或当前网络暂时不可用。",footer:"一百个人怎么做游戏 · 共同创作项目",
  },
  hero:{
@@ -62,6 +63,7 @@ const en={
   creatorIntro:"Project members and the Lead Designer enter here. Participants should provide their WeChat group name and invitation code.",
   name:"WeChat group name",namePlaceholder:"Your WeChat group name",code:"Invitation code",codePlaceholder:"Enter invitation code",
   enter:"Verify and enter",entering:"Entering…",close:"Close",required:"Please provide your WeChat group name.",
+  soundOff:"Tap for sound",soundOn:"Sound on",
   error:"The invitation is invalid, expired, or the network is temporarily unavailable.",footer:"WHAT 100 PEOPLE DO TO A GAME · COLLECTIVE PROJECT",
  },
  hero:{
