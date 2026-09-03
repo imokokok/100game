@@ -154,7 +154,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  const [lang,setLang]=useState<EditorialLang>("zh"),[creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
  const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"loading");
  const [publicView,setPublicView]=useState<PublicView>("concept"),[activeConcept,setActiveConcept]=useState(0);
- const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null);
+ const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null),scrollProgress=useRef<HTMLSpanElement>(null);
  const c=editorialContent[lang];
 
  useEffect(()=>{
@@ -173,7 +173,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   }
   if(introPhase==="leaving"){
    const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-   const fallback=window.setTimeout(()=>finishIntro(),reduced?80:650);return()=>window.clearTimeout(fallback);
+   const fallback=window.setTimeout(()=>finishIntro(),reduced?80:950);return()=>window.clearTimeout(fallback);
   }
  },[introPhase]);
  useEffect(()=>{
@@ -221,28 +221,28 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
    const rect=target.getBoundingClientRect();
    if(rect.top<window.innerHeight*.94&&rect.bottom>0){target.classList.add("isVisible");observer.unobserve(target)}
   });
-  let frame=0;
-  const queueReveal=()=>{if(frame)return;frame=window.requestAnimationFrame(()=>{frame=0;revealVisible()})};
   targets.forEach(target=>observer.observe(target));
   revealVisible();
-  window.addEventListener("scroll",queueReveal,{passive:true});window.addEventListener("resize",queueReveal);
   const delayed=window.setTimeout(revealVisible,120);
-  return()=>{observer.disconnect();window.clearTimeout(delayed);if(frame)window.cancelAnimationFrame(frame);window.removeEventListener("scroll",queueReveal);window.removeEventListener("resize",queueReveal)};
+  return()=>{observer.disconnect();window.clearTimeout(delayed)};
  },[introPhase,publicView]);
  useEffect(()=>{
   if(introPhase!=="done"||publicView!=="concept")return;
   const sections=Array.from(document.querySelectorAll<HTMLElement>(".conceptSections .editorialSection"));
   if(!sections.length)return;
-  let frame=0;
+  const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduced){sections.forEach(section=>section.classList.remove("isReelActive"));if(scrollProgress.current)scrollProgress.current.style.transform="scaleX(0)";return}
+  let frame=0,active=-1,scrollRange=1,trackSections=window.innerWidth>820;let centers:number[]=[];
+  const measure=()=>{scrollRange=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);trackSections=window.innerWidth>820;if(!trackSections&&active!==-1){active=-1;sections.forEach(section=>section.classList.remove("isReelActive"));setActiveConcept(0)}centers=trackSections?sections.map(section=>{const rect=section.getBoundingClientRect();return rect.top+window.scrollY+rect.height*.5}):[];queue()};
   const update=()=>{
-   frame=0;const center=window.innerHeight*.5;let best=0,distance=Number.POSITIVE_INFINITY;
-   sections.forEach((section,index)=>{const rect=section.getBoundingClientRect();const next=Math.abs(rect.top+rect.height*.5-center);if(next<distance){distance=next;best=index}});
-   sections.forEach((section,index)=>section.classList.toggle("isReelActive",index===best));setActiveConcept(best);
+   frame=0;const scrollY=window.scrollY,progress=Math.min(Math.max(scrollY/scrollRange,0),1);
+   if(trackSections){const center=scrollY+window.innerHeight*.5;let best=0,distance=Number.POSITIVE_INFINITY;centers.forEach((value,index)=>{const next=Math.abs(value-center);if(next<distance){distance=next;best=index}});if(best!==active){active=best;sections.forEach((section,index)=>section.classList.toggle("isReelActive",index===best));setActiveConcept(best)}}
+   if(scrollProgress.current)scrollProgress.current.style.transform=`scaleX(${progress})`;
   };
   const queue=()=>{if(!frame)frame=window.requestAnimationFrame(update)};
-  queue();window.addEventListener("scroll",queue,{passive:true});window.addEventListener("resize",queue);
-  return()=>{if(frame)window.cancelAnimationFrame(frame);window.removeEventListener("scroll",queue);window.removeEventListener("resize",queue);sections.forEach(section=>section.classList.remove("isReelActive"))};
- },[introPhase,publicView]);
+  measure();window.addEventListener("scroll",queue,{passive:true});window.addEventListener("resize",measure);
+  return()=>{if(frame)window.cancelAnimationFrame(frame);window.removeEventListener("scroll",queue);window.removeEventListener("resize",measure);sections.forEach(section=>section.classList.remove("isReelActive"));if(scrollProgress.current)scrollProgress.current.style.transform="scaleX(0)"};
+ },[introPhase,publicView,lang]);
 
  function updateCreatorUrl(open:boolean,push:boolean){
   const url=new URL(location.href);if(open)url.searchParams.set("access","invite");else{url.searchParams.delete("access");url.searchParams.delete("invite")}
@@ -306,6 +306,7 @@ return <main className={`publicHome${introActive?" homeIntroPending":""}${introP
    </header>
 
    {publicView==="concept"?<>
+    <span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/>
     <div className="conceptSections">
      <HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/>
      <WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/>

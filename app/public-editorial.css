@@ -24,6 +24,7 @@
  color:var(--ed-ink);
  font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Arial,sans-serif;
 }
+.editorialScrollProgress{position:fixed;top:0;right:0;left:0;z-index:150;height:3px;background:var(--ed-red);pointer-events:none;transform:scaleX(0);transform-origin:left}
 .editorialPage a{color:inherit;text-decoration:none}
 .editorialPage a:focus-visible,.editorialPage button:focus-visible,.editorialPage select:focus-visible,.editorialPage input:focus-visible{
  outline:3px solid var(--ed-red);
@@ -41,6 +42,7 @@
  padding:10px clamp(24px,4.1vw,72px);
  border-bottom:1px solid rgba(17,18,16,.42);
  background:rgba(232,226,216,.97);
+ transition:box-shadow .35s ease,border-color .35s ease;
 }
 .editorialBrand{display:inline-flex;width:max-content;padding:5px 0}
 .editorialProjectMark{display:flex;flex-direction:column;align-items:flex-start;gap:3px;font-family:"Arial Narrow","Helvetica Neue Condensed",Impact,sans-serif;font-weight:900;line-height:1;letter-spacing:-.04em}
@@ -140,6 +142,7 @@
  font:700 11px/1 "Courier New",monospace;
  letter-spacing:.14em;
  white-space:nowrap;
+ transition:color .24s ease,transform .38s cubic-bezier(.22,1,.36,1);
 }
 .editorialSectionNumber i{font-style:normal;color:var(--ed-muted)}
 .editorialEyebrow{
@@ -251,6 +254,9 @@
 .conceptSections{position:relative}
 .conceptSections .editorialArtwork{transition:transform .75s cubic-bezier(.22,1,.36,1)}
 .conceptSections .editorialSection.isReelActive .editorialArtwork{transform:translateY(-3px) scale(1.008)}
+.conceptSections .editorialSection.isReelActive .editorialSectionNumber{color:var(--ed-red);transform:translateX(-4px)}
+.conceptSections .editorialSection:after{content:"";position:absolute;top:0;bottom:0;left:0;z-index:6;width:2px;background:var(--ed-red);pointer-events:none;opacity:0;transform:scaleY(0);transform-origin:top}
+.conceptSections .editorialSection.isReelActive:after{animation:editorialEdgeDraw .72s cubic-bezier(.22,1,.36,1) both}
 .conceptReelIndicator{
  position:fixed;right:clamp(10px,1.4vw,24px);top:50%;z-index:60;display:grid;justify-items:center;gap:9px;
  padding:10px 7px;border:1px solid rgba(17,18,16,.25);background:rgba(244,240,232,.86);color:var(--ed-ink);
@@ -258,13 +264,14 @@
 }
 .conceptReelIndicator div{display:grid;gap:3px}
 .conceptReelIndicator button{width:18px;height:12px;display:grid;place-items:center;padding:0;border:0;background:transparent;cursor:pointer}
-.conceptReelIndicator button:before{content:"";width:3px;height:3px;border-radius:50%;background:rgba(17,18,16,.35);transition:height .22s ease,background .22s ease,border-radius .22s ease}
-.conceptReelIndicator button.isActive:before{height:11px;border-radius:2px;background:var(--ed-red)}
+.conceptReelIndicator button:before{content:"";width:3px;height:10px;border-radius:2px;background:rgba(17,18,16,.35);transform:scaleY(.3);transition:transform .26s cubic-bezier(.22,1,.36,1),background .22s ease}
+.conceptReelIndicator button.isActive:before{background:var(--ed-red);transform:scaleY(1)}
 
 /* Honest holding pages: no fabricated cards, controls or project data. */
 .editorialEmptyView{
  position:relative;min-height:760px;min-height:max(760px,calc(100dvh - 72px));display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);
  grid-template-rows:auto 1fr;gap:32px;padding:clamp(28px,4vw,64px) clamp(28px,5.2vw,88px) clamp(64px,7vw,112px);overflow:hidden;border-bottom:1px solid rgba(17,18,16,.55);isolation:isolate;
+ animation:editorialViewIn .58s cubic-bezier(.22,1,.36,1) both;
 }
 .editorialEmptyIndex{grid-column:1/-1;justify-self:end;font:700 10px/1.3 "Courier New",monospace;letter-spacing:.1em}
 .editorialEmptyCopy{grid-column:1;grid-row:2;align-self:center;max-width:760px;z-index:2}
@@ -295,11 +302,12 @@
 .editorialFooter a:hover:after{transform:scaleX(1)}
 
 /* Scroll-reveal is progressive enhancement; without JS everything stays visible. */
-.editorialPage.motionReady [data-reveal]{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
-.editorialPage.motionReady [data-reveal="visual"]{transform:translateY(16px) scale(.985);clip-path:inset(0 100% 0 0);transition-duration:.85s}
+.editorialPage.motionReady [data-reveal]{opacity:0;transform:translate3d(0,20px,0);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.editorialPage.motionReady [data-reveal="visual"]{transform:translate3d(0,16px,0) scale(.985);transition-duration:.72s}
 .editorialPage.motionReady [data-reveal="copy"]{transition-delay:.1s}
 .editorialPage.motionReady [data-reveal].isVisible{opacity:1;transform:none}
-.editorialPage.motionReady [data-reveal="visual"].isVisible{clip-path:inset(0)}
+@keyframes editorialViewIn{from{opacity:.72;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes editorialEdgeDraw{0%{opacity:0;transform:scaleY(0)}48%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(0)}}
 
 /* Creator access keeps the original route and verification logic, in the same editorial system. */
 .publicHome .homeCreatorOverlay{background:rgba(17,18,16,.64);-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
@@ -342,7 +350,9 @@
 
 @media(max-width:820px){
  .conceptReelIndicator{display:none}
- .editorialPage.motionReady [data-reveal="visual"]{clip-path:none}
+ .editorialPage.motionReady [data-reveal]{transform:translate3d(0,12px,0);transition-duration:.48s}
+ .editorialPage.motionReady [data-reveal="visual"]{transform:translate3d(0,10px,0) scale(.992)}
+ .conceptSections .editorialSection.isReelActive .editorialArtwork{transform:none}.conceptSections .editorialSection:after{display:none}
  .editorialHeader{position:sticky;min-height:112px;grid-template-columns:64px minmax(0,1fr);grid-template-rows:54px 44px;padding:6px 20px 8px}
  .editorialBrand{grid-column:1;grid-row:1}.editorialTools{grid-column:2;grid-row:1}.editorialNav{grid-column:1/-1;grid-row:2;justify-content:flex-start!important;gap:28px;overflow-x:auto;padding:0 2px;border-top:1px solid rgba(17,18,16,.2)}
  .editorialNav a{min-height:42px;display:inline-flex;align-items:center}
@@ -401,13 +411,16 @@
  .processRail span{font-size:8px}
 }
 
-@media(hover:hover){
- .editorialSection .editorialHeroStage,.editorialSection .questionVisual,.editorialSection .whyVisual,.editorialSection .worldVisual,.editorialSection .inspirationVisual,.editorialSection .closingVisual{transition:transform .7s cubic-bezier(.22,1,.36,1)}
- .editorialSection:hover .editorialHeroStage,.editorialSection:hover .questionVisual,.editorialSection:hover .whyVisual,.editorialSection:hover .worldVisual,.editorialSection:hover .inspirationVisual,.editorialSection:hover .closingVisual{transform:translateY(-3px)}
+@media(hover:hover) and (min-width:821px){
+ .editorialPage.motionReady .editorialSection:hover [data-reveal="visual"].isVisible{transform:translate3d(0,-3px,0)}
+ .editorialBrand,.editorialNav a,.editorialSurveyLink,.editorialLanguageTrigger,.editorialCreatorButton{transition:transform .24s cubic-bezier(.22,1,.36,1),color .2s ease,background-color .2s ease,border-color .2s ease}
+ .editorialBrand:hover{transform:translateY(-2px) rotate(-1deg)}.editorialNav a:hover,.editorialSurveyLink:hover{transform:translateY(-2px)}
 }
 
 @media(prefers-reduced-motion:reduce){
  .editorialPage{scroll-behavior:auto!important}
  .editorialPage *{animation:none!important;transition:none!important}
  .editorialPage [data-reveal]{opacity:1!important;transform:none!important;clip-path:none!important}
+ .conceptSections .editorialSection.isReelActive .editorialArtwork,.conceptSections .editorialSection.isReelActive .editorialSectionNumber{transform:none!important}
+ .editorialScrollProgress{display:none}.conceptSections .editorialSection:after{display:none}
 }
