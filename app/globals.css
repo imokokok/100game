@@ -6438,7 +6438,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 .openingSequence.isChecking,
 .openingSequence.isLoading,
 .openingSequence.isPlaying{
-  animation:releaseOpeningEnter .42s cubic-bezier(.22,.61,.36,1) both!important;
+  animation:releaseOpeningEnter .42s cubic-bezier(.22,.61,.36,1) both,releaseOpeningFailSafe 0s linear 4.8s forwards!important;
   visibility:visible!important;
   /* Keep the overlay click-through for scrolling; only the video is interactive. */
   pointer-events:none!important;
@@ -6546,6 +6546,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 }
 @keyframes releaseLoading{to{transform:scaleX(.86)}}
 @keyframes releaseOpeningEnter{from{opacity:0}to{opacity:1}}
+@keyframes releaseOpeningFailSafe{to{opacity:0;visibility:hidden;pointer-events:none}}
 @keyframes releaseEdgeCleanup{0%,56%{opacity:1}100%{opacity:0}}
 @keyframes releaseOpeningExit{0%{opacity:1}100%{opacity:0;visibility:hidden}}
 @keyframes releaseMediaExit{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.992)}}

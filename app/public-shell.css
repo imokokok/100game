@@ -36,8 +36,8 @@
 }
 .openingTitleStill img{display:block;width:100%;height:100%;object-fit:contain}
 .openingMedia>.openingVideo{position:relative!important;z-index:1!important;opacity:0!important}
-.openingSequence.isPlaying .openingTitleStill,.openingSequence.isLeaving .openingTitleStill{opacity:0}
-.openingSequence.isPlaying .openingMedia>.openingVideo,.openingSequence.isLeaving .openingMedia>.openingVideo{opacity:1!important}
+.openingSequence.isLoading .openingTitleStill,.openingSequence.isPlaying .openingTitleStill,.openingSequence.isLeaving .openingTitleStill{opacity:0}
+.openingSequence.isLoading .openingMedia>.openingVideo,.openingSequence.isPlaying .openingMedia>.openingVideo,.openingSequence.isLeaving .openingMedia>.openingVideo{opacity:1!important}
 @supports not (mix-blend-mode:darken){
  .openingTitleStill{opacity:1!important}
  .openingMedia>.openingVideo,.openingSequence.isPlaying .openingMedia>.openingVideo,.openingSequence.isLeaving .openingMedia>.openingVideo{opacity:0!important}

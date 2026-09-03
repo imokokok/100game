@@ -10,6 +10,10 @@ import {
 type IntroPhase="loading"|"playing"|"leaving"|"done";
 type PublicView="concept"|"projects"|"process";
 
+/* This ES5 watchdog is emitted in the initial HTML. It still releases the
+   opening when a slow/old embedded browser never hydrates the React bundle. */
+const INTRO_FAILSAFE_SCRIPT="(function(){window.setTimeout(function(){var e=document.documentElement,n='intro-failsafe-released';if((' '+e.className+' ').indexOf(' '+n+' ')<0)e.className+=(e.className?' ':'')+n;},4800);}());";
+
 function viewFromHash(hash:string):PublicView{
  if(hash==="#projects")return "projects";
  if(hash==="#process")return "process";
@@ -126,6 +130,8 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soun
     controlsList="nodownload noplaybackrate noremoteplayback"
     {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
     muted={!soundEnabled}
+    onLoadedData={onPlaying}
+    onCanPlay={onPlaying}
     onPlaying={onPlaying}
     onEnded={onEnded}
     onError={onError}
@@ -166,10 +172,10 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";storageSet("hundred-language",lang)},[lang]);
  useEffect(()=>{
   if(introPhase==="loading"){
-   const fallback=window.setTimeout(()=>beginIntroExit(),4000);return()=>window.clearTimeout(fallback);
+   const fallback=window.setTimeout(()=>beginIntroExit(),3200);return()=>window.clearTimeout(fallback);
   }
   if(introPhase==="playing"){
-   const fallback=window.setTimeout(()=>beginIntroExit(),3800);return()=>window.clearTimeout(fallback);
+   const fallback=window.setTimeout(()=>beginIntroExit(),3000);return()=>window.clearTimeout(fallback);
   }
   if(introPhase==="leaving"){
    const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -178,8 +184,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  },[introPhase]);
  useEffect(()=>{
   if(initialInvite)return;
-  const release=()=>setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving");
-  const hardStop=window.setTimeout(release,6800);introHardStop.current=hardStop;
+  const hardStop=window.setTimeout(()=>finishIntro(),4700);introHardStop.current=hardStop;
   return()=>{window.clearTimeout(hardStop);if(introHardStop.current===hardStop)introHardStop.current=null};
  },[initialInvite]);
  useEffect(()=>{
@@ -279,7 +284,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
 
 const introActive=introPhase!=="done";
 
-return <main className={`publicHome${introActive?" homeIntroPending":""}${introPhase==="leaving"?" homeIntroRevealing":""}`}>
+return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAFE_SCRIPT}}/>}<main className={`publicHome${introActive?" homeIntroPending":""}${introPhase==="leaving"?" homeIntroRevealing":""}`}>
  {introActive&&<OpeningSequence
   phase={introPhase}
   mediaRef={introMedia}
@@ -336,5 +341,5 @@ return <main className={`publicHome${introActive?" homeIntroPending":""}${introP
     </section>
    </div>}
   </div>
- </main>;
+ </main></>;
 }
