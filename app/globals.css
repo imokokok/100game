@@ -6622,7 +6622,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 @supports not (mix-blend-mode:darken){
   /* The film remains usable in very old WebViews; edge masks still merge its
      exported canvas into the page even when blend modes are unavailable. */
-  .openingVideo{mix-blend-mode:normal!important;filter:none!important}
+  .openingVideo{mix-blend-mode:normal!important;filter:none!important;opacity:0!important}
 }
 
 /* Shared raised / pressed language for navigation and controls. */
