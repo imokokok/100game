@@ -2503,7 +2503,9 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 }
 .openingSequence.isLeaving{animation:openingFilmExit .62s cubic-bezier(.22,1,.36,1) forwards}
 .openingSequence.isLeaving .openingMedia{transform:translateZ(0) scale(1.012)}
-.homeIntroRevealing .editorialPage{animation:homePageReveal .62s cubic-bezier(.22,1,.36,1) both}
+.homeIntroRevealing .editorialHeader,.homeIntroRevealing .editorialHeroCopy,.homeIntroRevealing .editorialHeroStage{animation:homePageReveal .5s cubic-bezier(.22,1,.36,1) both}
+.homeIntroRevealing .editorialHeroCopy{animation-delay:.04s}
+.homeIntroRevealing .editorialHeroStage{animation-delay:.1s}
 @keyframes openingFilmSettle{
  from{opacity:.86;transform:translateZ(0) scale(.975)}
  to{opacity:1;transform:translateZ(0) scale(1)}
@@ -2532,5 +2534,5 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 @media(prefers-reduced-motion:reduce){
  .openingMedia{animation:none}
  .openingSequence.isLeaving{animation-duration:.08s}
- .homeIntroRevealing .editorialPage{animation:none}
+ .homeIntroRevealing .editorialHeader,.homeIntroRevealing .editorialHeroCopy,.homeIntroRevealing .editorialHeroStage{animation:none}
 }
