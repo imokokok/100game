@@ -2469,6 +2469,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  flex:0 0 auto;
  overflow:hidden;
  background:#e8e2d8;
+ isolation:isolate;
  transform:translateZ(0) scale(.992);
  animation:openingFilmSettle 2.25s cubic-bezier(.2,.75,.22,1) both;
 }
@@ -2498,8 +2499,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  height:100%;
  display:block;
  object-fit:contain;
- background:#e8e2d8;
+ background:transparent;
+ mix-blend-mode:darken;
+ filter:contrast(1.04) saturate(1.08);
  transition:opacity .24s ease;
+}
+@supports not (mix-blend-mode:darken){
+ /* Very old embedded browsers show the clean transparent title still rather
+    than exposing the video's opaque grey canvas. */
+ .openingVideo{mix-blend-mode:normal;filter:none;opacity:0}
 }
 .openingSequence.isLeaving{animation:openingFilmExit .62s cubic-bezier(.22,1,.36,1) forwards}
 .openingSequence.isLeaving .openingMedia{transform:translateZ(0) scale(1.012)}
@@ -2524,6 +2532,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
 }
 @media(max-width:700px){
  .openingMedia{width:100vw;max-width:none;animation:none;transform:none}
+ .openingVideo{filter:none}
  .openingMedia:after{
   background:
    linear-gradient(to bottom,#e8e2d8 0,rgba(232,226,216,0) 15%,rgba(232,226,216,0) 85%,#e8e2d8 100%),
