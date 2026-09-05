@@ -27,7 +27,7 @@ test("server-renders the public homepage and resilient native links", async () =
   assert.match(html, /webkit-playsinline="true"/);
   assert.doesNotMatch(html, /播放片头|跳过片头|Play with sound|Skip/);
   assert.match(html, /href="#concept"/);
-  assert.match(html, /href="\/survey\/participant-portrait"/);
+  assert.match(html, /href="\/survey"/);
   assert.match(html, /href="\/lead"/);
   assert.doesNotMatch(html, /Owner 管理入口/);
   assert.match(html, /创作入口/);
@@ -183,10 +183,10 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   assert.doesNotMatch(layout, /ClickFeedback/);
   assert.match(page, /<EntryStudio initialInvite=\{access==="invite"\|\|hasInvite\} initialCode=\{inviteCode\?\?""\}\/>/);
   assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
-  assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=journal":"\/workspace"\)/);
+  assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=dashboard":"\/workspace"\)/);
   assert.match(workspace, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\} initialResponses=\{initialResponses\}\/>/);
   assert.match(workspace, /participantId\(request\)/);
-  assert.match(studio, /import \{WorkspaceFiles\} from "\.\/workspace-files"/);
+  assert.doesNotMatch(studio, /WorkspaceFiles|LiveLinks|LiveJournal|view=journal|view=links/);
   assert.doesNotMatch(studio, /lazy\(\(\)=>import\("\.\/workspace-files"\)/);
   assert.match(studio, /workspaceHomeButton/);
   assert.match(studio, /x\.value==="zh"\|\|x\.value==="en"/);
@@ -253,7 +253,7 @@ test("uses a public project homepage instead of an access-choice gate", async ()
     readFile(new URL("../app/studio.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(entry, /className=\{`publicHome/);
-  assert.match(entry, /href="\/survey\/participant-portrait"/);
+  assert.match(entry, /href="\/survey"/);
   assert.match(entry, /className="homeCreatorOverlay"/);
   assert.match(entry, /opening-title-6a63d7e7\.mp4/);
   assert.match(entry, /WeixinJSBridgeReady/);
@@ -415,7 +415,7 @@ test("returns to workspace home once and resets the rendered scroll surface", as
   assert.match(studio, /requestAnimationFrame\(\(\)=>\{window\.scrollTo\(\{top:0,behavior:"auto"\}\);workspaceRef\.current\?\.scrollTo/);
   assert.match(studio, /section className="workspace" ref=\{workspaceRef\}/);
   assert.match(studio, /disabled=\{view==="home"\}/);
-  assert.match(studio, /返回创作资料/);
+  assert.match(studio, /返回协作入口/);
 });
 
 test("uses one editorial system instead of assembling the interface from rounded cards", async () => {

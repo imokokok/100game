@@ -232,7 +232,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
    const response=await Promise.race([request,new Promise<Response>((_,reject)=>{timeout=window.setTimeout(()=>{controller?.abort();reject(new Error("timeout"))},12000)})]);
    if(!response.ok){setNotice(c.ui.error);return}
    const data=await response.json() as {role:"lead"|"participant"};
-   location.replace(data.role==="lead"?"/workspace?view=journal":"/workspace");
+   location.replace(data.role==="lead"?"/workspace?view=dashboard":"/workspace");
   }catch{setNotice(c.ui.error)}finally{window.clearTimeout(timeout);setBusy(false)}
  }
 
@@ -256,7 +256,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
      <a href="#process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
     </nav>
     <div className="editorialTools">
-     <a className="editorialSurveyLink" href="/survey/participant-portrait">{c.ui.survey}</a>
+     <a className="editorialSurveyLink" href="/survey">{c.ui.survey}</a>
      <EditorialLanguageMenu lang={lang} label={c.ui.language} onChange={setLang}/>
      <a ref={creatorButton} className="editorialCreatorButton" href="/lead" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
     </div>
@@ -266,7 +266,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
 
    <footer className="editorialFooter">
     <span>{c.ui.footer}</span>
-    <div><a href="#concept" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="#projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="#process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey/participant-portrait">{c.ui.survey}</a><a href="/lead" onClick={openCreator}>{c.ui.creator}</a></div>
+    <div><a href="#concept" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="#projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="#process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey">{c.ui.survey}</a><a href="/lead" onClick={openCreator}>{c.ui.creator}</a></div>
     <span>© 2026 HuieChen</span>
    </footer>
 
