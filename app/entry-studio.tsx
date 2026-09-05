@@ -167,10 +167,12 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
  const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null),scrollProgress=useRef<HTMLSpanElement>(null);
  const c=editorialContent[lang];
 
+ useEffect(()=>{document.body.classList.add("publicSiteBody");return()=>document.body.classList.remove("publicSiteBody")},[]);
+
  useEffect(()=>{
-  const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);setPublicView(params.view==="process"||params.view==="projects"?params.view:viewFromHash(location.hash));if(nextOpen||params.view==="process"||params.view==="projects")finishIntro();const token=params.invite;if(token)setCode(token)};
+  const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);const nextView=params.view==="process"||params.view==="projects"?params.view:viewFromHash(location.hash);setPublicView(nextView);if(nextOpen||nextView!=="concept")finishIntro();const token=params.invite;if(token)setCode(token)};
   const restore=(event:PageTransitionEvent)=>{if(event.persisted)finishIntro()};
-  const hydrate=window.setTimeout(()=>{const saved=storageGet("hundred-language");if(saved==="en")setLang("en");sync()},0);
+  const saved=storageGet("hundred-language");const hydrate=window.setTimeout(()=>{if(saved==="en")setLang("en");sync()},0);
   window.addEventListener("popstate",sync);window.addEventListener("hashchange",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("hashchange",sync);window.removeEventListener("pageshow",restore)};
  },[]);
  useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";storageSet("hundred-language",lang)},[lang]);
@@ -252,6 +254,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   const target=`${url.pathname}${url.search}${url.hash}`;(push?history.pushState:history.replaceState).call(history,{},"",target);
  }
  function changeView(event:MouseEvent<HTMLAnchorElement>,next:PublicView){
+  if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   event.preventDefault();finishIntro();setPublicView(next);setActiveConcept(0);
   history.pushState({},"",next==="concept"?"/":`/?view=${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0);
  }
@@ -265,7 +268,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   if(introHardStop.current!==null){window.clearTimeout(introHardStop.current);introHardStop.current=null}
   const media=introMedia.current;if(media)try{media.pause()}catch{/* The media may already be detached. */}
  }
- function openCreator(event?:MouseEvent<HTMLAnchorElement>){if(event){event.preventDefault();creatorButton.current=event.currentTarget}finishIntro();setNotice("");setCreatorOpen(true);updateCreatorUrl(true,true)}
+ function openCreator(event?:MouseEvent<HTMLAnchorElement>){if(event&&(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey))return;if(event){event.preventDefault();creatorButton.current=event.currentTarget}finishIntro();setNotice("");setCreatorOpen(true);updateCreatorUrl(true,true)}
  function closeCreator(restoreFocus=true){setNotice("");setCreatorOpen(false);updateCreatorUrl(false,false);if(restoreFocus)window.setTimeout(()=>creatorButton.current?.focus(),0)}
  async function submit(event:FormEvent){
   event.preventDefault();if(busy)return;if(!name.trim()){setNotice(c.ui.required);firstInput.current?.focus();return}

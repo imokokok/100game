@@ -1,0 +1,115 @@
+const assert=require('node:assert/strict');
+const {chromium}=require(process.env.AUDIT_PLAYWRIGHT);
+const base=process.env.AUDIT_BASE||'http://localhost:3106';
+(async()=>{
+ const browser=await chromium.launch({channel:'msedge',headless:true});
+ const results=[];
+ try{
+  const context=await browser.newContext({viewport:{width:390,height:844}});
+  await context.route('**/api/analytics',route=>route.fulfill({json:{ok:true}}));
+  const page=await context.newPage();
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(base+'/?view=process');
+  await page.locator('.processDisclosure').first().waitFor();
+  assert.equal(await page.locator('details[open]').count(),0);
+  await page.locator('.processDisclosure summary').first().click();
+  assert.equal(await page.locator('details[open]').count(),1);
+  await page.locator('.processDisclosure summary').first().click();
+  await page.evaluate(()=>scrollTo(0,600));
+  await page.waitForTimeout(250);
+  const geometry=await page.evaluate(()=>({headerTop:document.querySelector('.editorialHeader').getBoundingClientRect().top,scroll:scrollY,width:innerWidth,bodyWidth:document.documentElement.scrollWidth}));
+  results.push({process:geometry});
+  console.log(JSON.stringify({process:geometry}));
+  assert.ok(geometry.headerTop>=-1,'public navigation should stay visible');
+  assert.ok(geometry.bodyWidth<=geometry.width+1,'mobile horizontal overflow');
+  await page.evaluate(()=>localStorage.setItem('hundred-language','en'));
+  await page.goto(base+'/#process');
+  await page.waitForFunction(()=>document.querySelector('.editorialNav').textContent.includes('Process'));
+  await page.waitForFunction(()=>!document.querySelector('#opening-sequence'));
+  assert.equal(await page.evaluate(()=>localStorage.getItem('hundred-language')),'en');
+  results.push('language remembered and hash route bypasses intro');
+  await page.evaluate(()=>localStorage.setItem('hundred-language','zh'));
+  await page.goto(base+'/survey/npc-design');
+  await page.getByLabel('你的微信群昵称是？').fill('本地验证');
+  await page.getByLabel('你想让这个 NPC 叫什么？').fill('T B D');
+  await page.getByRole('button',{name:'保存并继续',exact:true}).click();
+  await page.getByText('请为 NPC 填写一个确定的名字。',{exact:true}).waitFor();
+  await page.getByLabel('你想让这个 NPC 叫什么？').fill('测试居民');
+  for(let i=0;i<3;i++)await page.getByRole('button',{name:'保存并继续',exact:true}).click();
+  await page.getByRole('button',{name:'普通居民',exact:false}).click();
+  await page.getByRole('button',{name:'检查并提交',exact:true}).click();
+  assert.equal(await page.locator('.review-panel h2').innerText(),'NPC设计问卷');
+  let posted=0;await page.route('**/api/questionnaire',async route=>{posted++;assert.equal(route.request().postDataJSON().surveyType,'npc-design');await route.fulfill({status:200,json:{ok:true,id:'local-test'}})});
+  await page.getByRole('button',{name:'确认提交',exact:true}).click();
+  await page.locator('.survey-confirm').waitFor();
+  assert.equal(posted,1);
+  assert.equal(await page.evaluate(()=>localStorage.getItem('what100-survey-draft-npc-design-v1')),null);
+  assert.equal(await page.locator('.survey-return-home').getAttribute('href'),'/');
+  assert.equal(await page.evaluate(()=>scrollY),0);
+  await page.getByRole('link',{name:'返回问卷列表',exact:true}).click();
+  await page.locator('.surveyCatalogue').waitFor();
+  results.push('NPC validation, review, mocked submit, draft removal and return');
+  const broken=await browser.newContext({viewport:{width:320,height:568}});
+  await broken.route('**/api/analytics',route=>route.fulfill({json:{ok:true}}));
+  await broken.addInitScript(()=>{Storage.prototype.setItem=function(){throw new DOMException('Blocked','SecurityError')};Storage.prototype.getItem=function(){throw new DOMException('Blocked','SecurityError')}});
+  const blockedPage=await broken.newPage();blockedPage.on('pageerror',e=>errors.push(e.message));
+  await blockedPage.goto(base+'/survey/npc-design');
+  await blockedPage.getByText('当前浏览器无法保存草稿，请保持页面打开直至提交。',{exact:true}).waitFor();
+  await blockedPage.getByLabel('你的微信群昵称是？').fill('存储禁用');
+  await blockedPage.getByText('当前浏览器无法保存草稿，请保持页面打开直至提交。',{exact:true}).waitFor();
+  assert.ok((await blockedPage.locator('.survey-shell').innerText()).includes('无法保存草稿'));
+  assert.ok(await blockedPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'320px survey overflow');
+  await broken.close();
+  results.push('blocked storage reports unsaved and form stays usable');
+  await page.unroute('**/api/questionnaire');
+  const invalidBodies=[{surveyType:'npc-design',answers:{wechatName:'validation',npcName:'定名'}},{answers:{wechatName:'validation'}},{surveyType:'npc-design',answers:{wechatName:{invalid:1},npcName:'定名',npcRole:['resident']}},{surveyType:'npc-design',answers:{wechatName:'x'.repeat(41),npcName:'定名',npcRole:['resident']}},{surveyType:'npc-design',answers:{wechatName:'validation',npcName:'定名',npcRole:['invalid']}}];
+  for(const body of invalidBodies){const response=await context.request.post(base+'/api/questionnaire',{data:body});assert.equal(response.status(),400);}
+  assert.equal((await context.request.get(base+'/api/lead/responses')).status(),401);
+  results.push('invalid payloads rejected and responses remain private');
+  await page.route('**/api/lead/responses',route=>route.fulfill({json:{responses:[{id:'test',wechat_name:'本地验证',locale:'zh',submitted_at:Date.now(),payload:JSON.stringify({_surveyType:'npc-design',npcName:'测试居民',npcRole:['resident']})}]}}));
+  await page.goto(base+'/lead');
+  await page.locator('.response-card').waitFor();
+  await page.evaluate(()=>{String.prototype.replaceAll=undefined});
+  const download=page.waitForEvent('download');
+  await page.getByRole('button',{name:'导出 CSV'}).click();await download;
+  await page.locator('.response-card').click();
+  await page.locator('.profile-sheet').waitFor();
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('.profile-sheet').count(),0);
+  results.push('admin export without replaceAll and close detail');
+  const desktop=await browser.newContext({viewport:{width:1440,height:900}});
+  await desktop.route('**/api/analytics',route=>route.fulfill({json:{ok:true}}));
+  const portrait=await desktop.newPage();portrait.on('pageerror',e=>errors.push(e.message));
+  await portrait.goto(base+'/survey/participant-portrait');
+  await portrait.getByLabel('你的微信群聊名').fill('画像本地验证');
+  for(let section=0;section<5;section++){
+   for(const question of await portrait.locator('.question').all()){
+    if(await question.locator('sup').count()){
+     const input=question.locator('input,textarea');
+     if(await input.count())await input.fill('本地流程验证回答');
+     else await question.locator('.option').first().click();
+    }
+   }
+   await portrait.getByRole('button',{name:section===4?'检查并提交':'保存并继续',exact:true}).click();
+  }
+  let attempts=0;
+  await portrait.route('**/api/questionnaire',async route=>{attempts++;await route.fulfill(attempts===1?{status:503,json:{error:'temporary'}}:{json:{ok:true,id:'local-portrait'}})});
+  await portrait.getByRole('button',{name:'确认提交',exact:true}).click();
+  await portrait.getByText('提交失败，请检查网络后重试。',{exact:true}).waitFor();
+  await portrait.getByRole('button',{name:'确认提交',exact:true}).click();
+  await portrait.locator('.survey-confirm').waitFor();
+  assert.equal(attempts,2);
+  assert.equal(await portrait.evaluate(()=>scrollY),0);
+  results.push('desktop portrait completes and failed submit can retry');
+  await portrait.goto(base+'/?view=process');
+  await portrait.evaluate(()=>scrollTo(0,600));await portrait.waitForTimeout(200);
+  assert.ok(await portrait.locator('.editorialHeader').evaluate(el=>el.getBoundingClientRect().top>=-1));
+  await portrait.goto(base+'/');
+  await portrait.waitForFunction(()=>!document.querySelector('#opening-sequence'),null,{timeout:15000});
+  assert.ok(await portrait.locator('.editorialNav').isVisible());
+  results.push('desktop navigation and intro release to homepage');
+  await desktop.close();
+  assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({results,errors},null,2));
+ }finally{await browser.close()}
+})().catch(e=>{console.error(e);process.exitCode=1});
