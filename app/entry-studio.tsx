@@ -28,6 +28,21 @@ function EditorialEmptyView({eyebrow,title,status,body}:{eyebrow:string;title:st
  </section>;
 }
 
+function ProcessArchive({lang}:{lang:EditorialLang}){
+ const zh=lang==="zh";
+ const entries=[
+  {date:"2026.09.03",type:zh?"策划会议":"PLANNING MEETING",title:zh?"第一次策划团队会议":"First planning team meeting",body:zh?"围绕概念与目标、故事与世界观、角色设计、机制与玩法、参考与风格、制作落地与分工展开讨论。":"A first working agenda covering concept, story world, characters, mechanics, references, production, and roles.",image:"/process/week0-planning-meeting.jpg",file:null},
+  {date:"2026.09.03",type:zh?"项目制度":"PROJECT RECORD",title:zh?"贡献记录与最终署名规则":"Contribution records and final credit rules",body:zh?"记录项目中实际完成的工作、职责范围与过程版本；最终署名以可核对的过程记录和实际贡献为准。":"A record of completed work, responsibilities, and project versions; final credits follow verifiable process records and actual contributions.",image:null,file:"/process/week0-contribution-records.docx"},
+  {date:"2026.09.04",type:zh?"项目提案":"DIGITAL PROPOSAL",title:zh?"100 项目 Digital Proposal":"100 Project Digital Proposal",body:zh?"关于双角色叙事、日程、100 个 NPC、互动与玩法方向的第一版完整提案。":"The first full proposal for dual-character narrative, routines, one hundred NPCs, interactions, and gameplay direction.",image:null,file:"/process/week0-digital-proposal.docx"},
+ ];
+ return <section className="editorialProcessArchive" aria-labelledby="processArchiveTitle">
+  <header><div><p className="editorialEyebrow">WEEK 0 · PHOTOJOURNAL</p><h1 id="processArchiveTitle">{zh?"过程展示":"Process"}</h1></div><p>{zh?"从第一次会议开始，持续记录项目如何形成。":"A continuing record of how the project takes shape, beginning with its first meeting."}</p></header>
+  <div className="processArchiveList">{entries.map((entry,index)=><article className={`processArchiveEntry ${entry.image?"hasImage":""}`} key={entry.title}>
+   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time>{entry.date}</time><div className="processArchiveCopy"><span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>{entry.file&&<a href={entry.file} download>{zh?"查看原文件":"Open original document"} <b>→</b></a>}</div>{entry.image&&<img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy"/>}
+  </article>)}</div>
+ </section>;
+}
+
 function ConceptReelIndicator({active,onSelect}:{active:number;onSelect:(index:number)=>void}){
  return <nav className="conceptReelIndicator" aria-label="理念页版面导航"><span>{String(active+1).padStart(2,"0")}</span><div>{Array.from({length:8},(_,index)=><button key={index} type="button" className={active===index?"isActive":""} aria-label={`前往理念版面 ${index+1}`} aria-current={active===index?"step":undefined} onClick={()=>onSelect(index)}/>)}</div><span>08</span></nav>;
 }
@@ -247,7 +262,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
     </div>
    </header>
 
-   {publicView==="concept"?<><span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/><div className="conceptSections"><HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/><WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/></div><ConceptReelIndicator active={activeConcept} onSelect={selectConcept}/></>:publicView==="projects"?<EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:<EditorialEmptyView eyebrow={c.ui.processEyebrow} title={c.ui.process} status={c.ui.pending} body={c.ui.processEmpty}/>}
+   {publicView==="concept"?<><span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/><div className="conceptSections"><HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/><WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/></div><ConceptReelIndicator active={activeConcept} onSelect={selectConcept}/></>:publicView==="projects"?<EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:<ProcessArchive lang={lang}/>}
 
    <footer className="editorialFooter">
     <span>{c.ui.footer}</span>

@@ -598,6 +598,24 @@ test("publishes a separate NPC design survey and keeps its answers separated in 
   assert.match(migration, /ADD COLUMN `survey_type`/);
 });
 
+test("publishes Week 0 process records with their dates and original files", async () => {
+  const [entry, assets] = await Promise.all([
+    readFile(new URL("../app/entry-studio.tsx", import.meta.url), "utf8"),
+    Promise.all([
+      access(new URL("../public/process/week0-planning-meeting.jpg", import.meta.url)),
+      access(new URL("../public/process/week0-contribution-records.docx", import.meta.url)),
+      access(new URL("../public/process/week0-digital-proposal.docx", import.meta.url)),
+    ]),
+  ]);
+  assert.ok(assets);
+  assert.match(entry, /function ProcessArchive/);
+  assert.match(entry, /2026\.09\.03/);
+  assert.match(entry, /2026\.09\.04/);
+  assert.match(entry, /week0-contribution-records\.docx/);
+  assert.match(entry, /week0-digital-proposal\.docx/);
+  assert.match(entry, /<ProcessArchive lang=\{lang\}\/>/);
+});
+
 test("keeps the embedded survey title anchored above the scrolling questions", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
   assert.match(css, /Embedded survey navigation stays anchored while only the questionnaire moves/);
