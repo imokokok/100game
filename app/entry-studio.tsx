@@ -3,6 +3,7 @@
 import {useCallback,useEffect,useRef,useState,type FormEvent,type MouseEvent,type RefObject} from "react";
 import {parseQuery,storageGet,storageSet} from "./client-compat";
 import {editorialContent,type EditorialLang} from "./public-home/content";
+import {SmoothDisclosure} from "./public-home/smooth-disclosure";
 import {mountOpeningPlayback,enableOpeningSound} from "./opening-playback";
 import {
  ClosingSection,HeroSection,InspirationSection,PeopleSection,ProcessSection,ProjectMark,QuestionSection,Why100Section,WorldSection,
@@ -34,7 +35,16 @@ function ProcessArchive({lang}:{lang:EditorialLang}){
  return <section className="editorialProcessArchive" aria-labelledby="processArchiveTitle">
   <header><div><p className="editorialEyebrow">WEEK 0 · PHOTOJOURNAL</p><h1 id="processArchiveTitle">{zh?"过程展示":"Process"}</h1></div><p>{zh?"从第一次会议开始，持续记录项目如何形成。":"A continuing record of how the project takes shape, beginning with its first meeting."}</p></header>
   <div className="processArchiveList">{entries.map((entry,index)=><article className={`processArchiveEntry ${entry.image?"hasImage":""}`} key={entry.title}>
-   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time>{entry.date}</time><div className="processArchiveCopy"><span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>{entry.minutes?<details className="processDisclosure"><summary><span className="whenClosed">{zh?"展开会议纪要":"Read meeting minutes"}</span><span className="whenOpen">{zh?"收起会议纪要":"Collapse meeting minutes"}</span></summary><div className="meetingMinutes" lang="zh">{meetingMinutes.map((text,i)=>/^[一二三四五六七八九十]+、/.test(text)?<h3 key={i}>{text}</h3>:<p key={i}>{text}</p>)}<a href={entry.file!} download>{zh?"下载原文件（Word）":"Download original (Word)"} →</a></div></details>:entry.file&&<a className="processFileAction" href={entry.file} download>{zh?"查看原文件":"Open original document"}</a>}</div>{entry.image&&<details className="processDisclosure processImageDisclosure"><summary><span className="whenClosed">{zh?"展开会议图片":"View meeting image"}</span><span className="whenOpen">{zh?"收起会议图片":"Collapse meeting image"}</span></summary><a href={entry.image} target="_blank" rel="noopener noreferrer" aria-label={zh?"查看原尺寸图片":"View full-size image"}><img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy"/></a></details>}
+   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time dateTime={entry.date.replace(/\./g,"-")}>{entry.date}</time>
+   <div className="processArchiveCopy">
+    <span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>
+    {entry.minutes?<SmoothDisclosure closedLabel={zh?"展开会议纪要":"Read meeting minutes"} openLabel={zh?"收起会议纪要":"Collapse meeting minutes"}>
+     <div className="meetingMinutes" lang="zh">{meetingMinutes.map((text,i)=>/^[一二三四五六七八九十]+、/.test(text)?<h3 key={i}>{text}</h3>:<p key={i}>{text}</p>)}<a href={entry.file!} download>{zh?"下载原文件（Word）":"Download original (Word)"} →</a></div>
+    </SmoothDisclosure>:entry.file&&<a className="processFileAction" href={entry.file} download>{zh?"查看原文件":"Open original document"}</a>}
+   </div>
+   {entry.image&&<SmoothDisclosure className="processImageDisclosure" closedLabel={zh?"展开会议图片":"View meeting image"} openLabel={zh?"收起会议图片":"Collapse meeting image"}>
+    <a href={entry.image} target="_blank" rel="noopener noreferrer" aria-label={zh?"查看原尺寸图片":"View full-size image"}><img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy" width="1536" height="1024" decoding="async"/></a>
+   </SmoothDisclosure>}
   </article>)}</div>
  </section>;
 }
@@ -53,10 +63,12 @@ function EditorialEmptyView({eyebrow,title,status,body}:{eyebrow:string;title:st
  </section>;
 }
 
-function ConceptReelIndicator({active,onSelect}:{active:number;onSelect:(index:number)=>void}){
- return <nav className="conceptReelIndicator" aria-label="理念页版面导航">
+function ConceptReelIndicator({active,onSelect,lang}:{active:number;onSelect:(index:number)=>void;lang:EditorialLang}){
+ const copy=editorialContent[lang];
+ const labels=[copy.hero.titleLabel,copy.question.title,copy.why.title,copy.process.title,copy.world.title,copy.people.title,copy.inspiration.title,copy.closing.title];
+ return <nav className="conceptReelIndicator" aria-label={lang==="zh"?"理念页版面导航":"Concept chapters"}>
   <span>{String(active+1).padStart(2,"0")}</span>
-  <div>{Array.from({length:8},(_,index)=><button key={index} type="button" className={active===index?"isActive":""} aria-label={`前往理念版面 ${index+1}`} aria-current={active===index?"step":undefined} onClick={()=>onSelect(index)}/>)}</div>
+  <div>{labels.map((label,index)=><button key={index} type="button" className={active===index?"isActive":""} aria-label={`${index+1}. ${label.replace(/\n/g," ")}`} title={label.replace(/\n/g," ")} aria-current={active===index?"step":undefined} onClick={()=>onSelect(index)}/>)}</div>
   <span>08</span>
  </nav>;
 }
@@ -77,12 +89,12 @@ function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:s
  const select=(next:EditorialLang)=>{onChange(next);setOpen(false);window.setTimeout(()=>trigger.current?.focus(),0)};
  return <div ref={root} className={`editorialLanguage${open?" isOpen":""}`}>
   <span className="editorialLanguageLabel">{label}</span>
-  <button ref={trigger} className="editorialLanguageTrigger" type="button" aria-label={label} aria-haspopup="listbox" aria-expanded={open} onClick={()=>setOpen(value=>!value)}>
+  <button ref={trigger} className="editorialLanguageTrigger" type="button" aria-label={label} aria-controls="public-language-options" aria-expanded={open} onClick={()=>setOpen(value=>!value)}>
    <span>{lang==="zh"?"中文":"EN"}</span><i aria-hidden="true"/>
   </button>
-  {open&&<div className="editorialLanguageMenu" role="listbox" aria-label={label}>
-   <button type="button" role="option" aria-selected={lang==="zh"} onClick={()=>select("zh")}>中文</button>
-   <button type="button" role="option" aria-selected={lang==="en"} onClick={()=>select("en")}>EN</button>
+  {open&&<div id="public-language-options" className="editorialLanguageMenu" role="group" aria-label={label}>
+   <button type="button" aria-pressed={lang==="zh"} onClick={()=>select("zh")}>中文</button>
+   <button type="button" aria-pressed={lang==="en"} onClick={()=>select("en")}>EN</button>
   </div>}
  </div>;
 }
@@ -195,7 +207,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   const previous=document.body.style.overflow;document.body.style.overflow="hidden";
   const timer=window.setTimeout(()=>firstInput.current?.focus(),30);
   const onKey=(event:KeyboardEvent)=>{
-   if(event.key==="Escape"){event.preventDefault();closeCreator(false);return}
+   if(event.key==="Escape"){event.preventDefault();closeCreator();return}
    if(event.key!=="Tab")return;
    const root=document.querySelector<HTMLElement>(".homeCreatorPanel");
    if(!root)return;
@@ -218,7 +230,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   if(!page)return;
   const targets=Array.from(page.querySelectorAll<HTMLElement>("[data-reveal]"));
   const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(reduced||!("IntersectionObserver" in window)){targets.forEach(target=>target.classList.add("isVisible"));return}
+  if(reduced||typeof window.IntersectionObserver!=="function"){targets.forEach(target=>target.classList.add("isVisible"));return}
   page.classList.add("motionReady");
   const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(!entry.isIntersecting)return;(entry.target as HTMLElement).classList.add("isVisible");observer.unobserve(entry.target)})},{rootMargin:"0px 0px -8%",threshold:.08});
   const revealVisible=()=>targets.forEach(target=>{
@@ -235,8 +247,6 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   if(introPhase!=="done"||publicView!=="concept")return;
   const sections=Array.from(document.querySelectorAll<HTMLElement>(".conceptSections .editorialSection"));
   if(!sections.length)return;
-  const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(reduced){sections.forEach(section=>section.classList.remove("isReelActive"));if(scrollProgress.current)scrollProgress.current.style.transform="scaleX(0)";return}
   let frame=0,active=-1,scrollRange=1,trackSections=window.innerWidth>820;let centers:number[]=[];
   const measure=()=>{scrollRange=Math.max(document.documentElement.scrollHeight-window.innerHeight,1);trackSections=window.innerWidth>820;if(!trackSections&&active!==-1){active=-1;sections.forEach(section=>section.classList.remove("isReelActive"));setActiveConcept(0)}centers=trackSections?sections.map(section=>{const rect=section.getBoundingClientRect();return rect.top+window.scrollY+rect.height*.5}):[];queue()};
   const update=()=>{
@@ -303,6 +313,7 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
     <a href="/" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
     <a href="/?view=projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
     <a href="/?view=process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
+    <a className="editorialMobileSurvey" href="/survey">{lang==="zh"?"项目问卷":"Surveys"}</a>
    </nav>
    <div className="editorialTools">
     <a className="editorialSurveyLink" href="/survey">{c.ui.survey}</a>
@@ -310,7 +321,6 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
     <a ref={creatorButton} className="editorialCreatorButton" href="/?access=invite" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
     </div>
    </header>
-   <nav className="mobileQuickLinks" aria-label={lang==="zh"?"手机快捷入口":"Mobile quick links"}><a href="/survey">{lang==="zh"?"项目问卷":"Project surveys"}</a><a href="/?view=process" onClick={event=>changeView(event,"process")}>{lang==="zh"?"过程展示":"Process"}</a></nav>
 
    {publicView==="concept"?<>
     <span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/>
@@ -318,7 +328,7 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
      <HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/>
      <WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/>
     </div>
-    <ConceptReelIndicator active={activeConcept} onSelect={selectConcept}/>
+    <ConceptReelIndicator active={activeConcept} onSelect={selectConcept} lang={lang}/>
    </>:publicView==="projects"?
     <EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:
     <ProcessArchive lang={lang}/>}

@@ -1,0 +1,70 @@
+const assert=require('node:assert/strict');
+const {mkdirSync}=require('node:fs');
+const {chromium}=require(process.env.AUDIT_PLAYWRIGHT);
+const base=process.env.AUDIT_BASE||'http://localhost:3106';
+(async()=>{
+ const browser=await chromium.launch({channel:'msedge',headless:true});
+ const errors=[];const reports=[];mkdirSync('work/ui-audit',{recursive:true});
+ try{
+  for(const width of [320,390,768,820,900,1024,1440]){
+   const context=await browser.newContext({viewport:{width,height:900}});
+   await context.route('**/api/analytics',r=>r.fulfill({json:{ok:true}}));
+   const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+   await page.goto(base+'/?view=process');
+   await page.locator('.processArchiveEntry').first().waitFor();
+   await page.waitForTimeout(600);
+   assert.equal(await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--ui-red').trim()),'#bd2923','shared theme tokens loaded');
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`process overflow ${width}`);
+   if(width<=820){assert.ok(await page.locator('.editorialMobileSurvey').isVisible());assert.equal(await page.locator('.mobileQuickLinks').count(),0);assert.ok(await page.locator('.editorialHeader').evaluate(el=>el.getBoundingClientRect().height<=110),'compact mobile nav');}
+   if(width===390||width===1440)await page.screenshot({animations:'disabled',path:`work/ui-audit/process-${width}.png`,fullPage:true});
+   const details=page.locator('.processImageDisclosure');const summary=details.locator('summary');
+   await summary.focus();await page.keyboard.press('Enter');await page.waitForTimeout(420);assert.ok(await details.getAttribute('open')!==null);
+   await summary.click();await page.waitForTimeout(420);assert.equal(await details.getAttribute('open'),null);
+   for(let i=0;i<3;i++)await summary.evaluate(el=>el.click());
+   await page.waitForTimeout(450);assert.ok(await details.getAttribute('open')!==null);
+   assert.equal(await details.evaluate(el=>el.style.height),'');
+   await page.locator('.editorialNav a[href="/"]').click();
+   await page.locator('#section-01').waitFor();await page.waitForTimeout(800);
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`concept overflow ${width}`);
+   const clipped=await page.locator('.editorialSection h1,.editorialSection h2,.processSteps').evaluateAll(els=>els.filter(el=>{const r=el.getBoundingClientRect();const s=el.closest('.editorialSection').getBoundingClientRect();return r.right>s.right+1||r.left<s.left-1||el.scrollWidth>el.clientWidth+2}).map(el=>el.className||el.tagName));
+   assert.deepEqual(clipped,[],`clipped concept content ${width}`);
+   if(width===390||width===1440)await page.screenshot({animations:'disabled',path:`work/ui-audit/concept-${width}.png`});
+   await page.goto(base+'/survey');await page.locator('.surveyCatalogue').waitFor();await page.waitForTimeout(550);
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`survey hub overflow ${width}`);
+   if(width===390||width===1440)await page.screenshot({animations:'disabled',path:`work/ui-audit/surveys-${width}.png`,fullPage:true});
+   await page.goto(base+'/survey/npc-design');await page.getByLabel('你的微信群昵称是？').waitFor();
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`NPC form overflow ${width}`);
+   await page.evaluate(()=>localStorage.setItem('hundred-language','en'));
+   await page.goto(base+'/?view=process');await page.waitForFunction(()=>document.documentElement.lang==='en');
+   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`English process overflow ${width}`);
+   const navOverflow=await page.locator('.editorialHeader a,.editorialHeader button').evaluateAll(es=>es.filter(el=>el.offsetWidth&&el.getBoundingClientRect().right>innerWidth).map(el=>el.textContent));
+   assert.deepEqual(navOverflow,[],`English header overflow ${width}`);
+   reports.push(`width ${width}: navigation, disclosures, concept, survey hub and NPC form pass`);
+   await context.close();
+  }
+  const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:'reduce'});
+  await context.route('**/api/analytics',r=>r.fulfill({json:{ok:true}}));
+  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(base+'/?view=process');await page.locator('.processDisclosure summary').first().click();
+  assert.equal(await page.locator('.processDisclosure').first().evaluate(el=>el.getAnimations().length),0);
+  await page.locator('.editorialNav a[href="/"]').click();await page.locator('#section-04').evaluate(el=>el.scrollIntoView());
+  await page.waitForFunction(()=>document.querySelectorAll('.conceptReelIndicator button')[3].getAttribute('aria-current')==='step');
+  assert.equal(await page.locator('.editorialHeroCopy').evaluate(el=>getComputedStyle(el).opacity),'1');
+  await page.locator('.editorialCreatorButton').click();await page.locator('.homeCreatorPanel input').first().waitFor();await page.keyboard.press('Escape');
+  await page.waitForFunction(()=>document.activeElement.classList.contains('editorialCreatorButton'));
+  await page.locator('.editorialLanguageTrigger').click();await page.keyboard.press('Tab');await page.keyboard.press('Tab');await page.keyboard.press('Enter');
+  await page.waitForFunction(()=>document.documentElement.lang==='en');
+  reports.push('reduced-motion: no disclosure animation; chapter tracking works; dialog focus restores; language keyboard switch works');
+  await context.close();
+  const legacy=await browser.newContext({viewport:{width:390,height:844}});
+  await legacy.route('**/api/analytics',r=>r.fulfill({json:{ok:true}}));
+  await legacy.addInitScript(()=>{Element.prototype.animate=undefined;window.IntersectionObserver=undefined});
+  const fallback=await legacy.newPage();fallback.on('pageerror',e=>errors.push(e.message));
+  await fallback.goto(base+'/?view=process');await fallback.locator('.processDisclosure summary').first().click();
+  assert.ok(await fallback.locator('details[open]').count()===1);
+  await fallback.locator('.editorialNav a[href="/"]').click();await fallback.locator('.editorialHeroCopy.isVisible').waitFor();
+  assert.equal(await fallback.locator('.editorialHeroCopy').evaluate(el=>getComputedStyle(el).opacity),'1');
+  reports.push('without animation API / IntersectionObserver: native disclosure and visible content pass');
+  assert.deepEqual(errors,[]);console.log(JSON.stringify({reports,errors},null,2));
+ }finally{await browser.close()}
+})().catch(e=>{console.error(e);process.exitCode=1});
