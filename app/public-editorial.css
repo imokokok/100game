@@ -13,8 +13,7 @@
  overflow-x:hidden;
 }
 .publicHome.homeIntroPending{position:relative;width:100%;min-height:100vh;min-height:100svh;overflow-x:hidden}
-.intro-failsafe-released .openingSequence{display:none!important}
-.intro-failsafe-released .publicHome.homeIntroPending{position:relative!important;height:auto!important;min-height:100vh!important;overflow-x:hidden!important;overflow-y:visible!important}
+.openingSequence[data-expired="true"]{display:none!important}
 .editorialPage,.editorialPage *{box-sizing:border-box}
 .editorialPage{
  min-width:0;

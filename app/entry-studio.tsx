@@ -2,6 +2,7 @@
 
 import {useCallback,useEffect,useRef,useState,type FormEvent,type MouseEvent,type RefObject} from "react";
 import {editorialContent,type EditorialLang} from "./public-home/content";
+import {mountOpeningPlayback,enableOpeningSound} from "./opening-playback";
 import {
  ClosingSection,HeroSection,InspirationSection,PeopleSection,ProcessSection,ProjectMark,QuestionSection,Why100Section,WorldSection,
 } from "./public-home/sections";
@@ -11,7 +12,7 @@ type PublicView="concept"|"projects"|"process";
 
 /* This ES5 watchdog is emitted in the initial HTML. It still releases the
    opening when a slow/old embedded browser never hydrates the React bundle. */
-const INTRO_FAILSAFE_SCRIPT="(function(){window.setTimeout(function(){var e=document.documentElement,n='intro-failsafe-released';if((' '+e.className+' ').indexOf(' '+n+' ')<0)e.className+=(e.className?' ':'')+n;},4800);}());";
+const INTRO_FAILSAFE_SCRIPT="(function(){window.setTimeout(function(){var e=document.getElementById('opening-sequence');if(!e||e.getAttribute('data-runtime-ready')==='true')return;e.setAttribute('data-expired','true');e.style.display='none';var v=e.getElementsByTagName('video')[0];if(v)try{v.pause();}catch(x){}},12000);}());";
 
 function viewFromHash(hash:string):PublicView{
  if(hash==="#projects")return "projects";
@@ -60,47 +61,38 @@ function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:s
 function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void}){
  const [soundEnabled,setSoundEnabled]=useState(false);
 
+ const callbacks=useRef({onPlaying,onEnded,onFinish});
+ useEffect(()=>{callbacks.current={onPlaying,onEnded,onFinish}},[onPlaying,onEnded,onFinish]);
  const enableSound=useCallback(()=>{
-  const media=mediaRef.current;if(!media)return;
-  media.volume=1;media.muted=false;
-  try{
-   const playback=media.play();
-   if(playback&&typeof playback.then==="function")void playback.then(()=>setSoundEnabled(true)).catch(()=>{media.muted=true;setSoundEnabled(false);void media.play().catch(()=>undefined)});
-   else setSoundEnabled(true);
-  }catch{media.muted=true;setSoundEnabled(false);try{void media.play()}catch{/* The independent timeout releases the page. */}}
+  const media=mediaRef.current;
+  if(media)void enableOpeningSound(media).then(enabled=>{if(media.isConnected)setSoundEnabled(enabled)});
  },[mediaRef]);
 
  useEffect(()=>{
-  if(phase!=="loading")return;
   const media=mediaRef.current;if(!media)return;
-  let cancelled=false;
-  media.volume=1;
-  media.muted=false;
-  try{
-   const audible=media.play();
-   if(audible&&typeof audible.then==="function"){
-    void audible.then(()=>{if(!cancelled)setSoundEnabled(true)}).catch(()=>{
-     if(cancelled)return;media.muted=true;setSoundEnabled(false);
-     try{const muted=media.play();if(muted&&typeof muted.catch==="function")void muted.catch(()=>{if(!cancelled)onError()})}catch{onError()}
-    });
-   }else window.setTimeout(()=>{if(!cancelled)setSoundEnabled(true)},0);
-  }catch{
-   media.muted=true;
-   try{void media.play()}catch{onError()}
-  }
-  const bridge=()=>enableSound();
-  document.addEventListener("WeixinJSBridgeReady",bridge);
-  document.addEventListener("YixinJSBridgeReady",bridge);
-  return()=>{cancelled=true;document.removeEventListener("WeixinJSBridgeReady",bridge);document.removeEventListener("YixinJSBridgeReady",bridge)};
- },[enableSound,mediaRef,onError,phase]);
+  const overlay=media.closest(".openingSequence");
+  if(overlay?.getAttribute("data-expired")==="true"){callbacks.current.onFinish();return}
+  overlay?.setAttribute("data-runtime-ready","true");
+  const dispose=mountOpeningPlayback(media,{
+   onStart:()=>callbacks.current.onPlaying(),
+   onEnd:()=>callbacks.current.onEnded(),
+  });
+  document.addEventListener("WeixinJSBridgeReady",enableSound);
+  document.addEventListener("YixinJSBridgeReady",enableSound);
+  return()=>{
+   dispose();
+   document.removeEventListener("WeixinJSBridgeReady",enableSound);
+   document.removeEventListener("YixinJSBridgeReady",enableSound);
+  };
+ },[enableSound,mediaRef]);
 
  return <div
+  id="opening-sequence"
   className={`openingSequence is${phase[0].toUpperCase()}${phase.slice(1)}`}
   role="dialog"
   aria-modal="true"
   aria-label="WHAT 100 PEOPLE DO TO A GAME opening title"
-  onPointerDown={enableSound}
-  onTouchEnd={enableSound}
+  onClick={enableSound}
   onAnimationEnd={event=>{if(event.currentTarget===event.target&&phase==="leaving")onFinish()}}
  >
   <div className="openingMedia">
@@ -121,11 +113,6 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
     controlsList="nodownload noplaybackrate noremoteplayback"
     {...{"webkit-playsinline":"true","x5-playsinline":"true","x5-video-player-type":"h5-page","x5-video-player-fullscreen":"false"}}
     muted={!soundEnabled}
-    onLoadedData={onPlaying}
-    onCanPlay={onPlaying}
-    onPlaying={onPlaying}
-    onEnded={onEnded}
-    onError={onError}
     disablePictureInPicture
     disableRemotePlayback
     aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
@@ -151,12 +138,6 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  },[]);
  useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";try{localStorage.setItem("hundred-language",lang)}catch{/* Storage can be disabled in embedded browsers. */}},[lang]);
  useEffect(()=>{
-  if(introPhase==="loading"){
-   const fallback=window.setTimeout(()=>beginIntroExit(),3200);return()=>window.clearTimeout(fallback);
-  }
-  if(introPhase==="playing"){
-   const fallback=window.setTimeout(()=>beginIntroExit(),3000);return()=>window.clearTimeout(fallback);
-  }
   if(introPhase==="leaving"){
    const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
    const fallback=window.setTimeout(()=>finishIntro(),reduced?80:720);return()=>window.clearTimeout(fallback);
@@ -175,7 +156,7 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  },[introPhase,publicView,lang]);
  useEffect(()=>{
   if(initialInvite)return;
-  const hardStop=window.setTimeout(()=>finishIntro(),4700);introHardStop.current=hardStop;
+  const hardStop=window.setTimeout(()=>finishIntro(),12000);introHardStop.current=hardStop;
   return()=>{window.clearTimeout(hardStop);if(introHardStop.current===hardStop)introHardStop.current=null};
  },[initialInvite]);
  useEffect(()=>{

@@ -600,11 +600,11 @@ test("keeps the original opening film and reveals the new editorial page", async
   ]);
   await access(new URL("../public/video/opening-title-6a63d7e7.mp4", import.meta.url));
   assert.match(entry, /src="\/video\/opening-title-6a63d7e7\.mp4"/);
-  assert.match(entry, /beginIntroExit\(\),3200/);
-  assert.match(entry, /finishIntro\(\),4700/);
-  assert.match(entry, /onLoadedData=\{onPlaying\}/);
+  assert.match(entry, /mountOpeningPlayback\(media/);
+  assert.match(entry, /finishIntro\(\),12000/);
+  assert.doesNotMatch(entry, /onLoadedData=\{onPlaying\}/);
   assert.match(entry, /INTRO_FAILSAFE_SCRIPT/);
-  assert.match(css, /openingEmergencyRelease 4\.8s/);
+  assert.match(css, /openingEmergencyRelease 12s/);
   assert.match(css, /\.openingSequence\.isLoading \.openingVideo/);
   assert.match(css, /\.homeIntroRevealing \.editorialHeader[^\{]*\{animation:homePageReveal/);
   assert.doesNotMatch(css, /\.homeIntroRevealing \.homePageBody/);

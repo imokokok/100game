@@ -2455,7 +2455,7 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  background:#e8e2d8;
  touch-action:manipulation;
  -webkit-tap-highlight-color:transparent;
- animation:openingEmergencyRelease 4.8s steps(1,end) forwards;
+ animation:openingEmergencyRelease 12s steps(1,end) forwards;
 }
 .openingMedia{
  position:relative;
@@ -2503,17 +2503,15 @@ body,.publicPage,.conceptStandalone,.peoplePage .publicCredits,.peoplePage .publ
  object-fit:contain;
  background:transparent;
  mix-blend-mode:darken;
- filter:contrast(1.04) saturate(1.08);
+ filter:none;
  opacity:0;
  transition:opacity .24s ease;
 }
 .openingSequence.isLoading .openingTitleStill,.openingSequence.isPlaying .openingTitleStill,.openingSequence.isLeaving .openingTitleStill{opacity:0}
 .openingSequence.isLoading .openingVideo,.openingSequence.isPlaying .openingVideo,.openingSequence.isLeaving .openingVideo{opacity:1}
 @supports not (mix-blend-mode:darken){
- /* Very old embedded browsers show the clean transparent title still rather
-    than exposing the video's opaque grey canvas. */
- .openingTitleStill{opacity:1!important}
- .openingVideo{mix-blend-mode:normal;filter:none;opacity:0!important}
+ .openingTitleStill{opacity:0!important}
+ .openingVideo{mix-blend-mode:normal;filter:none;opacity:1!important}
 }
 .openingSequence.isLeaving{animation:openingFilmExit .62s cubic-bezier(.22,1,.36,1) forwards}
 .openingSequence.isLeaving .openingMedia{transform:translateZ(0) scale(1.012)}
