@@ -6887,3 +6887,4 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
     opacity:1!important;
   }
 }
+.response-type,.response-type-empty{border-top:1px solid #c9c3b7;margin-top:28px;padding-top:24px}.response-type header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}.response-answer{padding:16px 0;border-bottom:1px solid #d9d3c8}.response-answer h4{font-size:15px;line-height:1.6;margin:0 0 8px}.response-answer p{line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.response-card{grid-template-columns:minmax(120px,1fr) minmax(100px,1fr) minmax(120px,2fr) auto}@media(max-width:640px){.response-card{grid-template-columns:1fr;gap:10px}.filters{grid-template-columns:1fr}}

@@ -21,6 +21,21 @@ function viewFromHash(hash:string):PublicView{
  return "concept";
 }
 
+function ProcessArchive({lang}:{lang:EditorialLang}){
+ const zh=lang==="zh";
+ const entries=[
+  {date:"2026.09.03",type:zh?"策划会议":"PLANNING MEETING",title:zh?"第一次策划团队会议":"First planning team meeting",body:zh?"围绕概念与目标、故事与世界观、角色设计、机制与玩法、参考与风格、制作落地与分工展开讨论。":"A first working agenda covering concept, story world, characters, mechanics, references, production, and roles.",image:"/process/week0-planning-meeting.jpg",file:null},
+  {date:"2026.09.03",type:zh?"项目制度":"PROJECT RECORD",title:zh?"贡献记录与最终署名规则":"Contribution records and final credit rules",body:zh?"记录项目中实际完成的工作、职责范围与过程版本；最终署名以可核对的过程记录和实际贡献为准。":"A record of completed work, responsibilities, and project versions; final credits follow verifiable process records and actual contributions.",image:null,file:"/process/week0-contribution-records.docx"},
+  {date:"2026.09.04",type:zh?"项目提案":"DIGITAL PROPOSAL",title:zh?"100 项目 Digital Proposal":"100 Project Digital Proposal",body:zh?"关于双角色叙事、日程、100 个 NPC、互动与玩法方向的第一版完整提案。":"The first full proposal for dual-character narrative, routines, one hundred NPCs, interactions, and gameplay direction.",image:null,file:"/process/week0-digital-proposal.docx"},
+ ];
+ return <section className="editorialProcessArchive" aria-labelledby="processArchiveTitle">
+  <header><div><p className="editorialEyebrow">WEEK 0 · PHOTOJOURNAL</p><h1 id="processArchiveTitle">{zh?"过程展示":"Process"}</h1></div><p>{zh?"从第一次会议开始，持续记录项目如何形成。":"A continuing record of how the project takes shape, beginning with its first meeting."}</p></header>
+  <div className="processArchiveList">{entries.map((entry,index)=><article className={`processArchiveEntry ${entry.image?"hasImage":""}`} key={entry.title}>
+   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time>{entry.date}</time><div className="processArchiveCopy"><span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>{entry.file&&<a href={entry.file} download>{zh?"查看原文件":"Open original document"} <b>→</b></a>}</div>{entry.image&&<img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy"/>}
+  </article>)}</div>
+ </section>;
+}
+
 function EditorialEmptyView({eyebrow,title,status,body}:{eyebrow:string;title:string;status:string;body:string}){
  return <section className="editorialEmptyView" aria-labelledby={`empty-${title}`}>
   <div className="editorialEmptyIndex" aria-hidden="true">00 / 00</div>
@@ -142,15 +157,15 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soun
  </div>;
 }
 
-export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
+export function EntryStudio({initialInvite=false,initialCode="",initialPublicView="concept"}:{initialInvite?:boolean;initialCode?:string;initialPublicView?:PublicView}){
  const [lang,setLang]=useState<EditorialLang>("zh"),[creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
- const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"loading");
- const [publicView,setPublicView]=useState<PublicView>("concept"),[activeConcept,setActiveConcept]=useState(0);
+ const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite||initialPublicView!=="concept"?"done":"loading");
+ const [publicView,setPublicView]=useState<PublicView>(initialPublicView),[activeConcept,setActiveConcept]=useState(0);
  const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null),scrollProgress=useRef<HTMLSpanElement>(null);
  const c=editorialContent[lang];
 
  useEffect(()=>{
-  const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);setPublicView(viewFromHash(location.hash));if(nextOpen)finishIntro();const token=params.invite;if(token)setCode(token)};
+  const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);setPublicView(params.view==="process"||params.view==="projects"?params.view:viewFromHash(location.hash));if(nextOpen||params.view==="process"||params.view==="projects")finishIntro();const token=params.invite;if(token)setCode(token)};
   const restore=(event:PageTransitionEvent)=>{if(event.persisted)finishIntro()};
   const hydrate=window.setTimeout(()=>{const saved=storageGet("hundred-language");if(saved==="en")setLang("en");sync()},0);
   window.addEventListener("popstate",sync);window.addEventListener("hashchange",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("hashchange",sync);window.removeEventListener("pageshow",restore)};
@@ -235,11 +250,11 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
  }
  function changeView(event:MouseEvent<HTMLAnchorElement>,next:PublicView){
   event.preventDefault();finishIntro();setPublicView(next);setActiveConcept(0);
-  history.pushState({},"",next==="concept"?"#concept":`#${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0);
+  history.pushState({},"",next==="concept"?"/":`/?view=${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0);
  }
  function selectConcept(index:number){
   const scroll=()=>document.getElementById(`section-${String(index+1).padStart(2,"0")}`)?.scrollIntoView({behavior:typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
-  if(publicView!=="concept"){setPublicView("concept");history.pushState({},"","#concept");window.setTimeout(scroll,0)}else scroll();
+  if(publicView!=="concept"){setPublicView("concept");history.pushState({},"","/");window.setTimeout(scroll,0)}else scroll();
  }
  function beginIntroExit(){setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving")}
  function finishIntro(){
@@ -277,18 +292,19 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
  />}
  <div className={`editorialPage editorialView-${publicView}`}>
   <header className="editorialHeader">
-   <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
+   <a className="editorialBrand" href="/" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
    <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
-    <a href="#concept" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
-    <a href="#projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
-    <a href="#process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
+    <a href="/" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
+    <a href="/?view=projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
+    <a href="/?view=process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
    </nav>
    <div className="editorialTools">
-    <a className="editorialSurveyLink" href="/survey/participant-portrait">{c.ui.survey}</a>
+    <a className="editorialSurveyLink" href="/survey">{c.ui.survey}</a>
     <EditorialLanguageMenu lang={lang} label={c.ui.language} onChange={setLang}/>
     <a ref={creatorButton} className="editorialCreatorButton" href="/?access=invite" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
     </div>
    </header>
+   <nav className="mobileQuickLinks" aria-label={lang==="zh"?"手机快捷入口":"Mobile quick links"}><a href="/survey">{lang==="zh"?"项目问卷":"Project surveys"}</a><a href="/?view=process" onClick={event=>changeView(event,"process")}>{lang==="zh"?"过程展示":"Process"}</a></nav>
 
    {publicView==="concept"?<>
     <span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/>
@@ -299,11 +315,11 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
     <ConceptReelIndicator active={activeConcept} onSelect={selectConcept}/>
    </>:publicView==="projects"?
     <EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:
-    <EditorialEmptyView eyebrow={c.ui.processEyebrow} title={c.ui.process} status={c.ui.pending} body={c.ui.processEmpty}/>}
+    <ProcessArchive lang={lang}/>}
 
    <footer className="editorialFooter">
     <span>{c.ui.footer}</span>
-    <div><a href="#concept" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="#projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="#process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey/participant-portrait">{c.ui.survey}</a><a href="/?access=invite" onClick={openCreator}>{c.ui.creator}</a></div>
+    <div><a href="/" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="/?view=projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="/?view=process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey">{c.ui.survey}</a><a href="/?access=invite" onClick={openCreator}>{c.ui.creator}</a></div>
     <span>© 2026 HuieChen</span>
    </footer>
 

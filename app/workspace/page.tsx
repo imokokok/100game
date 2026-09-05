@@ -5,7 +5,7 @@ import {currentAdmin,d1,participantId} from "../api/_shared";
 import {Studio,type WorkspaceRole,type WorkspaceView} from "../studio";
 import type {LeadResponse} from "../lead/lead-dashboard";
 
-const allowedViews:WorkspaceView[]=["home","tasks","survey","links","journal","dashboard"];
+const allowedViews:WorkspaceView[]=["home","tasks","survey","dashboard"];
 
 export default async function WorkspacePage({searchParams}:{searchParams:Promise<{view?:string}>}){
  const requestHeaders=await headers();
