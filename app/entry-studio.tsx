@@ -26,8 +26,8 @@ function viewFromHash(hash:string):PublicView{
 function ProcessArchive({lang}:{lang:EditorialLang}){
  const zh=lang==="zh";
  const entries=[
-  {date:"2026.09.03",type:zh?"会议纪要":"MEETING MINUTES",title:zh?"09.03 策划团队会议纪要":"Planning team meeting minutes · 09.03",body:zh?"本次会议的讨论结论与后续安排。点击展开阅读完整纪要。":"Meeting conclusions and next steps. Expand to read the original Chinese minutes.",image:null,file:"/process/week0-meeting-minutes.docx",minutes:true},
   {date:"2026.09.03",type:zh?"策划会议":"PLANNING MEETING",title:zh?"第一次策划团队会议":"First planning team meeting",body:zh?"围绕概念与目标、故事与世界观、角色设计、机制与玩法、参考与风格、制作落地与分工展开讨论。":"A first working agenda covering concept, story world, characters, mechanics, references, production, and roles.",image:"/process/week0-planning-meeting.jpg",file:null},
+  {date:"2026.09.03",type:zh?"会议纪要":"MEETING MINUTES",title:zh?"09.03 策划团队会议纪要":"Planning team meeting minutes · 09.03",body:zh?"本次会议的讨论结论与后续安排。点击展开阅读完整纪要。":"Meeting conclusions and next steps. Expand to read the original Chinese minutes.",image:null,file:"/process/week0-meeting-minutes.docx",minutes:true},
   {date:"2026.09.03",type:zh?"项目制度":"PROJECT RECORD",title:zh?"贡献记录与最终署名规则":"Contribution records and final credit rules",body:zh?"记录项目中实际完成的工作、职责范围与过程版本；最终署名以可核对的过程记录和实际贡献为准。":"A record of completed work, responsibilities, and project versions; final credits follow verifiable process records and actual contributions.",image:null,file:"/process/week0-contribution-records.docx"},
   {date:"2026.09.04",type:zh?"项目提案":"DIGITAL PROPOSAL",title:zh?"100 项目 Digital Proposal":"100 Project Digital Proposal",body:zh?"关于双角色叙事、日程、100 个 NPC、互动与玩法方向的第一版完整提案。":"The first full proposal for dual-character narrative, routines, one hundred NPCs, interactions, and gameplay direction.",image:null,file:"/process/week0-digital-proposal.docx"},
  ];
