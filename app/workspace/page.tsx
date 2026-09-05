@@ -25,7 +25,7 @@ export default async function WorkspacePage({searchParams}:{searchParams:Promise
  const initialView=requested&&allowedViews.includes(requested)&&(role==="lead"||requested!=="dashboard")?requested:"home";
  let initialResponses:LeadResponse[]|undefined;
  if(role==="lead"&&initialView==="survey"){
-  const result=await d1().prepare("SELECT id, wechat_name, locale, payload, submitted_at FROM questionnaire_responses ORDER BY submitted_at DESC LIMIT 1000").all<LeadResponse>();
+  const result=await d1().prepare("SELECT id, wechat_name, survey_type, locale, payload, submitted_at FROM questionnaire_responses ORDER BY submitted_at DESC LIMIT 1000").all<LeadResponse>();
   initialResponses=result.results;
  }
  return <Studio initialParticipant={participant} initialRole={role} initialView={initialView} initialResponses={initialResponses}/>;

@@ -1,5 +1,5 @@
 export type Lang = "zh" | "en";
-export type Question = { id: string; type: "text"|"textarea"|"single"|"multi"; zh: string; en: string; required?: boolean; options?: {value:string;zh:string;en:string}[]; showWhen?: {id:string;includes:string}; placeholderZh?: string; placeholderEn?: string };
+export type Question = { id: string; type: "text"|"textarea"|"single"|"multi"; zh: string; en: string; required?: boolean; options?: {value:string;zh:string;en:string}[]; showWhen?: {id:string;includes:string}; placeholderZh?: string; placeholderEn?: string; placeholderValues?: string[] };
 const opt=(value:string,zh:string,en:string)=>({value,zh,en});
 export const allQuestions: Question[] = [
  {id:"wechatName",type:"text",required:true,zh:"你的微信群聊名",en:"Your WeChat group name",placeholderZh:"请填写群聊中正在使用的名字",placeholderEn:"Use the name currently shown in the group"},

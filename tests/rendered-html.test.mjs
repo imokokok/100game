@@ -308,7 +308,7 @@ test("opens the participant survey inside the workspace without a page refresh",
   assert.match(studio, /<LiveTasks t=\{t\} lang=\{lang\} onOpenSurvey=\{\(\)=>selectView\("survey"\)\}\/>/);
   assert.match(studio, /view==="survey"&&\(role==="lead"\?<LeadResponses initialRows=\{initialResponses\}\/>:<EmbeddedSurvey embedded\/>\)/);
   assert.doesNotMatch(studio, /location\.href=participant\?"\/survey"/);
-  assert.match(survey, /SurveyApp\(\{embedded=false\}/);
+  assert.match(survey, /SurveyApp\(\{embedded=false,definition=portraitDefinition\}/);
   assert.match(survey, /embeddedSurvey/);
   assert.match(css, /\.workspace \.embeddedSurvey\{min-height:0/);
 });
@@ -570,8 +570,32 @@ test("consolidates overlapping survey prompts without losing earlier responses",
   assert.match(survey, /function migrateDraftAnswers/);
   assert.match(survey, /mergeText\("avoidGenres",\["dislikedConcepts","redLines"\]\)/);
   assert.doesNotMatch(survey, /\["gameDefinition","likedGenres","recommendations"/);
-  assert.match(lead, /import \{allQuestions\} from "\.\.\/survey\/questions"/);
-  assert.match(lead, /allQuestions\.map/);
+  assert.match(lead, /import \{allQuestions,type Question\} from "\.\.\/survey\/questions"/);
+  assert.match(lead, /npcQuestions/);
+});
+
+test("publishes a separate NPC design survey and keeps its answers separated in the lead view", async () => {
+  const [npcPage, npcQuestions, hub, survey, route, lead, migration] = await Promise.all([
+    readFile(new URL("../app/survey/npc-design/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/survey/npc-questions.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/survey/survey-hub.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/survey/survey-app.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/questionnaire/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/lead/lead-dashboard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../drizzle/0021_questionnaire_survey_type.sql", import.meta.url), "utf8"),
+  ]);
+  assert.match(npcPage, /NPC设计问卷/);
+  assert.match(npcQuestions, /你想让这个 NPC 叫什么/);
+  assert.match(npcQuestions, /npcRole/);
+  assert.match(hub, /href="\/survey\/npc-design"/);
+  assert.match(survey, /surveyType:surveyId/);
+  assert.match(survey, /请为 NPC 填写一个确定的名字/);
+  assert.match(route, /survey_type/);
+  assert.match(route, /placeholderNpcNames/);
+  assert.match(lead, /全部问卷类型/);
+  assert.match(lead, /NPC设计问卷/);
+  assert.match(lead, /participant-portrait","npc-design/);
+  assert.match(migration, /ADD COLUMN `survey_type`/);
 });
 
 test("keeps the embedded survey title anchored above the scrolling questions", async () => {
