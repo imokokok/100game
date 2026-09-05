@@ -6438,8 +6438,8 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 .openingSequence.isChecking,
 .openingSequence.isLoading,
 .openingSequence.isPlaying{
-  animation:releaseOpeningEnter .42s cubic-bezier(.22,.61,.36,1) both,releaseOpeningFailSafe 0s linear 4.8s forwards!important;
-  visibility:visible!important;
+  animation:releaseOpeningEnter .42s cubic-bezier(.22,.61,.36,1) both,releaseOpeningFailSafe 0s linear 12s forwards!important;
+  visibility:visible;
   /* Keep the overlay click-through for scrolling; only the video is interactive. */
   pointer-events:none!important;
 }
@@ -6623,7 +6623,7 @@ body,.entryGate,.inviteGate,.publicPage,.conceptStandalone,.peoplePage .publicCr
 @supports not (mix-blend-mode:darken){
   /* The film remains usable in very old WebViews; edge masks still merge its
      exported canvas into the page even when blend modes are unavailable. */
-  .openingVideo{mix-blend-mode:normal!important;filter:none!important;opacity:0!important}
+  .openingVideo{mix-blend-mode:normal!important;filter:none!important;opacity:1!important}
 }
 
 /* Shared raised / pressed language for navigation and controls. */

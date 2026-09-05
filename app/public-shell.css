@@ -39,8 +39,8 @@
 .openingSequence.isLoading .openingTitleStill,.openingSequence.isPlaying .openingTitleStill,.openingSequence.isLeaving .openingTitleStill{opacity:0}
 .openingSequence.isLoading .openingMedia>.openingVideo,.openingSequence.isPlaying .openingMedia>.openingVideo,.openingSequence.isLeaving .openingMedia>.openingVideo{opacity:1!important}
 @supports not (mix-blend-mode:darken){
- .openingTitleStill{opacity:1!important}
- .openingMedia>.openingVideo,.openingSequence.isPlaying .openingMedia>.openingVideo,.openingSequence.isLeaving .openingMedia>.openingVideo{opacity:0!important}
+ .openingTitleStill{opacity:0!important}
+ .openingMedia>.openingVideo,.openingSequence.isPlaying .openingMedia>.openingVideo,.openingSequence.isLeaving .openingMedia>.openingVideo{mix-blend-mode:normal!important;filter:none!important;opacity:1!important}
 }
 .openingSequence.isLoading::after{display:none!important}
 .homeIntroRevealing .editorialHeader,.homeIntroRevealing .editorialHeroCopy,.homeIntroRevealing .editorialHeroStage{animation:homePageReveal .62s cubic-bezier(.22,1,.36,1) both}
