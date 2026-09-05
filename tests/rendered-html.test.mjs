@@ -181,7 +181,7 @@ test("keeps the public entry lightweight and defers the workspace", async () => 
   ]);
   assert.doesNotMatch(layout, /PortfolioMotion/);
   assert.doesNotMatch(layout, /ClickFeedback/);
-  assert.match(page, /<EntryStudio initialInvite=\{access==="invite"\|\|hasInvite\} initialCode=\{inviteCode\?\?""\}\/>/);
+  assert.match(page, /<EntryStudio initialInvite=\{access==="invite"\|\|hasInvite\} initialCode=\{inviteCode\?\?""\} initialPublicView=\{initialPublicView\}\/>/);
   assert.doesNotMatch(entry, /\.\/i18n|\.\/locale-copy|live-flows|workspace-files/);
   assert.match(entry, /location\.replace\(data\.role==="lead"\?"\/workspace\?view=dashboard":"\/workspace"\)/);
   assert.match(workspace, /<Studio initialParticipant=\{participant\} initialRole=\{role\} initialView=\{initialView\} initialResponses=\{initialResponses\}\/>/);

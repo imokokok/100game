@@ -280,6 +280,7 @@
 .editorialFooter a{position:relative;padding:8px 0}
 .editorialFooter a:after{content:"";position:absolute;right:0;bottom:3px;left:0;height:1px;background:var(--ed-red);transform:scaleX(.25);transform-origin:left;transition:transform .2s ease}
 .editorialFooter a:hover:after{transform:scaleX(1)}
+.mobileQuickLinks{display:none}
 
 /* Scroll-reveal is progressive enhancement; without JS everything stays visible. */
 .editorialPage.motionReady [data-reveal]{opacity:0;transform:translate3d(0,20px,0);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
@@ -361,6 +362,7 @@
  .editorialProjectMark strong{font-size:17px}.editorialProjectMark span{font-size:10px}
  .editorialTools{gap:8px}.editorialSurveyLink{font-size:10px}.editorialLanguageTrigger{min-width:58px;min-height:40px;padding:0 8px}.editorialCreatorButton{min-height:42px;padding:0 12px;font-size:12px}
  .editorialNav{gap:24px}.editorialNav a{font-size:11px}
+ .mobileQuickLinks{position:sticky;top:108px;z-index:70;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px;border-bottom:1px solid rgba(17,18,16,.32);background:rgba(232,226,216,.98)}.mobileQuickLinks a{display:flex;min-height:44px;align-items:center;justify-content:center;border:1px solid var(--ed-ink);background:var(--ed-paper-light);font-size:13px;font-weight:800}.mobileQuickLinks a:last-child{border-color:var(--ed-red);background:var(--ed-red);color:#fff}
  .editorialSection{padding:24px 20px 68px;gap:28px;scroll-margin-top:108px}
  .editorialEyebrow{margin-bottom:16px;font-size:10px;letter-spacing:.19em}
  .editorialSectionNumber{font-size:10px}

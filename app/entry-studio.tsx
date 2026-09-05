@@ -14,7 +14,10 @@ type PublicView="concept"|"projects"|"process";
    opening when a slow/old embedded browser never hydrates the React bundle. */
 const INTRO_FAILSAFE_SCRIPT="(function(){window.setTimeout(function(){var e=document.getElementById('opening-sequence');if(!e||e.getAttribute('data-runtime-ready')==='true')return;e.setAttribute('data-expired','true');e.style.display='none';var v=e.getElementsByTagName('video')[0];if(v)try{v.pause();}catch(x){}},12000);}());";
 
-function viewFromHash(hash:string):PublicView{
+function viewFromLocation():PublicView{
+ const requested=new URLSearchParams(location.search).get("view");
+ if(requested==="projects"||requested==="process")return requested;
+ const hash=location.hash;
  if(hash==="#projects")return "projects";
  if(hash==="#process")return "process";
  return "concept";
@@ -138,15 +141,15 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
   </div>
  </div>;
 }
-export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?:boolean;initialCode?:string}){
+export function EntryStudio({initialInvite=false,initialCode="",initialPublicView="concept"}:{initialInvite?:boolean;initialCode?:string;initialPublicView?:PublicView}){
  const [lang,setLang]=useState<EditorialLang>("zh"),[creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
- const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite?"done":"loading");
- const [publicView,setPublicView]=useState<PublicView>("concept"),[activeConcept,setActiveConcept]=useState(0);
+ const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite||initialPublicView!=="concept"?"done":"loading");
+ const [publicView,setPublicView]=useState<PublicView>(initialPublicView),[activeConcept,setActiveConcept]=useState(0);
  const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null),scrollProgress=useRef<HTMLSpanElement>(null);
  const c=editorialContent[lang];
 
  useEffect(()=>{
-  const sync=()=>{const params=new URLSearchParams(location.search);const nextOpen=params.get("access")==="invite"||params.has("invite");setCreatorOpen(nextOpen);setPublicView(viewFromHash(location.hash));if(nextOpen)finishIntro();const token=params.get("invite");if(token)setCode(token)};
+  const sync=()=>{const params=new URLSearchParams(location.search);const nextOpen=params.get("access")==="invite"||params.has("invite");setCreatorOpen(nextOpen);setPublicView(viewFromLocation());if(nextOpen||viewFromLocation()!=="concept")finishIntro();const token=params.get("invite");if(token)setCode(token)};
   const restore=(event:PageTransitionEvent)=>{if(event.persisted)finishIntro()};
   const hydrate=window.setTimeout(()=>{try{const saved=localStorage.getItem("hundred-language");if(saved==="en")setLang("en")}catch{/* Storage can be disabled in embedded browsers. */}sync()},0);
   window.addEventListener("popstate",sync);window.addEventListener("hashchange",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("hashchange",sync);window.removeEventListener("pageshow",restore)};
@@ -209,10 +212,10 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
   const url=new URL(location.href);if(open)url.searchParams.set("access","invite");else{url.searchParams.delete("access");url.searchParams.delete("invite")}
   const target=`${url.pathname}${url.search}${url.hash}`;(push?history.pushState:history.replaceState).call(history,{},"",target);
  }
- function changeView(event:MouseEvent<HTMLAnchorElement>,next:PublicView){event.preventDefault();finishIntro();setPublicView(next);setActiveConcept(0);history.pushState({},"",next==="concept"?"#concept":`#${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0)}
+ function changeView(event:MouseEvent<HTMLAnchorElement>,next:PublicView){event.preventDefault();finishIntro();setPublicView(next);setActiveConcept(0);history.pushState({},"",next==="concept"?"/":`/?view=${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0)}
  function selectConcept(index:number){
   const scroll=()=>document.getElementById(`section-${String(index+1).padStart(2,"0")}`)?.scrollIntoView({behavior:typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
-  if(publicView!=="concept"){setPublicView("concept");history.pushState({},"","#concept");window.setTimeout(scroll,0)}else scroll();
+  if(publicView!=="concept"){setPublicView("concept");history.pushState({},"","/");window.setTimeout(scroll,0)}else scroll();
  }
  function beginIntroExit(){setIntroPhase(current=>current==="done"||current==="leaving"?current:"leaving")}
  function finishIntro(){
@@ -251,22 +254,23 @@ export function EntryStudio({initialInvite=false,initialCode=""}:{initialInvite?
    <header className="editorialHeader">
     <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
     <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
-     <a href="#concept" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
-     <a href="#projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
-     <a href="#process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
+     <a href="/" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
+     <a href="/?view=projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
+     <a href="/?view=process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
     </nav>
     <div className="editorialTools">
      <a className="editorialSurveyLink" href="/survey">{c.ui.survey}</a>
      <EditorialLanguageMenu lang={lang} label={c.ui.language} onChange={setLang}/>
      <a ref={creatorButton} className="editorialCreatorButton" href="/lead" onClick={openCreator} aria-haspopup="dialog" aria-expanded={creatorOpen}>{c.ui.creator}</a>
-    </div>
+   </div>
    </header>
+   <nav className="mobileQuickLinks" aria-label={lang==="zh"?"手机快捷入口":"Mobile quick links"}><a href="/survey">{lang==="zh"?"项目问卷":"Project surveys"}</a><a href="/?view=process" onClick={event=>changeView(event,"process")}>{lang==="zh"?"过程展示":"Process"}</a></nav>
 
    {publicView==="concept"?<><span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/><div className="conceptSections"><HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/><WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/></div><ConceptReelIndicator active={activeConcept} onSelect={selectConcept}/></>:publicView==="projects"?<EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:<ProcessArchive lang={lang}/>}
 
    <footer className="editorialFooter">
     <span>{c.ui.footer}</span>
-    <div><a href="#concept" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="#projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="#process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey">{c.ui.survey}</a><a href="/lead" onClick={openCreator}>{c.ui.creator}</a></div>
+    <div><a href="/" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="/?view=projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="/?view=process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey">{c.ui.survey}</a><a href="/lead" onClick={openCreator}>{c.ui.creator}</a></div>
     <span>© 2026 HuieChen</span>
    </footer>
 
