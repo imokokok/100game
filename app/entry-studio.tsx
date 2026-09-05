@@ -8,6 +8,8 @@ import {
  ClosingSection,HeroSection,InspirationSection,PeopleSection,ProcessSection,ProjectMark,QuestionSection,Why100Section,WorldSection,
 } from "./public-home/sections";
 
+import meetingMinutes from "./public-home/meeting-minutes.json";
+
 type IntroPhase="loading"|"playing"|"leaving"|"done";
 type PublicView="concept"|"projects"|"process";
 
@@ -24,6 +26,7 @@ function viewFromHash(hash:string):PublicView{
 function ProcessArchive({lang}:{lang:EditorialLang}){
  const zh=lang==="zh";
  const entries=[
+  {date:"2026.09.03",type:zh?"会议纪要":"MEETING MINUTES",title:zh?"09.03 策划团队会议纪要":"Planning team meeting minutes · 09.03",body:zh?"本次会议的讨论结论与后续安排。点击展开阅读完整纪要。":"Meeting conclusions and next steps. Expand to read the original Chinese minutes.",image:null,file:"/process/week0-meeting-minutes.docx",minutes:true},
   {date:"2026.09.03",type:zh?"策划会议":"PLANNING MEETING",title:zh?"第一次策划团队会议":"First planning team meeting",body:zh?"围绕概念与目标、故事与世界观、角色设计、机制与玩法、参考与风格、制作落地与分工展开讨论。":"A first working agenda covering concept, story world, characters, mechanics, references, production, and roles.",image:"/process/week0-planning-meeting.jpg",file:null},
   {date:"2026.09.03",type:zh?"项目制度":"PROJECT RECORD",title:zh?"贡献记录与最终署名规则":"Contribution records and final credit rules",body:zh?"记录项目中实际完成的工作、职责范围与过程版本；最终署名以可核对的过程记录和实际贡献为准。":"A record of completed work, responsibilities, and project versions; final credits follow verifiable process records and actual contributions.",image:null,file:"/process/week0-contribution-records.docx"},
   {date:"2026.09.04",type:zh?"项目提案":"DIGITAL PROPOSAL",title:zh?"100 项目 Digital Proposal":"100 Project Digital Proposal",body:zh?"关于双角色叙事、日程、100 个 NPC、互动与玩法方向的第一版完整提案。":"The first full proposal for dual-character narrative, routines, one hundred NPCs, interactions, and gameplay direction.",image:null,file:"/process/week0-digital-proposal.docx"},
@@ -31,7 +34,7 @@ function ProcessArchive({lang}:{lang:EditorialLang}){
  return <section className="editorialProcessArchive" aria-labelledby="processArchiveTitle">
   <header><div><p className="editorialEyebrow">WEEK 0 · PHOTOJOURNAL</p><h1 id="processArchiveTitle">{zh?"过程展示":"Process"}</h1></div><p>{zh?"从第一次会议开始，持续记录项目如何形成。":"A continuing record of how the project takes shape, beginning with its first meeting."}</p></header>
   <div className="processArchiveList">{entries.map((entry,index)=><article className={`processArchiveEntry ${entry.image?"hasImage":""}`} key={entry.title}>
-   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time>{entry.date}</time><div className="processArchiveCopy"><span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>{entry.file&&<a href={entry.file} download>{zh?"查看原文件":"Open original document"} <b>→</b></a>}</div>{entry.image&&<img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy"/>}
+   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time>{entry.date}</time><div className="processArchiveCopy"><span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>{entry.minutes?<details className="processDisclosure"><summary><span className="whenClosed">{zh?"展开会议纪要":"Read meeting minutes"}</span><span className="whenOpen">{zh?"收起会议纪要":"Collapse meeting minutes"}</span></summary><div className="meetingMinutes" lang="zh">{meetingMinutes.map((text,i)=>/^[一二三四五六七八九十]+、/.test(text)?<h3 key={i}>{text}</h3>:<p key={i}>{text}</p>)}<a href={entry.file!} download>{zh?"下载原文件（Word）":"Download original (Word)"} →</a></div></details>:entry.file&&<a href={entry.file} download>{zh?"查看原文件":"Open original document"} <b>→</b></a>}</div>{entry.image&&<details className="processDisclosure processImageDisclosure"><summary><span className="whenClosed">{zh?"展开会议图片":"View meeting image"}</span><span className="whenOpen">{zh?"收起会议图片":"Collapse meeting image"}</span></summary><a href={entry.image} target="_blank" rel="noopener noreferrer" aria-label={zh?"查看原尺寸图片":"View full-size image"}><img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy"/></a></details>}
   </article>)}</div>
  </section>;
 }
