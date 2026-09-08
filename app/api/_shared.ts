@@ -409,11 +409,11 @@ async function ensureAdminRateTable(): Promise<void> {
   await adminRateTableReady;
 }
 
-function adminClientKey(req: Request): string {
+function adminClientKey(req: Request, scope: string): string {
   const address = clientAddress(req);
   const userAgent = clientAgent(req);
   const salt = process.env.LEAD_SESSION_SECRET ?? "lead-login-rate-limit";
-  return sha256Hex(`${salt}\n${address}\n${userAgent}`);
+  return sha256Hex(`${salt}\n${scope}\n${address}\n${userAgent}`);
 }
 
 export type LeadLoginAttempt = {
@@ -428,11 +428,11 @@ export type LeadLoginAttempt = {
  * serverless instance. Database errors are allowed to propagate: login must
  * fail closed if its security state cannot be checked.
  */
-export async function beginLeadLoginAttempt(req: Request): Promise<LeadLoginAttempt> {
+export async function beginLeadLoginAttempt(req: Request, scope = "lead"): Promise<LeadLoginAttempt> {
   await ensureAdminRateTable();
   const now = Date.now();
   const cutoff = now - ADMIN_RATE_WINDOW_MS;
-  const clientKey = adminClientKey(req);
+  const clientKey = adminClientKey(req, scope);
   const db = d1();
   await db.batch([
     db.prepare("DELETE FROM lead_login_attempts WHERE attempted_at < ?").bind(now - 24 * 60 * 60 * 1000),

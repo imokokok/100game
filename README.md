@@ -36,6 +36,8 @@ pnpm run start
 - `BLOB_READ_WRITE_TOKEN`：Vercel Blob 私密读写 Token。
 - `LEAD_ACCESS_CODE`：主策划验证码。
 - `LEAD_SESSION_SECRET`：主策划会话签名密钥，至少 32 个随机字节。
+- `SURVEY_RESULTS_ACCESS_CODE`：NPC 调查问卷结果页验证码；未配置时默认为 `100`。
+- `SURVEY_RESULTS_SESSION_SECRET`：结果页会话签名密钥；未配置时复用 `LEAD_SESSION_SECRET`。
 
 不要把真实邀请码、数据库密码、API Key、Token 或会话密钥提交到 Git。
 
