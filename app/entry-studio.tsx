@@ -137,7 +137,7 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
   className={`openingSequence is${phase[0].toUpperCase()}${phase.slice(1)}`}
   role="dialog"
   aria-modal="true"
-  aria-label="WHAT 100 PEOPLE DO TO A GAME opening title"
+  aria-label="HOW 100 PEOPLE CALL A GAME opening title"
   onClick={enableSound}
   onAnimationEnd={event=>{if(event.currentTarget===event.target&&phase==="leaving")onFinish()}}
  >
@@ -161,7 +161,7 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish}:{ph
     muted={!soundEnabled}
     disablePictureInPicture
     disableRemotePlayback
-    aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
+    aria-label="HOW 100 PEOPLE CALL A GAME animated opening"
    >
     <source src="/video/opening-title-6a63d7e7.mp4" type="video/mp4"/>
     <track kind="captions" src="/video/opening-title-captions.vtt" srcLang="en" label="Sound effects"/>
@@ -280,7 +280,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   />}
   <div className={`editorialPage editorialView-${publicView}`}>
    <header className="editorialHeader">
-    <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
+    <a className="editorialBrand" href="#concept" onClick={event=>changeView(event,"concept")} aria-label="HOW 100 PEOPLE CALL A GAME"><ProjectMark/></a>
     <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
      <a href="/" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
      <a href="/?view=projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>

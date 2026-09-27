@@ -5,11 +5,11 @@ import {VisitTracker} from "./visit-tracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://100game.art"),
-  title: "WHAT 100 PEOPLE DO TO A GAME / 一百个人怎么做游戏",
-  description: "WHAT 100 PEOPLE DO TO A GAME / 一百个人怎么做游戏，共同创作项目网站与参与者问卷。",
+  title: "HOW 100 PEOPLE CALL A GAME / 一百个人怎么做游戏",
+  description: "HOW 100 PEOPLE CALL A GAME / 一百个人怎么做游戏，共同创作项目网站与参与者问卷。",
   alternates: { canonical: "/" },
-  openGraph: { title: "WHAT 100 PEOPLE DO TO A GAME", description: "一百个人怎么做游戏 · 共同创作项目" },
-  twitter: { card: "summary", title: "WHAT 100 PEOPLE DO TO A GAME", description: "一百个人怎么做游戏 · 共同创作项目" },
+  openGraph: { title: "HOW 100 PEOPLE CALL A GAME", description: "一百个人怎么做游戏 · 共同创作项目" },
+  twitter: { card: "summary", title: "HOW 100 PEOPLE CALL A GAME", description: "一百个人怎么做游戏 · 共同创作项目" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

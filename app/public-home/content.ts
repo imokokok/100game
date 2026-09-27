@@ -11,7 +11,7 @@ const zh={
   error:"邀请码无效、已过期，或当前网络暂时不可用。",footer:"一百个人怎么做游戏 · 共同创作项目",
  },
  hero:{
-  eyebrow:"AN INDEPENDENT COLLECTIVE GAME PROJECT",titleLabel:"WHAT 100 PEOPLE DO TO A GAME",
+  eyebrow:"AN INDEPENDENT COLLECTIVE GAME PROJECT",titleLabel:"HOW 100 PEOPLE CALL A GAME",
   lineOne:"WHAT",lineTwoPrefix:"100",lineTwoSuffix:"PEOPLE",lineThreePrefix:"DO TO A",lineThreeAccent:"GAME",
   subtitle:"一百个人，做一件不普通的事。",note:"DIFFERENT PEOPLE. A WIDER TOMORROW.",
  },
@@ -62,10 +62,10 @@ const en={
   creatorIntro:"Project members and the Lead Designer enter here. Participants should provide their WeChat group name and invitation code.",
   name:"WeChat group name",namePlaceholder:"Your WeChat group name",code:"Invitation code",codePlaceholder:"Enter invitation code",
   enter:"Verify and enter",entering:"Entering…",close:"Close",required:"Please provide your WeChat group name.",
-  error:"The invitation is invalid, expired, or the network is temporarily unavailable.",footer:"WHAT 100 PEOPLE DO TO A GAME · COLLECTIVE PROJECT",
+  error:"The invitation is invalid, expired, or the network is temporarily unavailable.",footer:"HOW 100 PEOPLE CALL A GAME · COLLECTIVE PROJECT",
  },
  hero:{
-  eyebrow:"AN INDEPENDENT COLLECTIVE GAME PROJECT",titleLabel:"WHAT 100 PEOPLE DO TO A GAME",
+  eyebrow:"AN INDEPENDENT COLLECTIVE GAME PROJECT",titleLabel:"HOW 100 PEOPLE CALL A GAME",
   lineOne:"WHAT",lineTwoPrefix:"100",lineTwoSuffix:"PEOPLE",lineThreePrefix:"DO TO A",lineThreeAccent:"GAME",
   subtitle:"One hundred people making something uncommon.",note:"DIFFERENT PEOPLE. A WIDER TOMORROW.",
  },
