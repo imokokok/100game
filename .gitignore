@@ -40,3 +40,17 @@ yarn-error.log*
 /outputs/
 /work/
 .pnpm-store/
+
+# Local Sites build, review, and migration scratch data
+/.sites-package-*/
+/.sites-stage-*/
+/.source-export-*/
+/.sites-checkout/
+/.sites-checkout-*/
+/.tmp-review/
+/site-release*.tgz
+/site-version*.tgz
+/repo-100game*/
+/formal-mobile-sync/
+/mobile-fix/
+/public/mondrian-survey-preview.png

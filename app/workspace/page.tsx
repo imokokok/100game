@@ -9,7 +9,7 @@ const allowedViews:WorkspaceView[]=["home","tasks","survey","dashboard"];
 
 export default async function WorkspacePage({searchParams}:{searchParams:Promise<{view?:string}>}){
  const requestHeaders=await headers();
- const request=new NextRequest("https://hundred-people-game.jzwjf5xs57.chatgpt.site/workspace",{headers:requestHeaders});
+ const request=new NextRequest("https://100game.art/workspace",{headers:requestHeaders});
  let participant:{id:string;display_code:string};
  let role:WorkspaceRole;
  if(isOwner(request)||await isLead(request)){
