@@ -1,0 +1,7 @@
+# Preserve uploaded archive bytes across Windows and Linux deployments.
+public/process/* -text
+public/process/*.txt binary
+*.pdf binary
+*.docx binary
+*.xls binary
+*.xlsx binary

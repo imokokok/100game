@@ -1,3 +1,4 @@
+import type {ReactNode} from "react";
 import {editorialContent,type EditorialLang} from "./content";
 
 type Copy=(typeof editorialContent)[EditorialLang];
@@ -25,7 +26,7 @@ export function ProjectMark(){
  return <span className="editorialProjectMark" aria-hidden="true"><strong>100</strong><span>PEOPLE</span></span>;
 }
 
-export function HeroSection({copy}:{copy:Copy["hero"]}){
+export function HeroSection({copy,actions}:{copy:Copy["hero"];actions?:ReactNode}){
  return <section className="editorialSection editorialHero" id="section-01" aria-labelledby="editorialHeroTitle">
   <SectionNumber number="01"/>
   <div className="editorialHeroCopy" data-reveal="title">
@@ -37,6 +38,7 @@ export function HeroSection({copy}:{copy:Copy["hero"]}){
    </h1>
    <p className="editorialHeroSubtitle">{copy.subtitle}</p>
    <p className="editorialHeroNote">{copy.note}</p>
+   {actions}
   </div>
   <div className="editorialHeroStage" data-reveal="visual" aria-hidden="true">
    <EditorialArtwork number={1}/>

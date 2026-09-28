@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import {useSiteLanguage} from "./use-site-language";
 
 // Global client error boundary. Without this, any uncaught error in a Client
 // Component (e.g. an API missing on some phone WebViews) renders a blank page,
 // which is exactly the "tap the invite link and get kicked out" symptom.
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const [lang]=useSiteLanguage();
   useEffect(() => {
     // Surface the real error so device-specific failures can be diagnosed.
     console.error("Client render error:", error);
@@ -27,9 +29,9 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         background: "#fff",
       }}
     >
-      <h1 style={{ fontSize: "1.25rem", margin: 0 }}>页面暂时无法显示</h1>
+      <h1 style={{ fontSize: "1.25rem", margin: 0 }}>{lang==="zh"?"页面暂时无法显示":"This page could not load"}</h1>
       <p style={{ margin: 0, color: "#666", maxWidth: "28rem" }}>
-        你的浏览器在加载时遇到了问题。请重试；如果仍然不行，请换个浏览器或更新系统后再次打开邀请链接。
+        {lang==="zh"?"加载遇到了问题。请重试，或返回首页重新进入。已保存的草稿会保留。":"Something went wrong while loading. Try again or return home. Saved drafts will still be there."}
       </p>
       <button
         onClick={reset}
@@ -44,8 +46,9 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
           cursor: "pointer",
         }}
       >
-        重试
+        {lang==="zh"?"重试":"Try again"}
       </button>
+      <a href="/">{lang==="zh"?"返回首页":"Back to home"}</a>
     </main>
   );
 }

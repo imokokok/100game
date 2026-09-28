@@ -4,6 +4,20 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/:path*",
+        headers: [
+          { key: "X-100game-Release", value: "production-20260928" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+      {
+        source: "/process/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=3600, must-revalidate" },
+        ],
+      },
+      {
         source: "/",
         headers: [
           { key: "Cache-Control", value: "private, no-store, no-cache, must-revalidate, max-age=0" },

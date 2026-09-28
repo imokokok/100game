@@ -9,7 +9,7 @@ const allowedViews:WorkspaceView[]=["home","tasks","survey","dashboard"];
 
 export default async function WorkspacePage({searchParams}:{searchParams:Promise<{view?:string}>}){
  const requestHeaders=await headers();
- const request=new NextRequest("https://100peoplegame.com/workspace",{headers:requestHeaders});
+ const request=new NextRequest("https://www.100game.art/workspace",{headers:requestHeaders});
  let participant:{id:string;display_code:string};
  let role:WorkspaceRole;
  const admin=await currentAdmin(request);

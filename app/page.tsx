@@ -1,4 +1,5 @@
 import { EntryStudio } from "./entry-studio";
+import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const initialPublicView=requested==="process"||requested==="projects"?requested:"concept";
   return (
     <EntryStudio
+      initialLang={(await cookies()).get("hundred-language")?.value==="en"?"en":"zh"}
       initialInvite={access === "invite" || hasInvite}
       initialCode={inviteCode ?? ""}
       initialPublicView={initialPublicView}

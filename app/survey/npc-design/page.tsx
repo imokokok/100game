@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import {SurveyApp,type SurveyDefinition} from "../survey-app";
 import {npcGroups,npcQuestions,npcSections,npcSectionStarts} from "../npc-questions";
 
-export const metadata:Metadata={title:"NPC设计问卷 / NPC Design Survey",description:"WHAT 100 PEOPLE DO TO A GAME NPC 设计问卷"};
+export const metadata:Metadata={title:"NPC设计问卷 / NPC Design Survey",description:"HOW 100 PEOPLE CALL A GAME NPC 设计问卷"};
 
 const npcDefinition:SurveyDefinition={
  id:"npc-design",titleZh:"NPC设计问卷",titleEn:"NPC Design Survey",eyebrowZh:"NPC DESIGN · NPC 设计",eyebrowEn:"NPC DESIGN SURVEY",

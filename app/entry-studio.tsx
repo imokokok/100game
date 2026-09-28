@@ -1,15 +1,16 @@
 "use client";
 
 import {useCallback,useEffect,useRef,useState,type FormEvent,type MouseEvent,type RefObject} from "react";
-import {parseQuery,storageGet,storageSet} from "./client-compat";
+import {parseQuery} from "./client-compat";
 import {editorialContent,type EditorialLang} from "./public-home/content";
-import {SmoothDisclosure} from "./public-home/smooth-disclosure";
+import {ProcessArchive} from "./process-archive";
+import {useSiteLanguage} from "./use-site-language";
 import {mountOpeningPlayback,enableOpeningSound} from "./opening-playback";
 import {
  ClosingSection,HeroSection,InspirationSection,PeopleSection,ProcessSection,ProjectMark,QuestionSection,Why100Section,WorldSection,
 } from "./public-home/sections";
 
-import meetingMinutes from "./public-home/meeting-minutes.json";
+
 
 type IntroPhase="loading"|"playing"|"leaving"|"done";
 type PublicView="concept"|"projects"|"process";
@@ -21,32 +22,8 @@ const INTRO_FAILSAFE_SCRIPT="(function(){window.setTimeout(function(){var e=docu
 function viewFromHash(hash:string):PublicView{
  if(hash==="#projects")return "projects";
  if(hash==="#process")return "process";
+ if(typeof location!=="undefined"&&location.pathname==="/process")return "process";
  return "concept";
-}
-
-function ProcessArchive({lang}:{lang:EditorialLang}){
- const zh=lang==="zh";
- const entries=[
-  {date:"2026.09.03",type:zh?"策划会议":"PLANNING MEETING",title:zh?"第一次策划团队会议":"First planning team meeting",body:zh?"围绕概念与目标、故事与世界观、角色设计、机制与玩法、参考与风格、制作落地与分工展开讨论。":"A first working agenda covering concept, story world, characters, mechanics, references, production, and roles.",image:"/process/week0-planning-meeting.jpg",file:null},
-  {date:"2026.09.03",type:zh?"会议纪要":"MEETING MINUTES",title:zh?"09.03 策划团队会议纪要":"Planning team meeting minutes · 09.03",body:zh?"本次会议的讨论结论与后续安排。点击展开阅读完整纪要。":"Meeting conclusions and next steps. Expand to read the original Chinese minutes.",image:null,file:"/process/week0-meeting-minutes.docx",minutes:true},
-  {date:"2026.09.03",type:zh?"项目制度":"PROJECT RECORD",title:zh?"贡献记录与最终署名规则":"Contribution records and final credit rules",body:zh?"记录项目中实际完成的工作、职责范围与过程版本；最终署名以可核对的过程记录和实际贡献为准。":"A record of completed work, responsibilities, and project versions; final credits follow verifiable process records and actual contributions.",image:null,file:"/process/week0-contribution-records.docx"},
-  {date:"2026.09.04",type:zh?"项目提案":"DIGITAL PROPOSAL",title:zh?"100 项目 Digital Proposal":"100 Project Digital Proposal",body:zh?"关于双角色叙事、日程、100 个 NPC、互动与玩法方向的第一版完整提案。":"The first full proposal for dual-character narrative, routines, one hundred NPCs, interactions, and gameplay direction.",image:null,file:"/process/week0-digital-proposal.docx"},
- ];
- return <section className="editorialProcessArchive" aria-labelledby="processArchiveTitle">
-  <header><div><p className="editorialEyebrow">WEEK 0 · PHOTOJOURNAL</p><h1 id="processArchiveTitle">{zh?"过程展示":"Process"}</h1></div><p>{zh?"从第一次会议开始，持续记录项目如何形成。":"A continuing record of how the project takes shape, beginning with its first meeting."}</p></header>
-  <div className="processArchiveList">{entries.map((entry,index)=><article className={`processArchiveEntry ${entry.image?"hasImage":""}`} key={entry.title}>
-   <div className="processArchiveNumber">{String(index+1).padStart(2,"0")}</div><time dateTime={entry.date.replace(/\./g,"-")}>{entry.date}</time>
-   <div className="processArchiveCopy">
-    <span>{entry.type}</span><h2>{entry.title}</h2><p>{entry.body}</p>
-    {entry.minutes?<SmoothDisclosure closedLabel={zh?"展开会议纪要":"Read meeting minutes"} openLabel={zh?"收起会议纪要":"Collapse meeting minutes"}>
-     <div className="meetingMinutes" lang="zh">{meetingMinutes.map((text,i)=>/^[一二三四五六七八九十]+、/.test(text)?<h3 key={i}>{text}</h3>:<p key={i}>{text}</p>)}<a href={entry.file!} download>{zh?"下载原文件（Word）":"Download original (Word)"} →</a></div>
-    </SmoothDisclosure>:entry.file&&<a className="processFileAction" href={entry.file} download>{zh?"查看原文件":"Open original document"}</a>}
-   </div>
-   {entry.image&&<SmoothDisclosure className="processImageDisclosure" closedLabel={zh?"展开会议图片":"View meeting image"} openLabel={zh?"收起会议图片":"Collapse meeting image"}>
-    <a href={entry.image} target="_blank" rel="noopener noreferrer" aria-label={zh?"查看原尺寸图片":"View full-size image"}><img src={entry.image} alt={zh?"2026 年 9 月 3 日策划团队会议议程":"Planning team meeting agenda, 3 September 2026"} loading="lazy" width="1536" height="1024" decoding="async"/></a>
-   </SmoothDisclosure>}
-  </article>)}</div>
- </section>;
 }
 
 function EditorialEmptyView({eyebrow,title,status,body}:{eyebrow:string;title:string;status:string;body:string}){
@@ -90,7 +67,7 @@ function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:s
  return <div ref={root} className={`editorialLanguage${open?" isOpen":""}`}>
   <span className="editorialLanguageLabel">{label}</span>
   <button ref={trigger} className="editorialLanguageTrigger" type="button" aria-label={label} aria-controls="public-language-options" aria-expanded={open} onClick={()=>setOpen(value=>!value)}>
-   <span>{lang==="zh"?"中文":"EN"}</span><i aria-hidden="true"/>
+   <span>{lang==="zh"?"语言 · 中文":"Language · EN"}</span><i aria-hidden="true"/>
   </button>
   {open&&<div id="public-language-options" className="editorialLanguageMenu" role="group" aria-label={label}>
    <button type="button" aria-pressed={lang==="zh"} onClick={()=>select("zh")}>中文</button>
@@ -99,7 +76,7 @@ function EditorialLanguageMenu({lang,label,onChange}:{lang:EditorialLang;label:s
  </div>;
 }
 
-function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soundOffLabel,soundOnLabel}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void;soundOffLabel:string;soundOnLabel:string}){
+function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soundOffLabel,soundOnLabel,closeLabel}:{phase:IntroPhase;mediaRef:RefObject<HTMLVideoElement|null>;onPlaying:()=>void;onEnded:()=>void;onError:()=>void;onFinish:()=>void;soundOffLabel:string;soundOnLabel:string;closeLabel:string}){
  const [soundEnabled,setSoundEnabled]=useState(false);
 
  const callbacks=useRef({onPlaying,onEnded,onFinish});
@@ -132,9 +109,11 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soun
   className={`openingSequence is${phase[0].toUpperCase()}${phase.slice(1)}`}
   role="dialog"
   aria-modal="true"
-  aria-label="WHAT 100 PEOPLE DO TO A GAME opening title"
+  aria-label="HOW 100 PEOPLE CALL A GAME opening title"
+  onKeyDown={event=>{if(event.key==="Escape")onFinish();if(event.key==="Tab"){const buttons=Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)"));const first=buttons[0],last=buttons[buttons.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus()}}}}
   onAnimationEnd={event=>{if(event.currentTarget===event.target&&phase==="leaving")onFinish()}}
  >
+  <button className="openingSkip" type="button" onClick={onFinish} autoFocus>{closeLabel} ×</button>
   <div className="openingMedia">
    <picture className="openingTitleStill" aria-hidden="true">
     <source srcSet="/images/title-art-sharp-v2.webp" type="image/webp"/>
@@ -156,7 +135,7 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soun
     disablePictureInPicture
     disableRemotePlayback
     onClick={enableSound}
-    aria-label="WHAT 100 PEOPLE DO TO A GAME animated opening"
+    aria-label="HOW 100 PEOPLE CALL A GAME animated opening"
    >
     <source src="/video/opening-title-ed541f.mp4" type="video/mp4"/>
    </video>
@@ -172,9 +151,10 @@ function OpeningSequence({phase,mediaRef,onPlaying,onEnded,onError,onFinish,soun
  </div>;
 }
 
-export function EntryStudio({initialInvite=false,initialCode="",initialPublicView="concept"}:{initialInvite?:boolean;initialCode?:string;initialPublicView?:PublicView}){
- const [lang,setLang]=useState<EditorialLang>("zh"),[creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
- const [introPhase,setIntroPhase]=useState<IntroPhase>(initialInvite||initialPublicView!=="concept"?"done":"loading");
+export function EntryStudio({initialInvite=false,initialCode="",initialPublicView="concept",initialLang="zh"}:{initialInvite?:boolean;initialCode?:string;initialPublicView?:PublicView;initialLang?:EditorialLang}){
+ const [lang,setLang]=useSiteLanguage(initialLang);
+ const [creatorOpen,setCreatorOpen]=useState(initialInvite),[name,setName]=useState(""),[code,setCode]=useState(initialCode),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
+ const [introPhase,setIntroPhase]=useState<IntroPhase>("done");
  const [publicView,setPublicView]=useState<PublicView>(initialPublicView),[activeConcept,setActiveConcept]=useState(0);
  const firstInput=useRef<HTMLInputElement>(null),creatorButton=useRef<HTMLAnchorElement>(null),introMedia=useRef<HTMLVideoElement>(null),introHardStop=useRef<number|null>(null),scrollProgress=useRef<HTMLSpanElement>(null);
  const c=editorialContent[lang];
@@ -184,10 +164,9 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
  useEffect(()=>{
   const sync=()=>{const params=parseQuery(location.search);const nextOpen=params.access==="invite"||"invite" in params;setCreatorOpen(nextOpen);const nextView=params.view==="process"||params.view==="projects"?params.view:viewFromHash(location.hash);setPublicView(nextView);if(nextOpen||nextView!=="concept")finishIntro();const token=params.invite;if(token)setCode(token)};
   const restore=(event:PageTransitionEvent)=>{if(event.persisted)finishIntro()};
-  const saved=storageGet("hundred-language");const hydrate=window.setTimeout(()=>{if(saved==="en")setLang("en");sync()},0);
+  const hydrate=window.setTimeout(sync,0);
   window.addEventListener("popstate",sync);window.addEventListener("hashchange",sync);window.addEventListener("pageshow",restore);return()=>{window.clearTimeout(hydrate);window.removeEventListener("popstate",sync);window.removeEventListener("hashchange",sync);window.removeEventListener("pageshow",restore)};
  },[]);
- useEffect(()=>{document.documentElement.lang=lang==="zh"?"zh-CN":"en";storageSet("hundred-language",lang)},[lang]);
  useEffect(()=>{
   if(introPhase==="leaving"){
    const reduced=typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -195,10 +174,10 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   }
  },[introPhase]);
  useEffect(()=>{
-  if(initialInvite)return;
+  if(introPhase==="done")return;
   const hardStop=window.setTimeout(()=>finishIntro(),12000);introHardStop.current=hardStop;
   return()=>{window.clearTimeout(hardStop);if(introHardStop.current===hardStop)introHardStop.current=null};
- },[initialInvite]);
+ },[introPhase]);
  useEffect(()=>{
   if(introPhase==="done"&&!creatorOpen&&document.body.style.overflow==="hidden")document.body.style.removeProperty("overflow");
  },[creatorOpen,introPhase]);
@@ -244,7 +223,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
   return()=>{observer.disconnect();window.clearTimeout(delayed)};
  },[introPhase,publicView]);
  useEffect(()=>{
-  if(introPhase!=="done"||publicView!=="concept")return;
+  if(introPhase!=="done"||publicView!=="concept"||window.matchMedia("(prefers-reduced-motion: reduce), (max-width: 820px)").matches)return;
   const sections=Array.from(document.querySelectorAll<HTMLElement>(".conceptSections .editorialSection"));
   if(!sections.length)return;
   let frame=0,active=-1,scrollRange=1,trackSections=window.innerWidth>820;let centers:number[]=[];
@@ -266,7 +245,7 @@ export function EntryStudio({initialInvite=false,initialCode="",initialPublicVie
  function changeView(event:MouseEvent<HTMLAnchorElement>,next:PublicView){
   if(event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   event.preventDefault();finishIntro();setPublicView(next);setActiveConcept(0);
-  history.pushState({},"",next==="concept"?"/":`/?view=${next}`);window.setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),0);
+  history.pushState({},"",next==="concept"?"/":next==="process"?"/process":`/?view=${next}`);window.setTimeout(()=>{window.scrollTo({top:0,behavior:"auto"});document.getElementById("public-content")?.focus({preventScroll:true})},0);
  }
  function selectConcept(index:number){
   const scroll=()=>document.getElementById(`section-${String(index+1).padStart(2,"0")}`)?.scrollIntoView({behavior:typeof matchMedia==="function"&&matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
@@ -305,14 +284,16 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
   onFinish={finishIntro}
   soundOffLabel={c.ui.soundOff}
   soundOnLabel={c.ui.soundOn}
+  closeLabel={lang==="zh"?"关闭片头":"Close film"}
  />}
  <div className={`editorialPage editorialView-${publicView}`}>
+  <a className="skipLink" href="#public-content">{lang==="zh"?"跳到正文":"Skip to content"}</a>
   <header className="editorialHeader">
-   <a className="editorialBrand" href="/" onClick={event=>changeView(event,"concept")} aria-label="WHAT 100 PEOPLE DO TO A GAME"><ProjectMark/></a>
+   <a className="editorialBrand" href="/" onClick={event=>changeView(event,"concept")} aria-label="HOW 100 PEOPLE CALL A GAME"><ProjectMark/></a>
    <nav className="editorialNav" aria-label={lang==="zh"?"首页导航":"Home navigation"}>
     <a href="/" aria-current={publicView==="concept"?"page":undefined} onClick={event=>changeView(event,"concept")}>{c.ui.about}</a>
     <a href="/?view=projects" aria-current={publicView==="projects"?"page":undefined} onClick={event=>changeView(event,"projects")}>{c.ui.project}</a>
-    <a href="/?view=process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
+    <a href="/process" aria-current={publicView==="process"?"page":undefined} onClick={event=>changeView(event,"process")}>{c.ui.process}</a>
     <a className="editorialMobileSurvey" href="/survey">{lang==="zh"?"项目问卷":"Surveys"}</a>
    </nav>
    <div className="editorialTools">
@@ -322,21 +303,23 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
     </div>
    </header>
 
+   <div id="public-content" tabIndex={-1}>
    {publicView==="concept"?<>
     <span ref={scrollProgress} className="editorialScrollProgress" aria-hidden="true"/>
     <div className="conceptSections">
-     <HeroSection copy={c.hero}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/>
+     <HeroSection copy={c.hero} actions={<div className="heroActions"><a href="#section-02">{lang==="zh"?"普通访问":"Explore the project"}</a><a href="/?access=invite" onClick={openCreator}>{lang==="zh"?"邀请码进入":"Enter with invitation"}</a><button type="button" onClick={()=>setIntroPhase("loading")}>{lang==="zh"?"播放片头":"Play opening film"}</button></div>}/><QuestionSection copy={c.question}/><Why100Section copy={c.why}/><ProcessSection copy={c.process}/>
      <WorldSection copy={c.world}/><PeopleSection copy={c.people}/><InspirationSection copy={c.inspiration}/><ClosingSection copy={c.closing}/>
     </div>
     <ConceptReelIndicator active={activeConcept} onSelect={selectConcept} lang={lang}/>
    </>:publicView==="projects"?
     <EditorialEmptyView eyebrow={c.ui.projectEyebrow} title={c.ui.project} status={c.ui.pending} body={c.ui.projectEmpty}/>:
     <ProcessArchive lang={lang}/>}
+   </div>
 
    <footer className="editorialFooter">
     <span>{c.ui.footer}</span>
-    <div><a href="/" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="/?view=projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="/?view=process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey">{c.ui.survey}</a><a href="/?access=invite" onClick={openCreator}>{c.ui.creator}</a></div>
-    <span>© 2026 HuieChen</span>
+    <div><a href="/" onClick={event=>changeView(event,"concept")}>{c.ui.about}</a><a href="/?view=projects" onClick={event=>changeView(event,"projects")}>{c.ui.project}</a><a href="/process" onClick={event=>changeView(event,"process")}>{c.ui.process}</a><a href="/survey">{c.ui.survey}</a><a href="/?access=invite" onClick={openCreator}>{c.ui.creator}</a></div>
+    <span>© 2026 Huie Chen</span>
    </footer>
 
    {creatorOpen&&<div className="homeCreatorOverlay" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget)closeCreator()}}>
@@ -345,7 +328,7 @@ return <>{!initialInvite&&<script dangerouslySetInnerHTML={{__html:INTRO_FAILSAF
      <h2 id="creatorDialogTitle">{c.ui.creatorTitle}</h2><p>{c.ui.creatorIntro}</p>
      <form className="homeCreatorForm" onSubmit={submit} aria-busy={busy}>
       <label><span>{c.ui.name}</span><input ref={firstInput} value={name} onChange={event=>setName(event.target.value)} autoComplete="name" maxLength={40} placeholder={c.ui.namePlaceholder}/></label>
-      <label><span>{c.ui.code}</span><input value={code} onChange={event=>setCode(event.target.value)} autoComplete="one-time-code" autoCapitalize="none" autoCorrect="off" placeholder={c.ui.codePlaceholder}/></label>
+      <label><span>{c.ui.code}</span><input value={code} onChange={event=>setCode(event.target.value)} required maxLength={200} autoComplete="one-time-code" autoCapitalize="none" autoCorrect="off" placeholder={c.ui.codePlaceholder}/></label>
       <button type="submit" disabled={busy}>{busy?c.ui.entering:c.ui.enter}</button>
      </form>
      {notice&&<p className="homeCreatorError" role="alert">{notice}</p>}
